@@ -11,7 +11,7 @@ public class GameScreen extends JFrame implements ActionListener {
     private int width, height;
 
     public GameScreen(Level level) {
-        super("JavaGame");
+        super("JavaGame - " + level.getName());
 
         this.level = level;
         this.width = Main.width;
