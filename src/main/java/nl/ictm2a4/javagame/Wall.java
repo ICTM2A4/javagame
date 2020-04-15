@@ -4,12 +4,12 @@ import java.awt.*;
 
 public class Wall extends Collidable {
 
-    public Wall(int gridX, int gridY) {
-        super(gridX, gridY, 32, 32);
+    public Wall(int x, int y) {
+        super(x, y, Main.gridWidth, Main.gridHeight);
     }
 
     public void draw(Graphics g) {
         g.setColor(Color.GRAY);
-        g.fillRect(getX() * getWidth(), getY() * getHeight(), getWidth(), getHeight());
+        g.fillRect(getX() * Main.gridWidth, getY() * Main.gridHeight, getWidth(), getHeight());
     }
 }
