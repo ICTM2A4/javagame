@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 
 public class Wall extends Collidable {
@@ -9,7 +10,6 @@ public class Wall extends Collidable {
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.GRAY);
-        g.fillRect(getX() * Main.gridWidth, getY() * Main.gridHeight, getWidth(), getHeight());
+        g.drawImage(Main.loadImage("textures/wall-" + this.connectedFacesSum() + ".jpg"), getX() * Main.gridWidth, getY() * Main.gridHeight, Main.level);
     }
 }
