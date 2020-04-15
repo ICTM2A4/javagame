@@ -5,7 +5,7 @@ import java.awt.*;
 public class Player extends Collidable {
 
     public Player(int x, int y) {
-        //TODO: instannce
+        super(x, y, 24, 24);
     }
 
     public void checkMove() {
