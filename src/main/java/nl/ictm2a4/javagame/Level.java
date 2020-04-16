@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -69,7 +70,7 @@ public class Level extends JPanel implements Runnable {
             // Read level name
             name = levelOjbect.get("name").toString();
 
-            // Read all walls
+            // Read all ground tiles
             JSONArray groundTiles = (JSONArray) levelOjbect.get("ground");
             for(Object ground : groundTiles) {
                 JSONArray coords = (JSONArray) ground;
@@ -124,27 +125,26 @@ public class Level extends JPanel implements Runnable {
     }
 
     public void generateWalls() {
-        System.out.println(this.getGameObjects().size());
-        for (int i = 0; i < this.getGameObjects().size(); i++) {
-            if (!(this.getGameObjects().get(i) instanceof Ground))
-                continue;
+        Ground[] groundTiles = getGameObjects().stream().filter(object -> (object instanceof Ground)).toArray(Ground[]::new);
 
-            Ground ground = (Ground) this.getGameObjects().get(i);
-            boolean[] connected = ground.hasConnectedFaces();
+        for(Ground ground : groundTiles) {
+            int x = ground.getX() / Main.gridWidth;
+            int y = ground.getY() / Main.gridHeight;
 
-            int x = (ground.getX() / Main.gridWidth);
-            int y = (ground.getY() / Main.gridHeight);
+            for (int _x = x-1; _x <= x+1; _x++) {
+                for (int _y = y-1; _y <= y+1; _y++) {
+                    if (_x == x && _y == y)
+                        continue;
 
-            if (!connected[0])
-                addCollidable(new Wall(this, x, y - 1));
-            if (!connected[1])
-                addCollidable(new Wall(this, x + 1, y));
-            if (!connected[2])
-                addCollidable(new Wall(this, x, y + 1));
-            if (!connected[3])
-                addCollidable(new Wall(this, x - 1, y));
+                    if (!fromCoords(_x * Main.gridWidth, _y * Main.gridHeight).isPresent())
+                        addCollidable(new Wall(this,_x,_y));
+                }
+            }
         }
-        System.out.println(this.getGameObjects().size());
+    }
+
+    public Optional<GameObject> fromCoords(int x, int y) {
+        return getGameObjects().stream().filter(object -> (object.getX() == x && object.getY() == y)).findFirst();
     }
 
 }

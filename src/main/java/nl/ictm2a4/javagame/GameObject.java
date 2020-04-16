@@ -76,15 +76,13 @@ public abstract class GameObject {
         return this.level;
     }
   
-    public int connectedFacesSum() {
+    public static int connectedFacesSum(boolean[] faces) {
         // north : 1
         // east : 2
         // south : 4
         // west : 8
 
         int sum = 0;
-
-        boolean[] faces = hasConnectedFaces();
         for (int n = 0; n < 4; n++)
             if (!faces[n]) sum += Math.pow(2,n);
         return sum;

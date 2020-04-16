@@ -11,6 +11,6 @@ public class Ground extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(Main.loadImage("textures/ground-" + this.connectedFacesSum() + ".jpg"), getX(), getY(), Main.screen.getLevel());
+        g.drawImage(Main.loadImage("textures/ground-" + connectedFacesSum(this.hasConnectedFaces()) + ".jpg"), getX(), getY(), Main.screen.getLevel());
     }
 }

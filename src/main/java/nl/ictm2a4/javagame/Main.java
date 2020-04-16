@@ -12,7 +12,6 @@ public class Main {
     public static final int gridHeight = 32;
   
     public static  Player player;
-//    public static Level level;
     public static GameScreen screen;
 
     public static void main(String[] args) {
