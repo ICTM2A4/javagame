@@ -40,10 +40,6 @@ public abstract class Collidable implements GameObject {
         return width;
     }
 
-    public void test() {
-        System.out.println(this.getClass().getCanonicalName());
-    }
-
     public int connectedFacesSum() {
         // north : 1
         // east : 2
@@ -51,11 +47,11 @@ public abstract class Collidable implements GameObject {
         // west : 8
 
         int sum = 0;
+
         boolean[] faces = hasConnectedFaces();
-        if (!faces[0]) sum += 1;
-        if (!faces[1]) sum += 2;
-        if (!faces[2]) sum += 4;
-        if (!faces[3]) sum += 8;
+        for (int n = 0; n <= 3; n++)
+            if (!faces[n]) sum += 2^n;
+
         return sum;
     }
 
@@ -72,14 +68,14 @@ public abstract class Collidable implements GameObject {
                 continue;
 
             if (this.getX() == collidable.getX()) {
-                if (this.getY() - 1 == collidable.getY()) // north
+                if (this.getY() - Main.gridHeight == collidable.getY()) // north
                     result[0] = true;
-                if (this.getY() + 1 == collidable.getY()) // south
+                if (this.getY() + Main.gridHeight == collidable.getY()) // south
                     result[2] = true;
             } if (getY() == collidable.getY()) {
-                if (this.getX() + 1 == collidable.getX()) // east
+                if (this.getX() + Main.gridWidth == collidable.getX()) // east
                     result[1] = true;
-                if (this.getX() - 1 == collidable.getX()) // west
+                if (this.getX() - Main.gridWidth == collidable.getX()) // west
                     result[3] = true;
             }
         }
