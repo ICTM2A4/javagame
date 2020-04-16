@@ -7,6 +7,7 @@ public class Player extends Collidable {
 
     public Player(int x, int y) {
         super(x, y, 16, 16);
+        setCollidable(false);
     }
 
     public void checkMove(KeyEvent event) {
@@ -30,9 +31,6 @@ public class Player extends Collidable {
     private void move(int x, int y) {
         boolean canMove = true;
         for(Collidable c : Main.level.getCollidables()) {
-            if(c  instanceof Player) {
-                continue;
-            }
             if(c.checkCollide(this, x, y)) {
                 canMove = false;
                 break;
@@ -45,7 +43,7 @@ public class Player extends Collidable {
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.orange);
+        g.setColor(Color.red);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
     }
 }
