@@ -13,11 +13,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class Level extends JPanel {
+public class Level extends JPanel implements Runnable {
 
     private int id, width, height;
     private ArrayList<Collidable> collidables;
     private String name;
+
+    private Thread thread;
+    private  boolean isRunning = false;
+    private int FPS = 30;
+    private long targetTime = 1000 / FPS;
 
     public Level() {
         id = 0;
@@ -29,7 +34,7 @@ public class Level extends JPanel {
 
         this.setPreferredSize(new Dimension(width, height));
 
-        loadLevel();
+//        loadLevel();
     }
 
     public ArrayList<Collidable> getCollidables() {
@@ -54,7 +59,8 @@ public class Level extends JPanel {
 
     public void loadLevel() {
         JSONParser parser = new JSONParser();
-        File file = new File(ClassLoader.getSystemClassLoader().getResource("levels/level-" + this.id + ".json").getFile());
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("levels/" +
+                "level-" + this.id + ".json").getFile());
 
         try(FileReader reader = new FileReader(file)) {
             Object object = parser.parse(reader);
@@ -85,4 +91,40 @@ public class Level extends JPanel {
             e.printStackTrace();
         }
     }
+
+    public void start() {
+        isRunning = true;
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    @Override
+    public void run() {
+        long start, elapsed, wait;
+        while(isRunning) {
+            start = System.nanoTime();
+
+            tick();
+            repaint();
+
+            elapsed = System.nanoTime() - start;
+            wait = targetTime - elapsed / 1000000;
+
+            if(wait <= 0) {
+                wait = 5;
+            }
+
+            try {
+                Thread.sleep(wait);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void tick() {
+
+    }
+
+
 }
