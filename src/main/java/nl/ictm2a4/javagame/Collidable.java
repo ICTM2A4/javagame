@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public abstract class Collidable implements GameObject {
 
     private int x, y, width, height;
+    private boolean collidable = true;
 
     public Collidable(int x, int y, int width, int height) {
         this.x = x;
@@ -13,11 +14,11 @@ public abstract class Collidable implements GameObject {
         this.width = width;
         this.height = height;
     }
+  
+    public void setCollidable(boolean collidable) {
+        this.collidable = collidable;
+    }
 
-    /*
-    Checks if the given collidable would have a collision with any other collidable at the given coordinate. The collidables' width and height are taken into account. Only the collidables registered
-    in the level's collidable list are taken into account.
-     */
     public boolean checkCollide(Collidable collidable, int x, int y) {
         for (Collidable otherCollidable : Main.level.getCollidables()) {
             if(checkCollideSingle(collidable, otherCollidable, x, y)){
@@ -25,7 +26,7 @@ public abstract class Collidable implements GameObject {
                 return true;
             }
         }
-
+      
         return false;
     }
 
@@ -63,5 +64,46 @@ public abstract class Collidable implements GameObject {
 
     public int getWidth() {
         return width;
+    }
+
+    public int connectedFacesSum() {
+        // north : 1
+        // east : 2
+        // south : 4
+        // west : 8
+
+        int sum = 0;
+
+        boolean[] faces = hasConnectedFaces();
+        for (int n = 0; n < 4; n++)
+            if (!faces[n]) sum += Math.pow(2,n);
+        return sum;
+    }
+
+    /*
+    [0] north
+    [1] east
+    [2] south
+    [3] west
+     */
+    public boolean[] hasConnectedFaces() {
+        boolean[] result = {false,false,false,false};
+        for(Collidable collidable : Main.level.getCollidables()) {
+            if (!collidable.getClass().getCanonicalName().equals(this.getClass().getCanonicalName()))
+                continue;
+
+            if (this.getX() == collidable.getX()) {
+                if (this.getY() - Main.gridHeight == collidable.getY()) // north
+                    result[0] = true;
+                if (this.getY() + Main.gridHeight == collidable.getY()) // south
+                    result[2] = true;
+            } if (getY() == collidable.getY()) {
+                if (this.getX() + Main.gridWidth == collidable.getX()) // east
+                    result[1] = true;
+                if (this.getX() - Main.gridWidth == collidable.getX()) // west
+                    result[3] = true;
+            }
+        }
+        return result;
     }
 }
