@@ -24,8 +24,8 @@ public class Level extends JPanel implements Runnable {
     private int FPS = 30;
     private long targetTime = 1000 / FPS;
 
-    public Level() {
-        id = 0;
+    public Level(int id) {
+        this.id = id;
         gameObjects = new ArrayList<>();
         setBackground(Color.black);
 

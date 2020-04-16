@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Level level = new Level();
+        Level level = new Level(1);
         player = new Player(level, 40, 40);
         level.addCollidable(player);
       
