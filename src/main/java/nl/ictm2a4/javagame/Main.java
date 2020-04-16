@@ -17,7 +17,7 @@ public class Main {
     public static void main(String[] args) {
 
         level = new Level();
-        player = new Player(32, 32);
+        player = new Player(40, 40);
         level.addCollidable(player);
       
         GameScreen screen = new GameScreen(level);
