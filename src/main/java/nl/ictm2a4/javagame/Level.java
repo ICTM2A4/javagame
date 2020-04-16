@@ -28,7 +28,6 @@ public class Level extends JPanel {
         height = Main.height;
 
         this.setPreferredSize(new Dimension(width, height));
-
         loadLevel();
     }
 
@@ -39,6 +38,7 @@ public class Level extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         for(Collidable collidable : collidables)
             collidable.draw(g);
     }
@@ -63,20 +63,30 @@ public class Level extends JPanel {
             // Read level name
             name = levelOjbect.get("name").toString();
 
+            // Read all walls
+            JSONArray walls = (JSONArray) levelOjbect.get("walls");
+            for(Object wall : walls) {
+                JSONArray coords = (JSONArray) wall;
+                int x = Integer.valueOf(coords.get(0).toString());
+                int y = Integer.valueOf(coords.get(1).toString());
+                addCollidable(new Wall(x,y));
+            }
+
+            // Read all ground tiles
+            JSONArray ground = (JSONArray) levelOjbect.get("ground");
+            for(Object groundTile : ground) {
+                JSONArray coords = (JSONArray) groundTile;
+                int x = Integer.valueOf(coords.get(0).toString());
+                int y = Integer.valueOf(coords.get(1).toString());
+                addCollidable(new Ground(x,y));
+            }
+
             // Read endpoint
             JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
             int endX = Integer.valueOf(endpoint.get(0).toString());
             int endY = Integer.valueOf(endpoint.get(1).toString());
             addCollidable(new EndPoint(endX, endY));
 
-            // Read all walls
-            JSONArray array = (JSONArray) levelOjbect.get("walls");
-            for(Object wall : array) {
-                JSONArray coords = (JSONArray) wall;
-                int x = Integer.valueOf(coords.get(0).toString());
-                int y = Integer.valueOf(coords.get(1).toString());
-                addCollidable(new Wall(x,y));
-            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
