@@ -3,10 +3,10 @@ package nl.ictm2a4.javagame;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class Player extends Collidable {
+public class Player extends GameObject {
 
-    public Player(int x, int y) {
-        super(x, y, 16, 16);
+    public Player(Level level, int x, int y) {
+        super(level, x, y, 16, 16);
         setCollidable(false);
     }
 
@@ -30,7 +30,7 @@ public class Player extends Collidable {
 
     private void move(int x, int y) {
         boolean canMove = true;
-        for(Collidable c : Main.level.getCollidables()) {
+        for(GameObject c : Main.screen.getLevel().getGameObjects()) {
             if(c.checkCollide(this, x, y)) {
                 canMove = false;
                 break;
@@ -42,6 +42,7 @@ public class Player extends Collidable {
         }
     }
 
+    @Override
     public void draw(Graphics g) {
         g.setColor(Color.red);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
