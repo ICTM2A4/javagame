@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public abstract class Collidable implements GameObject {
 
     private int x, y, width, height;
-    private boolean collidable = true;
+    public boolean collidable = true;
 
     public Collidable(int x, int y, int width, int height) {
         this.x = x;
@@ -21,6 +21,7 @@ public abstract class Collidable implements GameObject {
 
     public boolean checkCollide(Collidable collidable, int x, int y) {
         for (Collidable otherCollidable : Main.level.getCollidables()) {
+            if(!otherCollidable.collidable) continue;
             if(checkCollideSingle(collidable, otherCollidable, x, y)){
                 // Another collidable has been found at the given position
                 return true;

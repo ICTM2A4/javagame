@@ -11,7 +11,6 @@ public class Ground extends Collidable {
 
     @Override
     public void draw(Graphics g) {
-        System.out.println("Floor: " + this.connectedFacesSum() + "; " + getX() + ", " + getY());
         g.drawImage(Main.loadImage("textures/ground-" + this.connectedFacesSum() + ".jpg"), getX(), getY(), Main.level);
     }
 }
