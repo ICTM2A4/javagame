@@ -3,7 +3,6 @@ package nl.ictm2a4.javagame;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import org.json.simple.parser.ParseException;
 public class Level extends JPanel implements Runnable {
 
     private int id, width, height;
-    private ArrayList<Collidable> collidables;
+    private ArrayList<GameObject> gameObjects;
     private String name;
 
     private Thread thread;
@@ -26,7 +25,7 @@ public class Level extends JPanel implements Runnable {
 
     public Level() {
         id = 0;
-        collidables = new ArrayList<>();
+        gameObjects = new ArrayList<>();
         setBackground(Color.black);
 
         width = Main.width;
@@ -34,23 +33,24 @@ public class Level extends JPanel implements Runnable {
 
         this.setPreferredSize(new Dimension(width, height));
         loadLevel();
+        generateWalls();
     }
 
-    public ArrayList<Collidable> getCollidables() {
-        return collidables;
+    public ArrayList<GameObject> getGameObjects() {
+        return gameObjects;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for(Collidable collidable : collidables)
-            collidable.draw(g);
+        for(GameObject gameObject : gameObjects)
+            gameObject.draw(g);
     }
 
-    public void addCollidable(Collidable collidable) {
-        if (!this.collidables.contains(collidable))
-            this.collidables.add(collidable);
+    public void addCollidable(GameObject gameObject) {
+        if (!this.gameObjects.contains(gameObject))
+            this.gameObjects.add(gameObject);
     }
 
     public String getName() {
@@ -70,34 +70,21 @@ public class Level extends JPanel implements Runnable {
             name = levelOjbect.get("name").toString();
 
             // Read all walls
-            JSONArray walls = (JSONArray) levelOjbect.get("walls");
-            for(Object wall : walls) {
-                JSONArray coords = (JSONArray) wall;
-                int x = Integer.valueOf(coords.get(0).toString());
-                int y = Integer.valueOf(coords.get(1).toString());
-                addCollidable(new Wall(x,y));
-            }
-
-            // Read all ground tiles
-            JSONArray ground = (JSONArray) levelOjbect.get("ground");
-            for(Object groundTile : ground) {
-                JSONArray coords = (JSONArray) groundTile;
-                int x = Integer.valueOf(coords.get(0).toString());
-                int y = Integer.valueOf(coords.get(1).toString());
-                addCollidable(new Ground(x,y));
+            JSONArray groundTiles = (JSONArray) levelOjbect.get("ground");
+            for(Object ground : groundTiles) {
+                JSONArray coords = (JSONArray) ground;
+                int x = Integer.parseInt(coords.get(0).toString());
+                int y = Integer.parseInt(coords.get(1).toString());
+                addCollidable(new Ground(this,x,y));
             }
 
             // Read endpoint
             JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
-            int endX = Integer.valueOf(endpoint.get(0).toString());
-            int endY = Integer.valueOf(endpoint.get(1).toString());
-            addCollidable(new EndPoint(endX, endY));
+            int endX = Integer.parseInt(endpoint.get(0).toString());
+            int endY = Integer.parseInt(endpoint.get(1).toString());
+            addCollidable(new EndPoint(this,endX, endY));
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -136,5 +123,28 @@ public class Level extends JPanel implements Runnable {
 
     }
 
+    public void generateWalls() {
+        System.out.println(this.getGameObjects().size());
+        for (int i = 0; i < this.getGameObjects().size(); i++) {
+            if (!(this.getGameObjects().get(i) instanceof Ground))
+                continue;
+
+            Ground ground = (Ground) this.getGameObjects().get(i);
+            boolean[] connected = ground.hasConnectedFaces();
+
+            int x = (ground.getX() / Main.gridWidth);
+            int y = (ground.getY() / Main.gridHeight);
+
+            if (!connected[0])
+                addCollidable(new Wall(this, x, y - 1));
+            if (!connected[1])
+                addCollidable(new Wall(this, x + 1, y));
+            if (!connected[2])
+                addCollidable(new Wall(this, x, y + 1));
+            if (!connected[3])
+                addCollidable(new Wall(this, x - 1, y));
+        }
+        System.out.println(this.getGameObjects().size());
+    }
 
 }
