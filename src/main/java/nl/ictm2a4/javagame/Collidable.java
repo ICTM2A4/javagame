@@ -21,6 +21,7 @@ public abstract class Collidable implements GameObject {
     public boolean checkCollide(Collidable collidable, int x, int y) {
         for (Collidable otherCollidable : Main.level.getCollidables()) {
             if(checkCollideSingle(collidable, otherCollidable, x, y)){
+                // Another collidable has been found at the given position
                 return true;
             }
         }
