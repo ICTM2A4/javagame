@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.Main;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
+import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.Level;
 
@@ -11,19 +12,25 @@ import java.util.List;
 
 public class Player extends GameObject {
 
+    private final int animateDelay = 4;
+    private int currentImage = 0;
+    private int animateCount = 0;
+
     private PlayerStatus status;
 
     public Player(Level level, int gridX, int gridY) {
         super(level,
             ((gridX * LevelLoader.gridWidth) + 4),
             ((gridY * LevelLoader.gridHeight) + 2),
-            16, 24);
+            16, 20);
         setCollidable(false);
         status = PlayerStatus.IDLE;
     }
 
-    public void checkMove(List<Integer> pressedKeys) {
-        int stepSize = 8;
+    public void checkMove() {
+        int stepSize = 4;
+
+        List<Integer> pressedKeys = Main.screen.pressedKeys;
 
         if(pressedKeys.contains(KeyEvent.VK_W)){
             move(getX(), getY()- stepSize);
@@ -55,31 +62,24 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.red);
-        g.fillOval(getX(), getY(), getWidth(), getHeight());
+        g.drawImage(FileLoader.getInstance().getPlayerImage(status,currentImage),
+            getX() - 4, getY() - 26,
+            LevelLoader.getInstance().getCurrentLevel().get());
     }
 
     @Override
     public void tick() {
-        List<Integer> pressedKeys = Main.screen.pressedKeys;
+        checkMove();
 
-        // Movement
-        checkMove(pressedKeys);
+        animateCount++;
 
-        // Status
-        // If none of the player's action buttons are being held, return to the idle status
-        if(!pressedKeys.contains(KeyEvent.VK_D) && !pressedKeys.contains(KeyEvent.VK_D) && !pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A))
-        {
-            status = PlayerStatus.IDLE;
+        if (animateCount % animateDelay == 0) {
+            animateCount = 0;
+
+            currentImage++;
+            if (currentImage >= status.getImageAmount())
+                currentImage = 0;
         }
 
-        if(pressedKeys.contains(KeyEvent.VK_D))
-        {
-            status = PlayerStatus.MOVINGRIGHT;
-        }
-        else if (pressedKeys.contains(KeyEvent.VK_A))
-        {
-            status = PlayerStatus.MOVINGLEFT;
-        }
     }
 }
