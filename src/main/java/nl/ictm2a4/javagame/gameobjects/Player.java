@@ -22,10 +22,8 @@ public class Player extends GameObject {
         status = PlayerStatus.IDLE;
     }
 
-    public void checkMove() {
+    public void checkMove(List<Integer> pressedKeys) {
         int stepSize = 8;
-
-        List<Integer> pressedKeys = Main.screen.pressedKeys;
 
         if(pressedKeys.contains(KeyEvent.VK_W)){
             move(getX(), getY()- stepSize);
@@ -63,6 +61,25 @@ public class Player extends GameObject {
 
     @Override
     public void tick() {
-        checkMove();
+        List<Integer> pressedKeys = Main.screen.pressedKeys;
+
+        // Movement
+        checkMove(pressedKeys);
+
+        // Status
+        // If none of the player's action buttons are being held, return to the idle status
+        if(!pressedKeys.contains(KeyEvent.VK_D) && !pressedKeys.contains(KeyEvent.VK_D) && !pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A))
+        {
+            status = PlayerStatus.IDLE;
+        }
+
+        if(pressedKeys.contains(KeyEvent.VK_D))
+        {
+            status = PlayerStatus.MOVINGRIGHT;
+        }
+        else if (pressedKeys.contains(KeyEvent.VK_A))
+        {
+            status = PlayerStatus.MOVINGLEFT;
+        }
     }
 }
