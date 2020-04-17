@@ -118,4 +118,6 @@ public abstract class GameObject {
     public boolean isCollidable() {
         return this.collidable;
     }
+
+    public abstract void loadImage();
 }
