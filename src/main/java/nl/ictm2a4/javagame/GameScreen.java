@@ -6,11 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
     private Level level;
     private int width, height;
+    public List<Integer> pressedKeys;
+
 
     public GameScreen(Level level) {
         super("JavaGame - " + level.getName());
@@ -18,6 +22,7 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         this.level = level;
         this.width = Main.width;
         this.height = Main.height;
+        pressedKeys = new ArrayList<Integer>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -43,13 +48,18 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        Main.player.checkMove(e);
+        if(!pressedKeys.contains(e.getKeyCode())){
+            pressedKeys.add(e.getKeyCode());
+        }
 
+        Main.player.checkMove(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        if(pressedKeys.contains(e.getKeyCode())){
+            pressedKeys.remove(Integer.valueOf(e.getKeyCode()));
+        }
     }
 
     public Level getLevel() {
