@@ -66,10 +66,20 @@ public class Player extends GameObject {
         // Movement
         checkMove(pressedKeys);
 
+        // Status
         // If none of the player's action buttons are being held, return to the idle status
         if(!pressedKeys.contains(KeyEvent.VK_D) && !pressedKeys.contains(KeyEvent.VK_D) && !pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A))
         {
             status = PlayerStatus.IDLE;
+        }
+
+        if(pressedKeys.contains(KeyEvent.VK_D))
+        {
+            status = PlayerStatus.MOVINGRIGHT;
+        }
+        else if (pressedKeys.contains(KeyEvent.VK_A))
+        {
+            status = PlayerStatus.MOVINGLEFT;
         }
     }
 }
