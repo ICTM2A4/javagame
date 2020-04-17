@@ -1,6 +1,7 @@
-package nl.ictm2a4.javagame;
+package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.Level;
 
 import java.awt.*;
 

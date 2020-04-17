@@ -1,4 +1,4 @@
-package nl.ictm2a4.javagame;
+package nl.ictm2a4.javagame.screens;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;

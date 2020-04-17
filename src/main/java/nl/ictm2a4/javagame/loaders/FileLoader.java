@@ -1,12 +1,9 @@
 package nl.ictm2a4.javagame.loaders;
 
-import nl.ictm2a4.javagame.Main;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.AnnotatedArrayType;
 import java.util.ArrayList;
 
 public class FileLoader {

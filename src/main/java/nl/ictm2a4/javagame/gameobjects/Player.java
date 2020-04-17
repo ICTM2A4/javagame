@@ -1,7 +1,6 @@
 package nl.ictm2a4.javagame.gameobjects;
 
-import nl.ictm2a4.javagame.GameObject;
-import nl.ictm2a4.javagame.Level;
+import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.Main;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -17,18 +16,16 @@ public class Player extends GameObject {
     public Player(Level level, int gridX, int gridY) {
         super(level,
             ((gridX * LevelLoader.gridWidth) + 4),
-            ((gridY * LevelLoader.gridHeight) + 4),
-            16, 20);
+            ((gridY * LevelLoader.gridHeight) + 2),
+            16, 24);
         setCollidable(false);
         status = PlayerStatus.IDLE;
     }
 
-    public void checkMove(KeyEvent event) {
-        int key = event.getKeyCode();
-        int stepSize = 8;
-
+    public void checkMove() {
+        int stepSize = 4;
         List<Integer> pressedKeys = Main.screen.pressedKeys;
-        
+
         if(pressedKeys.contains(KeyEvent.VK_W)){
             move(getX(), getY()- stepSize);
         }
@@ -61,5 +58,10 @@ public class Player extends GameObject {
     public void draw(Graphics g) {
         g.setColor(Color.red);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
+    }
+
+    @Override
+    public void tick() {
+        checkMove();
     }
 }
