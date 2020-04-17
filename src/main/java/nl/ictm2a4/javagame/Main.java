@@ -13,13 +13,14 @@ public class Main {
   
     public static  Player player;
     public static GameScreen screen;
+    private static MainMenu MainMenu;
 
     public static void main(String[] args) {
 
         Level level = new Level(1);
         player = new Player(level, 40, 40);
         level.addCollidable(player);
-      
+        MainMenu = new MainMenu();
         screen = new GameScreen(level);
         level.start();
     }
