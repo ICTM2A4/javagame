@@ -1,5 +1,7 @@
 package nl.ictm2a4.javagame;
 
+import nl.ictm2a4.javagame.screens.GameScreen;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
