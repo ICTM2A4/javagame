@@ -1,19 +1,21 @@
 package nl.ictm2a4.javagame;
 
+import nl.ictm2a4.javagame.gameobjects.GameObject;
+import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.GameScreen;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainMenu extends JFrame implements ActionListener {
+public class MainMenu extends JPanel implements ActionListener {
 
     private JButton start, selectlevel, levelbuilder, exit;
     private static GameScreen screen;
 
     public MainMenu() {
         setLayout(new FlowLayout());
-        setSize(320, 360);
-        setTitle("Main Menu");
+        this.setPreferredSize(new Dimension(320, 360));
 
         start = new JButton("Start");
         start.addActionListener(this);
@@ -28,13 +30,15 @@ public class MainMenu extends JFrame implements ActionListener {
         exit.addActionListener(this);
         add(exit);
 
-        setVisible(false);
+        setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == start) {
             System.out.println("Level Start");
+            LevelLoader.getInstance().loadLevel(1);
+            LevelLoader.getInstance().startLevel();
         }
         if(e.getSource() == selectlevel) {
             System.out.println("Level Select start op");
@@ -46,4 +50,5 @@ public class MainMenu extends JFrame implements ActionListener {
             System.exit(0);
         }
     }
+
 }
