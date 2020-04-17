@@ -35,7 +35,6 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         pack();
         addKeyListener(this);
         setVisible(true);
-
     }
 
     @Override

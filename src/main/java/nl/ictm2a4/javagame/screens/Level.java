@@ -43,6 +43,7 @@ public class Level extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         getGameObjects().forEach(object -> object.draw(g));
+        this.player.draw(g);
     }
 
     public void addCollidable(GameObject gameObject) {
