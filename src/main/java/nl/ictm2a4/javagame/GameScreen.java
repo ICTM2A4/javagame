@@ -1,5 +1,8 @@
 package nl.ictm2a4.javagame;
 
+import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.loaders.LevelLoader;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,28 +11,26 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
-    private Level level;
-    private int width, height;
+    private LevelLoader levelLoader;
+    private FileLoader fileLoader;
+    private String title = "Java game";
     public List<Integer> pressedKeys;
 
+    public GameScreen() {
+        setTitle(title);
 
-    public GameScreen(Level level) {
-        super("JavaGame - " + level.getName());
-
-        this.level = level;
-        this.width = Main.width;
-        this.height = Main.height;
+        this.levelLoader = new LevelLoader();
+        this.fileLoader = new FileLoader();
         pressedKeys = new ArrayList<Integer>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
         setLayout(new BorderLayout());
-        setContentPane(level);
-        pack();
 
         addKeyListener(this);
         setVisible(true);
@@ -52,7 +53,9 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
             pressedKeys.add(e.getKeyCode());
         }
 
-        Main.player.checkMove(e);
+        LevelLoader.getInstance().getCurrentLevel().ifPresent(
+            level -> level.getPlayer().ifPresent(
+                player -> player.checkMove(e)));
     }
 
     @Override
@@ -62,7 +65,14 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    public Level getLevel() {
-        return level;
+    public Optional<Level> getLevel() {
+        return levelLoader.getCurrentLevel();
+    }
+
+    public void addTitle(String append) {
+        setTitle(title + " - " + append);
+    }
+    public void resetTitle() {
+        setTitle(title);
     }
 }

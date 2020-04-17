@@ -1,4 +1,10 @@
-package nl.ictm2a4.javagame;
+package nl.ictm2a4.javagame.gameobjects;
+
+import nl.ictm2a4.javagame.GameObject;
+import nl.ictm2a4.javagame.Level;
+import nl.ictm2a4.javagame.Main;
+import nl.ictm2a4.javagame.enums.PlayerStatus;
+import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -6,9 +12,15 @@ import java.util.List;
 
 public class Player extends GameObject {
 
-    public Player(Level level, int x, int y) {
-        super(level, x, y, 16, 16);
+    private PlayerStatus status;
+
+    public Player(Level level, int gridX, int gridY) {
+        super(level,
+            ((gridX * LevelLoader.gridWidth) + 4),
+            ((gridY * LevelLoader.gridHeight) + 4),
+            16, 20);
         setCollidable(false);
+        status = PlayerStatus.IDLE;
     }
 
     public void checkMove(KeyEvent event) {
@@ -34,14 +46,11 @@ public class Player extends GameObject {
         }
     }
 
+    // TODO: update player status when moving
     private void move(int x, int y) {
-        boolean canMove = true;
-        for(GameObject c : Main.screen.getLevel().getGameObjects()) {
-            if(c.checkCollide(this, x, y)) {
-                canMove = false;
-                break;
-            }
-        }
+        boolean canMove = LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(
+            object -> !object.checkCollide(this, x, y));
+
         if(canMove) {
             setX(x);
             setY(y);
@@ -52,10 +61,5 @@ public class Player extends GameObject {
     public void draw(Graphics g) {
         g.setColor(Color.red);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
-    }
-
-    @Override
-    public void loadImage() {
-
     }
 }
