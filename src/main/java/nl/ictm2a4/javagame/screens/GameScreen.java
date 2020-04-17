@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.screens;
 
+import nl.ictm2a4.javagame.MainMenu;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -30,7 +31,8 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         setResizable(false);
 
         setLayout(new BorderLayout());
-
+        setContentPane(new MainMenu());
+        pack();
         addKeyListener(this);
         setVisible(true);
 

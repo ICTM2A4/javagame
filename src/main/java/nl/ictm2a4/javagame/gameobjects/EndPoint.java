@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.gameobjects;
 
+import nl.ictm2a4.javagame.MainMenu;
 import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -48,8 +49,7 @@ public class EndPoint extends GameObject {
         boolean result = super.checkCollideSingle(gameObject,x,y);
 
         if (result) {
-            this.getLevel().setVisible(false);
-            System.out.println("Je hebt gewonnen");
+            LevelLoader.getInstance().stopLevel();
         }
 
         return result;

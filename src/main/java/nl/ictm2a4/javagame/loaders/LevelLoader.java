@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.loaders;
 
+import nl.ictm2a4.javagame.MainMenu;
 import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.Main;
 
@@ -35,11 +36,13 @@ public class LevelLoader implements Runnable {
         Main.screen.pack();
         start();
         Main.screen.addTitle(currentLevel.getName());
+        currentLevel.getTopLevelAncestor().requestFocus();
         return true;
     }
 
     public void stopLevel() {
-        Main.screen.setContentPane(null);
+        Main.screen.setContentPane(new MainMenu());
+        Main.screen.pack();
         stop();
         Main.screen.resetTitle();
     }

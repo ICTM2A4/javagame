@@ -1,3 +1,4 @@
+
 package nl.ictm2a4.javagame;
 
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -9,7 +10,5 @@ public class Main {
 
     public static void main(String[] args) {
         screen = new GameScreen();
-        LevelLoader.getInstance().loadLevel(1);
-        LevelLoader.getInstance().startLevel();
     }
 }
