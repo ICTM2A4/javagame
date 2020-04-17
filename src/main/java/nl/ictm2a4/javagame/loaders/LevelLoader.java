@@ -4,6 +4,9 @@ import nl.ictm2a4.javagame.MainMenu;
 import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.Main;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.io.File;
 import java.util.Optional;
 
 public class LevelLoader implements Runnable {
