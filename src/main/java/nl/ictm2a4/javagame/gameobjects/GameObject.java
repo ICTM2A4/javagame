@@ -1,4 +1,7 @@
-package nl.ictm2a4.javagame;
+package nl.ictm2a4.javagame.gameobjects;
+
+import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.Level;
 
 import java.awt.*;
 
@@ -21,7 +24,7 @@ public abstract class GameObject {
     }
 
     public boolean checkCollide(GameObject gameObject, int x, int y) {
-        for (GameObject otherGameObject : Main.screen.getLevel().getGameObjects()) {
+        for (GameObject otherGameObject : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()) {
             if(!otherGameObject.isCollidable()) continue;
             if(otherGameObject.checkCollideSingle(gameObject, x, y)){
                 // Another collidable has been found at the given position
@@ -101,14 +104,14 @@ public abstract class GameObject {
                 continue;
 
             if (this.getX() == gameObject.getX()) {
-                if (this.getY() - Main.gridHeight == gameObject.getY()) // north
+                if (this.getY() - LevelLoader.gridHeight == gameObject.getY()) // north
                     result[0] = true;
-                if (this.getY() + Main.gridHeight == gameObject.getY()) // south
+                if (this.getY() + LevelLoader.gridHeight == gameObject.getY()) // south
                     result[2] = true;
             } if (getY() == gameObject.getY()) {
-                if (this.getX() + Main.gridWidth == gameObject.getX()) // east
+                if (this.getX() + LevelLoader.gridWidth == gameObject.getX()) // east
                     result[1] = true;
-                if (this.getX() - Main.gridWidth == gameObject.getX()) // west
+                if (this.getX() - LevelLoader.gridWidth == gameObject.getX()) // west
                     result[3] = true;
             }
         }
@@ -119,5 +122,6 @@ public abstract class GameObject {
         return this.collidable;
     }
 
-    public abstract void loadImage();
+    public void tick() {}
+
 }

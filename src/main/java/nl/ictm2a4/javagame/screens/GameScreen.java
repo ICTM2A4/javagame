@@ -1,4 +1,7 @@
-package nl.ictm2a4.javagame;
+package nl.ictm2a4.javagame.screens;
+
+import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,25 +14,22 @@ import java.util.List;
 
 public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
-    private Level level;
-    private int width, height;
+    private LevelLoader levelLoader;
+    private FileLoader fileLoader;
+    private String title = "Java game";
     public List<Integer> pressedKeys;
 
+    public GameScreen() {
+        setTitle(title);
 
-    public GameScreen(Level level) {
-        super("JavaGame - " + level.getName());
-
-        this.level = level;
-        this.width = Main.width;
-        this.height = Main.height;
+        this.levelLoader = new LevelLoader();
+        this.fileLoader = new FileLoader();
         pressedKeys = new ArrayList<Integer>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
         setLayout(new BorderLayout());
-        setContentPane(level);
-        pack();
 
         addKeyListener(this);
         setVisible(true);
@@ -51,8 +51,6 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         if(!pressedKeys.contains(e.getKeyCode())){
             pressedKeys.add(e.getKeyCode());
         }
-
-        Main.player.checkMove(e);
     }
 
     @Override
@@ -62,7 +60,10 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
-    public Level getLevel() {
-        return level;
+    public void addTitle(String append) {
+        setTitle(title + " - " + append);
+    }
+    public void resetTitle() {
+        setTitle(title);
     }
 }
