@@ -47,4 +47,9 @@ public class Player extends GameObject {
         g.setColor(Color.red);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
     }
+
+    @Override
+    public void loadImage() {
+
+    }
 }

@@ -33,8 +33,10 @@ public class Level extends JPanel implements Runnable {
         height = Main.height;
 
         this.setPreferredSize(new Dimension(width, height));
+
         loadLevel();
         generateWalls();
+        calculateFaces();
     }
 
     public ArrayList<GameObject> getGameObjects() {
@@ -44,9 +46,7 @@ public class Level extends JPanel implements Runnable {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        for(GameObject gameObject : gameObjects)
-            gameObject.draw(g);
+        getGameObjects().stream().forEach(object -> object.draw(g));
     }
 
     public void addCollidable(GameObject gameObject) {
@@ -103,7 +103,6 @@ public class Level extends JPanel implements Runnable {
             start = System.nanoTime();
 
             tick();
-            repaint();
 
             elapsed = System.nanoTime() - start;
             wait = targetTime - elapsed / 1000000;
@@ -121,10 +120,10 @@ public class Level extends JPanel implements Runnable {
     }
 
     public void tick() {
-
+        repaint();
     }
 
-    public void generateWalls() {
+    private void generateWalls() {
         Ground[] groundTiles = getGameObjects().stream().filter(object -> (object instanceof Ground)).toArray(Ground[]::new);
 
         for(Ground ground : groundTiles) {
@@ -141,6 +140,10 @@ public class Level extends JPanel implements Runnable {
                 }
             }
         }
+    }
+
+    private void calculateFaces() {
+        getGameObjects().stream().forEach(GameObject::loadImage);
     }
 
     public Optional<GameObject> fromCoords(int x, int y) {
