@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 public class Player extends GameObject {
 
@@ -14,16 +15,21 @@ public class Player extends GameObject {
         int key = event.getKeyCode();
         int stepSize = 8;
 
-        if(key == KeyEvent.VK_W){
+        List<Integer> pressedKeys = Main.screen.pressedKeys;
+        
+        if(pressedKeys.contains(KeyEvent.VK_W)){
             move(getX(), getY()- stepSize);
         }
-        if(key == KeyEvent.VK_A){
+
+        if(pressedKeys.contains(KeyEvent.VK_A)){
             move(getX() - stepSize, getY());
         }
-        if(key == KeyEvent.VK_S){
+
+        if(pressedKeys.contains(KeyEvent.VK_S)){
             move(getX(), getY() + stepSize);
         }
-        if(key == KeyEvent.VK_D){
+
+        if(pressedKeys.contains(KeyEvent.VK_D)){
             move(getX() + stepSize, getY());
         }
     }

@@ -3,6 +3,8 @@ package nl.ictm2a4.javagame;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
