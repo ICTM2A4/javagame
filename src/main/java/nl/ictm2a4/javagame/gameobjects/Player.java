@@ -2,13 +2,11 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.GameObject;
 import nl.ictm2a4.javagame.Level;
-import nl.ictm2a4.javagame.Main;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
 public class Player extends GameObject {
 
@@ -17,8 +15,8 @@ public class Player extends GameObject {
     public Player(Level level, int gridX, int gridY) {
         super(level,
             ((gridX * LevelLoader.gridWidth) + 4),
-            ((gridY * LevelLoader.gridHeight) + 4),
-            16, 20);
+            ((gridY * LevelLoader.gridHeight) + 2),
+            16, 24);
         setCollidable(false);
         status = PlayerStatus.IDLE;
     }
@@ -27,21 +25,16 @@ public class Player extends GameObject {
         int key = event.getKeyCode();
         int stepSize = 8;
 
-        List<Integer> pressedKeys = Main.screen.pressedKeys;
-        
-        if(pressedKeys.contains(KeyEvent.VK_W)){
+        if(key == KeyEvent.VK_W){
             move(getX(), getY()- stepSize);
         }
-
-        if(pressedKeys.contains(KeyEvent.VK_A)){
+        if(key == KeyEvent.VK_A){
             move(getX() - stepSize, getY());
         }
-
-        if(pressedKeys.contains(KeyEvent.VK_S)){
+        if(key == KeyEvent.VK_S){
             move(getX(), getY() + stepSize);
         }
-
-        if(pressedKeys.contains(KeyEvent.VK_D)){
+        if(key == KeyEvent.VK_D){
             move(getX() + stepSize, getY());
         }
     }
