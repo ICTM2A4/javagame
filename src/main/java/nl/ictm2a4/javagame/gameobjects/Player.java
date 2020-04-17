@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Player extends GameObject {
 
-    private final int animateDelay = 6;
+    private final int animateDelay = 4;
     private int currentImage = 0;
     private int animateCount = 0;
 
@@ -27,8 +27,10 @@ public class Player extends GameObject {
         status = PlayerStatus.IDLE;
     }
 
-    public void checkMove(List<Integer> pressedKeys) {
+    public void checkMove() {
         int stepSize = 4;
+
+        List<Integer> pressedKeys = Main.screen.pressedKeys;
 
         if(pressedKeys.contains(KeyEvent.VK_W)){
             move(getX(), getY()- stepSize);
@@ -67,28 +69,17 @@ public class Player extends GameObject {
 
     @Override
     public void tick() {
-        List<Integer> pressedKeys = Main.screen.pressedKeys;
-
-        // Movement
-        checkMove(pressedKeys);
-
-        // Status
-        // If none of the player's action buttons are being held, return to the idle status
-        if(!pressedKeys.contains(KeyEvent.VK_D) && !pressedKeys.contains(KeyEvent.VK_S) && !pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A))
-            status = PlayerStatus.IDLE;
-        if(pressedKeys.contains(KeyEvent.VK_D))
-            status = PlayerStatus.MOVINGRIGHT;
-        else if (pressedKeys.contains(KeyEvent.VK_A))
-            status = PlayerStatus.MOVINGLEFT;
+        checkMove();
 
         animateCount++;
 
-
         if (animateCount % animateDelay == 0) {
             animateCount = 0;
+
             currentImage++;
+            if (currentImage >= status.getImageAmount())
+                currentImage = 0;
         }
-        if (currentImage >= status.getImageAmount())
-            currentImage = 0;
+
     }
 }
