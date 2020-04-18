@@ -95,12 +95,18 @@ public class LevelLoader implements Runnable {
         currentLevel.tick();
     }
 
+    /**
+     * Start the game thread
+     */
     private void start() {
         isRunning = true;
         thread = new Thread(this);
         thread.start();
     }
 
+    /**
+     * Stop the thread
+     */
     private void stop() {
         isRunning = false;
         thread = null;

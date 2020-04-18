@@ -102,8 +102,6 @@ public class Level extends JPanel {
             player = new Player(playerX, playerY);
             addCollidable(player);
 
-            System.out.println(player);
-
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
