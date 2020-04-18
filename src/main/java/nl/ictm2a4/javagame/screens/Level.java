@@ -35,6 +35,10 @@ public class Level extends JPanel {
         generateWalls();
     }
 
+    /**
+     * Get all loaded GameObjects in the Level
+     * @return ArrayList of GameObjects
+     */
     public ArrayList<GameObject> getGameObjects() {
         return gameObjects;
     }
@@ -46,15 +50,26 @@ public class Level extends JPanel {
         this.player.draw(g);
     }
 
+    /**
+     * Add a GameObject to the level
+     * @param gameObject GameObject to add
+     */
     public void addCollidable(GameObject gameObject) {
         if (!this.gameObjects.contains(gameObject))
             this.gameObjects.add(gameObject);
     }
 
+    /**
+     * Get the name of the level
+     * @return Levelname as String
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Load the current level from it's JSON file
+     */
     public void loadLevel() {
         JSONParser parser = new JSONParser();
         File file = FileLoader.loadFile("levels/level-" + id + ".json");
@@ -72,19 +87,19 @@ public class Level extends JPanel {
                 JSONArray coords = (JSONArray) ground;
                 int x = Integer.parseInt(coords.get(0).toString());
                 int y = Integer.parseInt(coords.get(1).toString());
-                addCollidable(new Ground(this,x,y));
+                addCollidable(new Ground(x,y));
             }
 
             // Read endpoint
             JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
             int endX = Integer.parseInt(endpoint.get(0).toString());
             int endY = Integer.parseInt(endpoint.get(1).toString());
-            addCollidable(new EndPoint(this, endX, endY));
+            addCollidable(new EndPoint(endX, endY));
 
             JSONArray playerpoint = (JSONArray) levelOjbect.get("player");
             int playerX = Integer.parseInt(playerpoint.get(0).toString());
             int playerY = Integer.parseInt(playerpoint.get(1).toString());
-            player = new Player(this, playerX, playerY);
+            player = new Player(playerX, playerY);
             addCollidable(player);
 
             System.out.println(player);
@@ -94,6 +109,12 @@ public class Level extends JPanel {
         }
     }
 
+    /**
+     * Generate the walls based on the groundTiles
+     *
+     * Loop over all ground tiles and check if the
+     * 8 positions around the ground tile are occupied, if empty generate wall
+     */
     private void generateWalls() {
         Ground[] groundTiles = getGameObjects().stream().filter(object -> (object instanceof Ground)).toArray(Ground[]::new);
 
@@ -106,23 +127,28 @@ public class Level extends JPanel {
                     if (_x == x && _y == y)
                         continue;
 
-                    if (!fromCoords(_x * LevelLoader.gridWidth, _y * LevelLoader.gridHeight).isPresent())
-                        addCollidable(new Wall(this,_x,_y));
+                    if (fromCoords(_x * LevelLoader.gridWidth, _y * LevelLoader.gridHeight).isEmpty())
+                        addCollidable(new Wall(_x,_y));
                 }
             }
-        }
+        };
     }
 
+    /**
+     * Find a GameObject based on the x and y coordinates
+     * @param x x to check for
+     * @param y y to check for
+     * @return Optional GameObject based on the coords, use #.ifPresent() and #.get() to use
+     */
     public Optional<GameObject> fromCoords(int x, int y) {
-        return getGameObjects().stream().filter(object -> (object.getX() == x && object.getY() == y)).findFirst();
+        return getGameObjects().stream().filter(object -> (object.getX() == x && object.getY() == y)).findAny();
     }
 
+    /**
+     * Tick the level and all it's GameObjects
+     */
     public void tick() {
         repaint();
         getGameObjects().forEach(GameObject::tick);
-    }
-
-    public Optional<Player> getPlayer() {
-        return Optional.ofNullable(player);
     }
 }

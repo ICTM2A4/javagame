@@ -1,7 +1,5 @@
 package nl.ictm2a4.javagame.gameobjects;
 
-import nl.ictm2a4.javagame.MainMenu;
-import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -18,9 +16,8 @@ public class EndPoint extends GameObject {
     private int currentImage = 0;
     private int animateCount = 0;
 
-    public EndPoint(Level level, int gridX, int gridY) {
+    public EndPoint(int gridX, int gridY) {
         super(
-            level,
             gridX * LevelLoader.gridWidth + ((LevelLoader.gridWidth - 16) / 2),
             gridY * LevelLoader.gridHeight + ((LevelLoader.gridHeight - 16) / 2) - 2,
             16,16);
@@ -34,6 +31,9 @@ public class EndPoint extends GameObject {
             LevelLoader.getInstance().getCurrentLevel().get());
     }
 
+    /**
+     * Update the coin image based on it's current frame
+     */
     @Override
     public void tick() {
         animateCount++;
@@ -44,13 +44,17 @@ public class EndPoint extends GameObject {
         }
     }
 
+    /**
+     * Override the GameObject checkCollideSingle, test if player collided with the endpoint
+     * @param gameObject GameObject which is colliding
+     * @return result of isColliding check
+     */
     @Override
     public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
         boolean result = super.checkCollideSingle(gameObject,x,y);
 
-        if (result) {
+        if (result && gameObject instanceof Player)
             LevelLoader.getInstance().stopLevel();
-        }
 
         return result;
     }

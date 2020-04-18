@@ -1,10 +1,9 @@
 package nl.ictm2a4.javagame.gameobjects;
 
-import nl.ictm2a4.javagame.Main;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
-import nl.ictm2a4.javagame.screens.Level;
+import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,69 +16,84 @@ public class Player extends GameObject {
     private int animateCount = 0;
 
     private PlayerStatus status;
+    private PlayerStatus.Direction direction;
 
-    public Player(Level level, int gridX, int gridY) {
-        super(level,
-            ((gridX * LevelLoader.gridWidth) + 4),
+    public Player(int gridX, int gridY) {
+        super(((gridX * LevelLoader.gridWidth) + 4),
             ((gridY * LevelLoader.gridHeight) + 2),
             16, 20);
         setCollidable(false);
         status = PlayerStatus.IDLE;
+        direction = PlayerStatus.Direction.RIGHT;
     }
 
+    /**
+     * Check if movement buttons are pressed, and then check if new location is occupied.
+     */
     public void checkMove() {
         int stepSize = 4;
 
-        List<Integer> pressedKeys = Main.screen.pressedKeys;
+        List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
 
-        if(pressedKeys.contains(KeyEvent.VK_W)){
+        if (pressedKeys.contains(KeyEvent.VK_W)){
             move(getX(), getY()- stepSize);
         }
 
-        if(pressedKeys.contains(KeyEvent.VK_A)){
+        if (pressedKeys.contains(KeyEvent.VK_A)){
             move(getX() - stepSize, getY());
+            direction = PlayerStatus.Direction.LEFT;
         }
 
-        if(pressedKeys.contains(KeyEvent.VK_S)){
+        if (pressedKeys.contains(KeyEvent.VK_S)){
             move(getX(), getY() + stepSize);
         }
 
-        if(pressedKeys.contains(KeyEvent.VK_D)){
+        if (pressedKeys.contains(KeyEvent.VK_D)){
             move(getX() + stepSize, getY());
+            direction = PlayerStatus.Direction.RIGHT;
         }
+
+        if (!pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A) && !pressedKeys.contains(KeyEvent.VK_S) && !pressedKeys.contains(KeyEvent.VK_D))
+            status = PlayerStatus.IDLE;
     }
 
-    // TODO: update player status when moving
+    /**
+     * Test the x, y coords for a GameObject, which is collidable, and update the playerStatus
+     * @param x x of the new player's location
+     * @param y y of the new player's location
+     */
     private void move(int x, int y) {
-        boolean canMove = LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(
-            object -> !object.checkCollide(this, x, y));
-
-        if(canMove) {
+        if (LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(
+            object -> !object.checkCollide(this, x, y))) {
             setX(x);
             setY(y);
+            status = PlayerStatus.MOVING;
+        } else {
+            status = PlayerStatus.IDLE;
         }
     }
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(FileLoader.getInstance().getPlayerImage(status,currentImage),
+        g.drawImage(FileLoader.getInstance().getPlayerImage(status,direction,currentImage),
             getX() - 4, getY() - 26,
             LevelLoader.getInstance().getCurrentLevel().get());
     }
 
+    /**
+     * Update the player image, corresponding to the current frame and player status
+     */
     @Override
     public void tick() {
         checkMove();
 
         animateCount++;
-
         if (animateCount % animateDelay == 0) {
             animateCount = 0;
-
             currentImage++;
-            if (currentImage >= status.getImageAmount())
-                currentImage = 0;
         }
+        if (currentImage >= status.getImageAmount())
+            currentImage = 0;
 
     }
 }

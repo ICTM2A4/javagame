@@ -9,20 +9,29 @@ public abstract class GameObject {
 
     private int x, y, width, height;
     private boolean collidable = true;
-    private Level level;
 
-    public GameObject(Level level, int x, int y, int width, int height) {
-        this.level = level;
+    public GameObject(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
-  
+
+    /**
+     * Set if the GameObject is collidable, default is true
+     * @param collidable new collidable setting
+     */
     public void setCollidable(boolean collidable) {
         this.collidable = collidable;
     }
 
+    /**
+     * Check if the given x, y are colliding with another collidable GameObject
+     * @param gameObject The GameObject who is quering the colliding check
+     * @param x the x where the object wants to go
+     * @param y the y where the object wants to go
+     * @return true if place is occupied, false if place if empty
+     */
     public boolean checkCollide(GameObject gameObject, int x, int y) {
         for (GameObject otherGameObject : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()) {
             if(!otherGameObject.isCollidable()) continue;
@@ -35,6 +44,7 @@ public abstract class GameObject {
         return false;
     }
 
+    // TODO: @Jochem, update, see JavaDoc Standards
     /*
     Checks if the given collidable would have a collision with the given other collidable at the given coordinates.
      */
@@ -53,75 +63,103 @@ public abstract class GameObject {
         return true;
     }
 
+    /**
+     * Draw the object
+     * @param g Graphics from the Frame,Panel
+     */
     public abstract void draw(Graphics g);
 
+    /**
+     * Get the x of the GameObject
+     * @return GameObject's X
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Get the y of the GameObject
+     * @return GameObject's Y
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Set the new GameObject's x
+     * @param x The x to set
+     */
     public void setX(int x) {this.x = x;}
 
-    public  void setY(int y) {this.y = y;}
+    /**
+     * Set the new GameObject's y
+     * @param y The y to set
+     */
+    public void setY(int y) {this.y = y;}
 
+    /**
+     * Get the height of the GameObject
+     * @return GameObject's height
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Get the width of the GameObject
+     * @return GameObject's width
+     */
     public int getWidth() {
         return width;
     }
 
-    public Level getLevel() {
-        return this.level;
-    }
-  
+    /**
+     * Get the sum of all connected faces
+     * North: 1
+     * East:  2
+     * South: 4
+     * West:  8
+     * @param faces Boolean array true if face is connected, false if no connected face is found
+     * @return The total sum of all connected faces
+     */
     public static int connectedFacesSum(boolean[] faces) {
-        // north : 1
-        // east : 2
-        // south : 4
-        // west : 8
-
         int sum = 0;
         for (int n = 0; n < 4; n++)
             if (!faces[n]) sum += Math.pow(2,n);
         return sum;
     }
 
-    /*
-    [0] north
-    [1] east
-    [2] south
-    [3] west
+    /**
+     * Locate all connected faces to a GameObject of same object type
+     *
+     * [0]: north
+     * [1]: east
+     * [2]: south
+     * [3]: west
+     *
+     * @return Boolean array true if connected faces is found, false if no connected face is found
      */
     public boolean[] hasConnectedFaces() {
-        boolean[] result = {false,false,false,false};
-        for(GameObject gameObject : level.getGameObjects()) {
-            if (!gameObject.getClass().getCanonicalName().equals(this.getClass().getCanonicalName()))
-                continue;
-
-            if (this.getX() == gameObject.getX()) {
-                if (this.getY() - LevelLoader.gridHeight == gameObject.getY()) // north
-                    result[0] = true;
-                if (this.getY() + LevelLoader.gridHeight == gameObject.getY()) // south
-                    result[2] = true;
-            } if (getY() == gameObject.getY()) {
-                if (this.getX() + LevelLoader.gridWidth == gameObject.getX()) // east
-                    result[1] = true;
-                if (this.getX() - LevelLoader.gridWidth == gameObject.getX()) // west
-                    result[3] = true;
-            }
-        }
-        return result;
+        String s = this.getClass().getCanonicalName();
+        Level level = LevelLoader.getInstance().getCurrentLevel().get();
+        return new boolean[] {
+            level.fromCoords(getX(), getY() - LevelLoader.gridHeight).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
+            level.fromCoords(getX() + LevelLoader.gridWidth, getY()).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
+            level.fromCoords(getX(), getY() + LevelLoader.gridHeight).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
+            level.fromCoords(getX() - LevelLoader.gridWidth, getY()).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent()
+        };
     }
 
+    /**
+     * Find the collidable status of the GameObject
+     * @return true if object is collidable, false if object is not collidable
+     */
     public boolean isCollidable() {
         return this.collidable;
     }
 
+    /**
+     * Tick the GameObject
+     */
     public void tick() {}
-
 }

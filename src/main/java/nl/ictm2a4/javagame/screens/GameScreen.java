@@ -1,6 +1,5 @@
 package nl.ictm2a4.javagame.screens;
 
-import nl.ictm2a4.javagame.MainMenu;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -15,16 +14,17 @@ import java.util.List;
 
 public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
-    private LevelLoader levelLoader;
-    private FileLoader fileLoader;
+    private static GameScreen instance;
     private String title = "Java game";
-    public List<Integer> pressedKeys;
+    private List<Integer> pressedKeys;
 
     public GameScreen() {
         setTitle(title);
 
-        this.levelLoader = new LevelLoader();
-        this.fileLoader = new FileLoader();
+        instance = this;
+
+        new LevelLoader();
+        new FileLoader();
         pressedKeys = new ArrayList<Integer>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,10 +61,30 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         }
     }
 
+    /**
+     * Append text to the screen title, seperated by an -
+     * @param append Text to append
+     */
     public void addTitle(String append) {
         setTitle(title + " - " + append);
     }
+
+    /**
+     * Reset the screen title to the default title
+     */
     public void resetTitle() {
         setTitle(title);
+    }
+
+    /**
+     * Get the instance of the GameScreen
+     * @return GameScreen instance
+     */
+    public static GameScreen getInstance() {
+        return instance;
+    }
+
+    public List<Integer> getPressedKeys() {
+        return pressedKeys;
     }
 }
