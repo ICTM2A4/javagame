@@ -4,7 +4,6 @@ import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.GameScreen;
-import nl.ictm2a4.javagame.screens.PauseScreen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -22,7 +21,7 @@ public class Player extends GameObject {
     public Player(int gridX, int gridY) {
         super(((gridX * LevelLoader.gridWidth) + 4),
             ((gridY * LevelLoader.gridHeight) + 2),
-            16, 20);
+            16, 20, true);
         setCollidable(false);
         status = PlayerStatus.IDLE;
         direction = PlayerStatus.Direction.RIGHT;

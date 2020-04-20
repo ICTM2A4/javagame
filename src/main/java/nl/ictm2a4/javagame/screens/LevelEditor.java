@@ -1,15 +1,19 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.enums.PlayerStatus;
+import nl.ictm2a4.javagame.gameobjects.GameObject;
+import nl.ictm2a4.javagame.gameobjects.Ground;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class LevelEditor extends JPanel implements ActionListener {
 
@@ -19,7 +23,7 @@ public class LevelEditor extends JPanel implements ActionListener {
     private JButton save, cancel;
     private JLabel preview, items;
     private JTextField level_Name;
-    private ArrayList <Image> editorItems;
+    private ArrayList<Image> editorItems;
 
     public LevelEditor() {
         gbc = new GridBagConstraints ();
@@ -31,7 +35,6 @@ public class LevelEditor extends JPanel implements ActionListener {
         editorItems.add(FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0));
 
         displayGUI();
-
     }
 
     private void displayGUI () {
@@ -39,11 +42,13 @@ public class LevelEditor extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension((LevelLoader.width + 47), (LevelLoader.height + 200)));
         setLayout ( new GridBagLayout () );
 
-       createNameField();
+        createNameField();
 
-        JPanel blackPanel = getPanel ( Color.BLACK );
-        addComp ( this, blackPanel, 0, 1, 1, 1
-                , GridBagConstraints.BOTH, LevelLoader.width, LevelLoader.height );
+        LevelLoader.getInstance().loadLevel(2);
+        Level level = LevelLoader.getInstance().getCurrentLevel().get();
+        addComp ( this, level, 0, 1, 1, 1
+            , GridBagConstraints.BOTH, LevelLoader.width, LevelLoader.height );
+        level.addMouseListener(new LevelEditorMouseListener());
 
         createButtons();
 
@@ -76,10 +81,48 @@ public class LevelEditor extends JPanel implements ActionListener {
         return panel;
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Level level = LevelLoader.getInstance().getCurrentLevel().get();
+        if(e.getSource() == save) {
+            level.setName("");
+            level.saveLevel();
+        }
+        if(e.getSource() == cancel) {
+
+        }
+    }
+
+    public class LevelEditorMouseListener extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+            int gridX = Math.round(e.getX() / 32);
+            int gridY = Math.round(e.getY() / 32);
+
+            Level level = LevelLoader.getInstance().getCurrentLevel().get();
+
+            Optional<GameObject> find = level.fromCoords(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight).filter(object -> object.getClass().getCanonicalName() == Ground.class.getCanonicalName());
+
+            if (e.getButton() == 1) { // left mouse button
+                if (!find.isPresent())
+                    level.addCollidable(new Ground(gridX,gridY));
+            }
+
+            else if (e.getButton() == 3) { // right mouse button
+                if (find.isPresent())
+                    level.removeCollidable(find.get());
+            }
+
+            level.repaint();
+            level.regenerateWalls();
+        }
+    }
+
     private void createButtons() {
         JPanel buttons = getPanel ( Color.white );
         addComp ( this, buttons, 0, 2, 1, 1
-                , GridBagConstraints.BOTH, LevelLoader.width, 100 );
+            , GridBagConstraints.BOTH, LevelLoader.width, 100 );
         buttons.setLayout(new FlowLayout());
         save = new JButton("Save");
         save.addActionListener(this);
@@ -92,7 +135,7 @@ public class LevelEditor extends JPanel implements ActionListener {
     private void createNameField() {
         JPanel nameField = getPanel (Color.white);
         addComp(this, nameField, 0, 0, 1, 1,
-                GridBagConstraints.BOTH, LevelLoader.width, 50);
+            GridBagConstraints.BOTH, LevelLoader.width, 50);
         nameField.setLayout(new FlowLayout());
         preview = new JLabel("Preview");
         nameField.add(preview);
@@ -103,23 +146,12 @@ public class LevelEditor extends JPanel implements ActionListener {
     private void createItems() {
         JPanel itemlist  = getPanel ( Color.white );
         addComp ( this, itemlist, 1, 0, 1, 3
-                , GridBagConstraints.BOTH, 47, LevelLoader.height + 200 );
+            , GridBagConstraints.BOTH, 47, LevelLoader.height + 200 );
         itemlist.setLayout(new FlowLayout());
         items = new JLabel("Items");
         itemlist.add(items);
         for(Image image  : editorItems) {
             itemlist.add(new JLabel(new ImageIcon(image)));
-        }
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == save) {
-
-        }
-        if(e.getSource() == cancel) {
-
         }
     }
 }

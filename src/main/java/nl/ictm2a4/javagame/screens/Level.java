@@ -44,7 +44,7 @@ public class Level extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        getGameObjects().forEach(object -> object.draw(g));
+        getGameObjects().stream().forEach(object -> object.draw(g));
         this.player.draw(g);
     }
 
@@ -58,11 +58,24 @@ public class Level extends JPanel {
     }
 
     /**
+     * Remove a GameObject to the level
+     * @param gameObject GameObject to remove
+     */
+    public void removeCollidable(GameObject gameObject) {
+        if (this.gameObjects.contains(gameObject))
+            this.gameObjects.remove(gameObject);
+    }
+
+    /**
      * Get the name of the level
      * @return Levelname as String
      */
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -106,6 +119,21 @@ public class Level extends JPanel {
         }
     }
 
+    public void saveLevel() {
+        JSONObject object = new JSONObject();
+        object.put("name", "test");
+
+        JSONArray groundTiles = new JSONArray();
+        for(Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground).toArray(Ground[]::new)) {
+            JSONArray groundArray = new JSONArray();
+            groundArray.add(ground.getX() / LevelLoader.gridWidth);
+            groundArray.add(ground.getY() / LevelLoader.gridHeight);
+            groundTiles.add(groundArray);
+        }
+        object.put("ground",groundTiles);
+
+    }
+
     /**
      * Generate the walls based on the groundTiles
      *
@@ -129,6 +157,13 @@ public class Level extends JPanel {
                 }
             }
         };
+    }
+
+    public void regenerateWalls() {
+        Wall[] walls = getGameObjects().stream().filter(gameObject -> gameObject instanceof Wall).toArray(Wall[]::new);
+        for (Wall wall : walls)
+            getGameObjects().remove(wall);
+        generateWalls();
     }
 
     /**

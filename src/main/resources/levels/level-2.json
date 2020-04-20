@@ -1,0 +1,6 @@
+{
+  "name": "level editor test",
+  "ground": [],
+  "endpoint": [1,3],
+  "player": [1,1]
+}

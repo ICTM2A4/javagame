@@ -9,12 +9,18 @@ public abstract class GameObject {
 
     private int x, y, width, height;
     private boolean collidable = true;
+    private boolean isEntity;
 
     public GameObject(int x, int y, int width, int height) {
+        this(x,y,width,height,true);
+    }
+
+    public GameObject(int x, int y, int width, int height, boolean isEntity) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.isEntity = isEntity;
     }
 
     /**
@@ -159,4 +165,12 @@ public abstract class GameObject {
      * Tick the GameObject
      */
     public void tick() {}
+
+    /**
+     * Get if the object is an entity
+     * @return boolean isEntity
+     */
+    public boolean isEntity() {
+        return this.isEntity;
+    }
 }
