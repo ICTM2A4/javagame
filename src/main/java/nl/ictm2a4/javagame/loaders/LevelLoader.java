@@ -50,11 +50,8 @@ public class LevelLoader implements Runnable {
      */
     public boolean startLevel() {
         if (currentLevel == null) return false;
-        GameScreen.getInstance().setContentPane(currentLevel);
-        GameScreen.getInstance().pack();
+        GameScreen.getInstance().setPanel(currentLevel, currentLevel.getName());
         start();
-        GameScreen.getInstance().addTitle(currentLevel.getName());
-        currentLevel.getTopLevelAncestor().requestFocus();
         return true;
     }
 
@@ -62,10 +59,8 @@ public class LevelLoader implements Runnable {
      * Stop the current level
      */
     public void stopLevel() {
-        GameScreen.getInstance().setContentPane(new MainMenu());
-        GameScreen.getInstance().pack();
+        GameScreen.getInstance().setPanel(new MainMenu());
         stop();
-        GameScreen.getInstance().resetTitle();
     }
 
     @Override
