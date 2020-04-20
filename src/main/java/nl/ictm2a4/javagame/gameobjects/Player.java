@@ -76,7 +76,7 @@ public class Player extends GameObject {
     @Override
     public void draw(Graphics g) {
         g.drawImage(FileLoader.getInstance().getPlayerImage(status,direction,currentImage),
-            getX() - 4, getY() - 26,
+            getX() - 8, getY() - 30,
             LevelLoader.getInstance().getCurrentLevel().get());
     }
 

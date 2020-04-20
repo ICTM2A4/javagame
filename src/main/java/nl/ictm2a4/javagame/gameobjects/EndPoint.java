@@ -12,7 +12,6 @@ public class EndPoint extends GameObject {
     private final int animateDelay = 3;
     private final int imageAmount = 7;
 
-    private List<Image> images;
     private int currentImage = 0;
     private int animateCount = 0;
 
@@ -21,7 +20,6 @@ public class EndPoint extends GameObject {
             gridX * LevelLoader.gridWidth + ((LevelLoader.gridWidth - 16) / 2),
             gridY * LevelLoader.gridHeight + ((LevelLoader.gridHeight - 16) / 2) - 2,
             16,16);
-        images = new ArrayList<>();
     }
 
     @Override

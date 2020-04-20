@@ -23,8 +23,8 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
         instance = this;
 
-        new LevelLoader();
         new FileLoader();
+        new LevelLoader();
         pressedKeys = new ArrayList<Integer>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

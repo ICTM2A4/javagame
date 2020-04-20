@@ -2,15 +2,12 @@ package nl.ictm2a4.javagame.screens;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
-import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -72,10 +69,10 @@ public class Level extends JPanel {
      */
     public void loadLevel() {
         JSONParser parser = new JSONParser();
-        File file = FileLoader.loadFile("levels/level-" + id + ".json");
 
-        try(FileReader reader = new FileReader(file)) {
-            Object object = parser.parse(reader);
+        try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
+            Reader rd = new InputStreamReader(is, "UTF-8");
+            Object object = parser.parse(rd);
             JSONObject levelOjbect = (JSONObject) object;
 
             // Read level name
@@ -96,6 +93,7 @@ public class Level extends JPanel {
             int endY = Integer.parseInt(endpoint.get(1).toString());
             addCollidable(new EndPoint(endX, endY));
 
+            // Read player startpoint
             JSONArray playerpoint = (JSONArray) levelOjbect.get("player");
             int playerX = Integer.parseInt(playerpoint.get(0).toString());
             int playerY = Integer.parseInt(playerpoint.get(1).toString());

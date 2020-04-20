@@ -1,11 +1,13 @@
 package nl.ictm2a4.javagame.loaders;
 
+import nl.ictm2a4.javagame.Main;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -83,15 +85,6 @@ public class FileLoader {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * Load a file from the resource folder using a path
-     * @param path Path to the file in the src/resources folder
-     * @return File
-     */
-    public static File loadFile(String path) {
-        return new File(ClassLoader.getSystemClassLoader().getResource(path).getFile().replaceAll("%20", " "));
     }
 
     /**
