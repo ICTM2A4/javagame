@@ -23,28 +23,33 @@ public abstract class GameObject {
         this.collidable = collidable;
     }
 
-    public boolean checkCollide(GameObject gameObject, int x, int y) {
-        for (GameObject otherGameObject : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()) {
-            if(!otherGameObject.isCollidable()) continue;
-            if(otherGameObject.checkCollideSingle(gameObject, x, y)){
-                // Another collidable has been found at the given position
-                return true;
-            }
-        }
-      
-        return false;
+    /**
+     *  Returns whether there is a collision with any other game object at a specified location. Useful for checking if an object can move to the given position.
+     *  This function iterates the level's list of gameobjects, please add all of your gameobjects that need to be involved with the collision detection to this list.
+     *
+     * @param x the X coordinate of the position at which the collision will be checked
+     * @param y the Y coordinate of the position at which the collision will be checked
+     * @return If there is a collision between this object and any other game object at the given coordinates
+     */
+    public boolean checkCollide(int x, int y) {
+        return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(object -> object.checkCollideSingle(this, x, y) && object.isCollidable());
     }
 
-    /*
-    Checks if the given collidable would have a collision with the given other collidable at the given coordinates.
+    /**
+     * Returns whether there is a collision between this gameobject and another gameobject at a specified location. Useful for checking if an object can move anywhere.
+     *
+     * @param otherGameObject The other game object against which the collision will be checked
+     * @param x the X coordinate of the position at which the collision will be checked
+     * @param y the Y coordinate of the position at which the collision will be checked
+     * @return If there is a collision between this object and the other game object at the given coordinates
      */
-    public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
-        if (x >= this.getX() + this.getWidth() || this.getX() >= x + gameObject.getWidth()){
+    public boolean checkCollideSingle(GameObject otherGameObject, int x, int y) {
+        if (x >= this.getX() + this.getWidth() || this.getX() >= x + otherGameObject.getWidth()){
             // The objects do not overlap on the X axis
             return false;
         }
 
-        if (y >= this.getY() + this.getHeight() || this.getY() >= y + gameObject.getHeight()) {
+        if (y >= this.getY() + this.getHeight() || this.getY() >= y + otherGameObject.getHeight()) {
             // The objects do not overlap on the Y axis
             return false;
         }

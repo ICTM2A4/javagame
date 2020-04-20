@@ -52,7 +52,7 @@ public class Player extends GameObject {
     // TODO: update player status when moving
     private void move(int x, int y) {
         boolean canMove = LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(
-            object -> !object.checkCollide(this, x, y));
+            object -> !object.checkCollide(x, y));
 
         if(canMove) {
             setX(x);
