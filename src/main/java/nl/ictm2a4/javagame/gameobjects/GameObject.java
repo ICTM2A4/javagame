@@ -34,15 +34,7 @@ public abstract class GameObject {
      * @return If there is a collision between this object and any other game object at the given coordinates
      */
     public boolean checkCollide(int x, int y) {
-        for (GameObject otherGameObject : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()) {
-            if(!otherGameObject.isCollidable()) continue;
-            if(otherGameObject.checkCollideSingle(this, x, y)){
-                // Another collidable has been found at the given position
-                return true;
-            }
-        }
-      
-        return false;
+        return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(object -> object.checkCollideSingle(this, x, y) && object.isCollidable());
     }
 
      /**
