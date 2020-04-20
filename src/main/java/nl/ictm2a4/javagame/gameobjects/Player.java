@@ -63,8 +63,7 @@ public class Player extends GameObject {
      * @param y y of the new player's location
      */
     private void move(int x, int y) {
-        if (LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(
-            object -> !object.checkCollide(this, x, y))) {
+        if(!checkCollide(x, y)) {
             setX(x);
             setY(y);
             status = PlayerStatus.MOVING;
