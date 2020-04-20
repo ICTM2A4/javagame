@@ -33,6 +33,7 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         setLayout(new BorderLayout());
         setContentPane(new MainMenu());
         pack();
+        setLocationRelativeTo(null);
         addKeyListener(this);
         setVisible(true);
     }
@@ -74,6 +75,18 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
      */
     public void resetTitle() {
         setTitle(title);
+    }
+
+    public void setPanel(JPanel panel, String title) {
+        setContentPane(panel);
+        pack();
+        setLocationRelativeTo(null);
+        requestFocus();
+        addTitle(title);
+    }
+    public void setPanel(JPanel panel) {
+        setPanel(panel, "");
+        resetTitle();
     }
 
     /**

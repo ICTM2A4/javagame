@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -146,5 +147,10 @@ public class Level extends JPanel {
     public void tick() {
         repaint();
         getGameObjects().forEach(GameObject::tick);
+
+        if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
+            LevelLoader.getInstance().stop();
+            GameScreen.getInstance().setPanel(new PauseScreen(), "Paused");
+        }
     }
 }

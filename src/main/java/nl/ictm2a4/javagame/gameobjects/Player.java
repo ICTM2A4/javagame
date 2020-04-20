@@ -57,11 +57,6 @@ public class Player extends GameObject {
         if (!pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A) && !pressedKeys.contains(KeyEvent.VK_S) && !pressedKeys.contains(KeyEvent.VK_D))
             status = PlayerStatus.IDLE;
 
-        if(pressedKeys.contains(KeyEvent.VK_ESCAPE)) {
-            LevelLoader.getInstance().stop();
-            GameScreen.getInstance().setContentPane(new PauseScreen());
-            GameScreen.getInstance().pack();
-        }
     }
 
     /**

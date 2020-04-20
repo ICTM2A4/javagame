@@ -59,6 +59,7 @@ public class MainMenu extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == start) {
             LevelLoader.getInstance().startLevel(1);
+            GameScreen.getInstance().setLocationRelativeTo(null);
         }
         if(e.getSource() == selectlevel) {
             System.out.println("Level Select start op");
