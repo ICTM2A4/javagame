@@ -1,8 +1,10 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.enums.PlayerStatus;
+import nl.ictm2a4.javagame.gameobjects.EndPoint;
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.Ground;
+import nl.ictm2a4.javagame.gameobjects.Player;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -13,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class LevelEditor extends JPanel implements ActionListener {
@@ -23,16 +26,18 @@ public class LevelEditor extends JPanel implements ActionListener {
     private JButton save, cancel;
     private JLabel preview, items;
     private JTextField level_Name;
-    private ArrayList<Image> editorItems;
+    private HashMap<Image, String> editorItems;
+    private String current;
+    private JPanel itemlist;
 
     public LevelEditor() {
         gbc = new GridBagConstraints ();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.insets = new Insets( hGap, vGap, hGap, vGap );
-        editorItems = new ArrayList<>();
-        editorItems.add(FileLoader.getInstance().getGroundTile(0));
-        editorItems.add(FileLoader.getInstance().getCoinImage(0));
-        editorItems.add(FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0));
+        editorItems = new HashMap<>();
+        editorItems.put(FileLoader.getInstance().getGroundTile(15), "ground");
+        editorItems.put(FileLoader.getInstance().getCoinImage(0), "endpoint");
+        editorItems.put(FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0), "player");
 
         displayGUI();
     }
@@ -107,8 +112,13 @@ public class LevelEditor extends JPanel implements ActionListener {
             Optional<GameObject> find = level.fromCoords(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight).filter(object -> object.getClass().getCanonicalName() == Ground.class.getCanonicalName());
 
             if (e.getButton() == 1) { // left mouse button
-                if (!find.isPresent())
-                    level.addCollidable(new Ground(gridX,gridY));
+                if (!find.isPresent()) {
+                    switch (current) {
+                        case "ground": {level.addCollidable(new Ground(gridX,gridY)); break;}
+                        case "endpoint": {level.addCollidable(new EndPoint(gridX, gridY)); break;}
+                        case "player": {level.addCollidable(new Player(gridX, gridY)); break;}
+                    }
+                }
             }
 
             else if (e.getButton() == 3) { // right mouse button
@@ -118,6 +128,21 @@ public class LevelEditor extends JPanel implements ActionListener {
 
             level.repaint();
             level.regenerateWalls();
+        }
+    }
+
+    public class LevelItemsMouseListener extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(e.getButton() == 1) {
+                int ypx = 25;
+                for(Image image : editorItems.keySet()) {
+                    if(e.getY() > ypx && e.getY() < (ypx += image.getHeight(itemlist))) {
+                        System.out.println(image.getSource());
+                        current = editorItems.get(image);
+                    }
+                }
+            }
         }
     }
 
@@ -146,14 +171,16 @@ public class LevelEditor extends JPanel implements ActionListener {
     }
 
     private void createItems() {
-        JPanel itemlist  = getPanel ( Color.white );
+        itemlist  = getPanel ( Color.white );
+        itemlist.addMouseListener(new LevelItemsMouseListener());
         addComp ( this, itemlist, 1, 0, 1, 3
             , GridBagConstraints.BOTH, 47, LevelLoader.height + 200 );
         itemlist.setLayout(new FlowLayout());
         items = new JLabel("Items");
         itemlist.add(items);
-        for(Image image  : editorItems) {
+        for(Image image  : editorItems.keySet()) {
             itemlist.add(new JLabel(new ImageIcon(image)));
         }
+        current = "endpoint";
     }
 }
