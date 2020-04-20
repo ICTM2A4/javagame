@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -44,7 +43,6 @@ public class LevelEditor extends JPanel implements ActionListener {
     }
 
     private void displayGUI () {
-
         this.setPreferredSize(new Dimension((LevelLoader.width + 47), (LevelLoader.height + 200)));
         setLayout ( new GridBagLayout () );
 
@@ -66,9 +64,9 @@ public class LevelEditor extends JPanel implements ActionListener {
     }
 
     private void addComp(JPanel panel, JComponent comp
-            , int x, int y, int gWidth
-            , int gHeight, int fill
-            , int weightx, int weighty) {
+        , int x, int y, int gWidth
+        , int gHeight, int fill
+        , int weightx, int weighty) {
         gbc.gridx = x;
         gbc.gridy = y;
         gbc.gridwidth = gWidth;
