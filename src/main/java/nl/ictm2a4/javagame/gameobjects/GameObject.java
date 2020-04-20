@@ -26,10 +26,12 @@ public abstract class GameObject {
     }
 
     /**
-     * Check if the given x, y are colliding with another collidable GameObject
-     * @param x the x where the object wants to go
-     * @param y the y where the object wants to go
-     * @return true if place is occupied, false if place if empty
+     *  Returns whether there is a collision with any other game object at a specified location. Useful for checking if an object can move to the given position.
+     *  This function iterates the level's list of gameobjects, please add all of your gameobjects that need to be involved with the collision detection to this list.
+     *
+     * @param x the X coordinate of the position at which the collision will be checked
+     * @param y the Y coordinate of the position at which the collision will be checked
+     * @return If there is a collision between this object and any other game object at the given coordinates
      */
     public boolean checkCollide(int x, int y) {
         for (GameObject otherGameObject : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()) {
@@ -43,7 +45,7 @@ public abstract class GameObject {
         return false;
     }
 
-    /**
+     /**
      * Returns whether there is a collision between this gameobject and another gameobject at a specified location. Useful for checking if an object can move anywhere.
      *
      * @param otherGameObject The other game object against which the collision will be checked
