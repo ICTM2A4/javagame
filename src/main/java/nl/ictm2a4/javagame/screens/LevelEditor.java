@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -26,18 +25,19 @@ public class LevelEditor extends JPanel implements ActionListener {
     private JButton save, cancel;
     private JLabel preview, items;
     private JTextField level_Name;
-    private HashMap<Image, String> editorItems;
-    private String current;
+    private HashMap<Image, Class> editorItems;
+    private Class current;
     private JPanel itemlist;
+    private GameObject last;
 
     public LevelEditor() {
         gbc = new GridBagConstraints ();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         gbc.insets = new Insets( hGap, vGap, hGap, vGap );
         editorItems = new HashMap<>();
-        editorItems.put(FileLoader.getInstance().getGroundTile(15), "ground");
-        editorItems.put(FileLoader.getInstance().getCoinImage(0), "endpoint");
-        editorItems.put(FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0), "player");
+        editorItems.put(FileLoader.getInstance().getGroundTile(15), Ground.class);
+        editorItems.put(FileLoader.getInstance().getCoinImage(0), EndPoint.class);
+        editorItems.put(FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0), Player.class);
 
         displayGUI();
     }
@@ -95,7 +95,6 @@ public class LevelEditor extends JPanel implements ActionListener {
             GameScreen.getInstance().setPanel(new MainMenu());
         }
         if(e.getSource() == cancel) {
-            System.out.println("test");
             GameScreen.getInstance().setPanel(new MainMenu());
         }
     }
@@ -109,22 +108,29 @@ public class LevelEditor extends JPanel implements ActionListener {
 
             Level level = LevelLoader.getInstance().getCurrentLevel().get();
 
-            Optional<GameObject> find = level.fromCoords(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight).filter(object -> object.getClass().getCanonicalName() == Ground.class.getCanonicalName());
+            Optional<GameObject> find = level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
 
             if (e.getButton() == 1) { // left mouse button
                 if (!find.isPresent()) {
-                    switch (current) {
+                    switch (current.getSimpleName().toLowerCase()) {
                         case "ground": {level.addCollidable(new Ground(gridX,gridY)); break;}
                         case "endpoint": {level.addCollidable(new EndPoint(gridX, gridY)); break;}
                         case "player": {level.addCollidable(new Player(gridX, gridY)); break;}
                     }
+                    last = level.getGameObjects().get(level.getGameObjects().size() - 1);
                 }
             }
 
             else if (e.getButton() == 3) { // right mouse button
-                if (find.isPresent())
+                if (find.isPresent()) {
+                    System.out.println(find.get().getClass().getSimpleName());
                     level.removeCollidable(find.get());
+                }
             }
+
+            System.out.println("last xmin: " + last.getX() + ", xmax: " + (last.getX() + last.getWidth()) + ", ymin: " + last.getY() + ", ymax: " + (last.getY() + last.getHeight()));
+            System.out.println("mouse x: " + e.getX() + ", y: " + e.getY());
+            System.out.println("match found: " + find.isPresent() + "\n");
 
             level.repaint();
             level.regenerateWalls();
@@ -181,6 +187,6 @@ public class LevelEditor extends JPanel implements ActionListener {
         for(Image image  : editorItems.keySet()) {
             itemlist.add(new JLabel(new ImageIcon(image)));
         }
-        current = "endpoint";
+        current = EndPoint.class;
     }
 }

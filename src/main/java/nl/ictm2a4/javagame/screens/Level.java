@@ -5,10 +5,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
@@ -207,7 +208,21 @@ public class Level extends JPanel {
      * @return Optional GameObject based on the coords, use #.ifPresent() and #.get() to use
      */
     public Optional<GameObject> fromCoords(int x, int y) {
-        return getGameObjects().stream().filter(object -> (object.getX() == x && object.getY() == y)).findAny();
+        return getGameObjects().stream().filter(gameObject ->
+            (gameObject.getX() <= x &&
+            gameObject.getY() <= y &&
+            gameObject.getX() + gameObject.getWidth() > x &&
+            gameObject.getY() + gameObject.getHeight() > y)
+        ).findAny();
+    }
+
+    public Stream<GameObject> fromCoordsToArray(int x, int y) {
+        return Arrays.stream(getGameObjects().stream().filter(gameObject ->
+            (gameObject.getX() <= x &&
+                gameObject.getY() <= y &&
+                gameObject.getX() + gameObject.getWidth() > x &&
+                gameObject.getY() + gameObject.getHeight() > y)
+        ).toArray(GameObject[]::new));
     }
 
     /**
