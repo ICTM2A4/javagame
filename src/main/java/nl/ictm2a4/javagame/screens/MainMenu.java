@@ -1,4 +1,4 @@
-package nl.ictm2a4.javagame;
+package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -58,9 +58,7 @@ public class MainMenu extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == start) {
-            System.out.println("Level Start");
-            LevelLoader.getInstance().loadLevel(1);
-            LevelLoader.getInstance().startLevel();
+            LevelLoader.getInstance().startLevel(1);
         }
         if(e.getSource() == selectlevel) {
             System.out.println("Level Select start op");
@@ -72,5 +70,4 @@ public class MainMenu extends JPanel implements ActionListener {
             System.exit(0);
         }
     }
-
 }

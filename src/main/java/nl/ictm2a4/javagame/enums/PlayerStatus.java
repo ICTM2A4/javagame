@@ -1,8 +1,7 @@
 package nl.ictm2a4.javagame.enums;
 
 public enum PlayerStatus {
-    MOVINGRIGHT(4),
-    MOVINGLEFT(4),
+    MOVING(4),
     IDLE(2);
 
     private int imageAmount;
@@ -13,5 +12,10 @@ public enum PlayerStatus {
 
     public int getImageAmount() {
         return this.imageAmount;
+    }
+
+    public enum Direction {
+        LEFT,
+        RIGHT
     }
 }

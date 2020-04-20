@@ -1,12 +1,9 @@
 package nl.ictm2a4.javagame.loaders;
 
-import nl.ictm2a4.javagame.MainMenu;
+import nl.ictm2a4.javagame.screens.MainMenu;
+import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
-import nl.ictm2a4.javagame.Main;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.io.File;
 import java.util.Optional;
 
 public class LevelLoader implements Runnable {
@@ -29,25 +26,46 @@ public class LevelLoader implements Runnable {
         instance = this;
     }
 
+    /**
+     * Load a level by it's id
+     * @param id ID of the level
+     */
     public void loadLevel(int id) {
         currentLevel = new Level(id);
     }
 
+    /**
+     * Start a level by it's id, and load the level
+     * @param id ID of the level
+     * @return true if the level could be started, false if the level could not be started
+     */
+    public boolean startLevel(int id) {
+        loadLevel(id);
+        return startLevel();
+    }
+
+    /**
+     * Start the current loaded level
+     * @return true if the level could be started, false if the level could not be started
+     */
     public boolean startLevel() {
         if (currentLevel == null) return false;
-        Main.screen.setContentPane(currentLevel);
-        Main.screen.pack();
+        GameScreen.getInstance().setContentPane(currentLevel);
+        GameScreen.getInstance().pack();
         start();
-        Main.screen.addTitle(currentLevel.getName());
+        GameScreen.getInstance().addTitle(currentLevel.getName());
         currentLevel.getTopLevelAncestor().requestFocus();
         return true;
     }
 
+    /**
+     * Stop the current level
+     */
     public void stopLevel() {
-        Main.screen.setContentPane(new MainMenu());
-        Main.screen.pack();
+        GameScreen.getInstance().setContentPane(new MainMenu());
+        GameScreen.getInstance().pack();
         stop();
-        Main.screen.resetTitle();
+        GameScreen.getInstance().resetTitle();
     }
 
     @Override
@@ -77,21 +95,35 @@ public class LevelLoader implements Runnable {
         currentLevel.tick();
     }
 
+    /**
+     * Start the game thread
+     */
     private void start() {
         isRunning = true;
         thread = new Thread(this);
         thread.start();
     }
 
+    /**
+     * Stop the thread
+     */
     private void stop() {
         isRunning = false;
         thread = null;
     }
 
+    /**
+     * Get the current loaded level
+     * @return Optional<Level>, use #.ifPresent() and #.get()
+     */
     public Optional<Level> getCurrentLevel() {
         return Optional.ofNullable(currentLevel);
     }
 
+    /**
+     * Get the instance of the Level Loader
+     * @return LevelLoader instance
+     */
     public static LevelLoader getInstance() {
         return instance;
     }
