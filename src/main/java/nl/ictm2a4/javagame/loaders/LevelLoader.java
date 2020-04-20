@@ -107,9 +107,14 @@ public class LevelLoader implements Runnable {
     /**
      * Stop the thread
      */
-    private void stop() {
+    public void stop() {
         isRunning = false;
         thread = null;
+    }
+
+    public void resume() {
+        start();
+        GameScreen.getInstance().requestFocus();
     }
 
     /**
