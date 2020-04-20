@@ -4,8 +4,6 @@ import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EndPoint extends GameObject {
 
@@ -20,6 +18,7 @@ public class EndPoint extends GameObject {
             gridX * LevelLoader.gridWidth + ((LevelLoader.gridWidth - 16) / 2),
             gridY * LevelLoader.gridHeight + ((LevelLoader.gridHeight - 16) / 2) - 2,
             16,16);
+        setyIndex(9);
     }
 
     @Override

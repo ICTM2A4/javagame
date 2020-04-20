@@ -1,6 +1,6 @@
 {
-  "name": "level editor test",
+  "name": "editor level test",
   "ground": [],
-  "endpoint": [1,3],
+  "endpoint": [2,1],
   "player": [1,1]
 }

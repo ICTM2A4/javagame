@@ -4,7 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Optional;
 
 import nl.ictm2a4.javagame.gameobjects.GameObject;
@@ -44,8 +47,7 @@ public class Level extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        getGameObjects().stream().forEach(object -> object.draw(g));
-        this.player.draw(g);
+        getGameObjects().stream().sorted(Comparator.comparingInt(GameObject::getyIndex)).forEach(object -> object.draw(g));
     }
 
     /**
@@ -103,16 +105,20 @@ public class Level extends JPanel {
 
             // Read endpoint
             JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
-            int endX = Integer.parseInt(endpoint.get(0).toString());
-            int endY = Integer.parseInt(endpoint.get(1).toString());
-            addCollidable(new EndPoint(endX, endY));
+            if (endpoint != null) {
+                int endX = Integer.parseInt(endpoint.get(0).toString());
+                int endY = Integer.parseInt(endpoint.get(1).toString());
+                addCollidable(new EndPoint(endX, endY));
+            }
 
             // Read player startpoint
             JSONArray playerpoint = (JSONArray) levelOjbect.get("player");
-            int playerX = Integer.parseInt(playerpoint.get(0).toString());
-            int playerY = Integer.parseInt(playerpoint.get(1).toString());
-            player = new Player(playerX, playerY);
-            addCollidable(player);
+            if (playerpoint != null) {
+                int playerX = Integer.parseInt(playerpoint.get(0).toString());
+                int playerY = Integer.parseInt(playerpoint.get(1).toString());
+                player = new Player(playerX, playerY);
+                addCollidable(player);
+            }
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -131,6 +137,34 @@ public class Level extends JPanel {
             groundTiles.add(groundArray);
         }
         object.put("ground",groundTiles);
+
+        JSONArray player = new JSONArray();
+        Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+        if (oPlayer.isPresent()) {
+            player.add(oPlayer.get().getX() / LevelLoader.gridWidth);
+            player.add(oPlayer.get().getY() / LevelLoader.gridHeight);
+            object.put("player", player);
+        }
+
+
+        JSONArray endpoint = new JSONArray();
+        Optional<GameObject> end = getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
+        if (end.isPresent()) {
+            endpoint.add(end.get().getX() / LevelLoader.gridWidth);
+            endpoint.add(end.get().getY() / LevelLoader.gridHeight);
+            object.put("endpoint", endpoint);
+        }
+
+        URL url = getClass().getResource("/levels/level-" + id + ".json");
+        File file = new File(url.getFile());
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(object.toJSONString());
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

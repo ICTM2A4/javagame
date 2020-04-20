@@ -87,9 +87,11 @@ public class LevelEditor extends JPanel implements ActionListener {
         if(e.getSource() == save) {
             level.setName("");
             level.saveLevel();
+            GameScreen.getInstance().setPanel(new MainMenu());
         }
         if(e.getSource() == cancel) {
-
+            System.out.println("test");
+            GameScreen.getInstance().setPanel(new MainMenu());
         }
     }
 
