@@ -6,10 +6,14 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
@@ -52,7 +56,7 @@ public class Level extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        getGameObjects().forEach(object -> object.draw(g));
+        getGameObjects().stream().forEach(object -> object.draw(g));
         this.player.draw(g);
 
         if (this.renderShadows) {
@@ -106,11 +110,24 @@ public class Level extends JPanel {
     }
 
     /**
+     * Remove a GameObject to the level
+     * @param gameObject GameObject to remove
+     */
+    public void removeCollidable(GameObject gameObject) {
+        if (this.gameObjects.contains(gameObject))
+            this.gameObjects.remove(gameObject);
+    }
+
+    /**
      * Get the name of the level
      * @return Levelname as String
      */
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -158,6 +175,54 @@ public class Level extends JPanel {
         this.renderShadows = renderShadows;
     }
 
+    public void saveLevel() {
+        JSONObject object = new JSONObject();
+        object.put("name", this.getName());
+
+        JSONArray groundTiles = new JSONArray();
+        for(Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground).toArray(Ground[]::new)) {
+            JSONArray groundArray = new JSONArray();
+            groundArray.add(ground.getX() / LevelLoader.gridWidth);
+            groundArray.add(ground.getY() / LevelLoader.gridHeight);
+            groundTiles.add(groundArray);
+        }
+        object.put("ground",groundTiles);
+
+        JSONArray player = new JSONArray();
+        Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+        if (oPlayer.isPresent()) {
+            player.add(oPlayer.get().getX() / LevelLoader.gridWidth);
+            player.add(oPlayer.get().getY() / LevelLoader.gridHeight);
+            object.put("player", player);
+        }
+
+
+        JSONArray endpoint = new JSONArray();
+        Optional<GameObject> end = getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
+        if (end.isPresent()) {
+            endpoint.add(end.get().getX() / LevelLoader.gridWidth);
+            endpoint.add(end.get().getY() / LevelLoader.gridHeight);
+            object.put("endpoint", endpoint);
+        }
+
+        URL url = getClass().getResource("/levels/level-" + id + ".json");
+        File file = null;
+        try {
+            file = new File(URLDecoder.decode(url.getPath(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(object.toJSONString());
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     /**
      * Generate the walls based on the groundTiles
      *
@@ -183,6 +248,13 @@ public class Level extends JPanel {
         }
     }
 
+    public void regenerateWalls() {
+        Wall[] walls = getGameObjects().stream().filter(gameObject -> gameObject instanceof Wall).toArray(Wall[]::new);
+        for (Wall wall : walls)
+            getGameObjects().remove(wall);
+        generateWalls();
+    }
+
     /**
      * Find a GameObject based on the x and y coordinates
      * @param x x to check for
@@ -190,7 +262,21 @@ public class Level extends JPanel {
      * @return Optional GameObject based on the coords, use #.ifPresent() and #.get() to use
      */
     public Optional<GameObject> fromCoords(int x, int y) {
-        return getGameObjects().stream().filter(object -> (object.getX() == x && object.getY() == y)).findAny();
+        return getGameObjects().stream().filter(gameObject ->
+            (gameObject.getX() <= x &&
+                gameObject.getY() <= y &&
+                gameObject.getX() + gameObject.getWidth() > x &&
+                gameObject.getY() + gameObject.getHeight() > y)
+        ).findAny();
+    }
+
+    public Stream<GameObject> fromCoordsToArray(int x, int y) {
+        return Arrays.stream(getGameObjects().stream().filter(gameObject ->
+            (gameObject.getX() <= x &&
+                gameObject.getY() <= y &&
+                gameObject.getX() + gameObject.getWidth() > x &&
+                gameObject.getY() + gameObject.getHeight() > y)
+        ).toArray(GameObject[]::new));
     }
 
     /**
