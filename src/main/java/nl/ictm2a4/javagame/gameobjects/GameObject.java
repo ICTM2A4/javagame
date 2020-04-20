@@ -10,6 +10,7 @@ public abstract class GameObject {
     private int x, y, width, height;
     private boolean collidable = true;
     private boolean isEntity;
+    private int yIndex;
 
     public GameObject(int x, int y, int width, int height) {
         this(x,y,width,height,true);
@@ -21,6 +22,7 @@ public abstract class GameObject {
         this.width = width;
         this.height = height;
         this.isEntity = isEntity;
+        this.yIndex = 0;
     }
 
     /**
@@ -64,6 +66,14 @@ public abstract class GameObject {
 
         // The objects overlap on either or bot@h of the axis.
         return true;
+    }
+
+    /**
+     * Set the yIndex of the object, used in the drawing order
+     * @param yIndex index of the object
+     */
+    public void setyIndex(int yIndex) {
+        this.yIndex = yIndex;
     }
 
     /**
@@ -130,6 +140,14 @@ public abstract class GameObject {
         for (int n = 0; n < 4; n++)
             if (!faces[n]) sum += Math.pow(2,n);
         return sum;
+    }
+
+    /**
+     * Get the Y index of the object
+     * @return Yindex of object
+     */
+    public int getyIndex() {
+        return yIndex;
     }
 
     /**

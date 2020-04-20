@@ -43,6 +43,7 @@ public class LevelEditor extends JPanel implements ActionListener {
     }
 
     private void displayGUI () {
+
         this.setPreferredSize(new Dimension((LevelLoader.width + 47), (LevelLoader.height + 200)));
         setLayout ( new GridBagLayout () );
 

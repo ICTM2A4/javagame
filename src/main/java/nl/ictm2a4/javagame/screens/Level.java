@@ -8,11 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 import nl.ictm2a4.javagame.gameobjects.GameObject;
@@ -41,6 +37,7 @@ public class Level extends JPanel {
 
         loadLevel();
         generateWalls();
+
         renderShadows = true;
         shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
     }
@@ -56,8 +53,7 @@ public class Level extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        getGameObjects().stream().forEach(object -> object.draw(g));
-        this.player.draw(g);
+        getGameObjects().stream().sorted(Comparator.comparingInt(GameObject::getyIndex)).forEach(object -> object.draw(g));
 
         if (this.renderShadows) {
             g.setColor(new Color(255,153,51,40));
@@ -137,7 +133,7 @@ public class Level extends JPanel {
         JSONParser parser = new JSONParser();
 
         try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
-            Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
+            Reader rd = new InputStreamReader(is, "UTF-8");
             Object object = parser.parse(rd);
             JSONObject levelOjbect = (JSONObject) object;
 
@@ -155,24 +151,24 @@ public class Level extends JPanel {
 
             // Read endpoint
             JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
-            int endX = Integer.parseInt(endpoint.get(0).toString());
-            int endY = Integer.parseInt(endpoint.get(1).toString());
-            addCollidable(new EndPoint(endX, endY));
+            if (endpoint != null) {
+                int endX = Integer.parseInt(endpoint.get(0).toString());
+                int endY = Integer.parseInt(endpoint.get(1).toString());
+                addCollidable(new EndPoint(endX, endY));
+            }
 
             // Read player startpoint
             JSONArray playerpoint = (JSONArray) levelOjbect.get("player");
-            int playerX = Integer.parseInt(playerpoint.get(0).toString());
-            int playerY = Integer.parseInt(playerpoint.get(1).toString());
-            player = new Player(playerX, playerY);
-            addCollidable(player);
+            if (playerpoint != null) {
+                int playerX = Integer.parseInt(playerpoint.get(0).toString());
+                int playerY = Integer.parseInt(playerpoint.get(1).toString());
+                player = new Player(playerX, playerY);
+                addCollidable(player);
+            }
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setRenderShadows(boolean renderShadows) {
-        this.renderShadows = renderShadows;
     }
 
     public void saveLevel() {
@@ -219,8 +215,10 @@ public class Level extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
+    public void setRenderShadows(boolean renderShadows) {
+        this.renderShadows = renderShadows;
     }
 
     /**
@@ -245,7 +243,7 @@ public class Level extends JPanel {
                         addCollidable(new Wall(_x,_y));
                 }
             }
-        }
+        };
     }
 
     public void regenerateWalls() {
