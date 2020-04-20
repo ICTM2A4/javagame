@@ -65,7 +65,7 @@ public class MainMenu extends JPanel implements ActionListener {
             System.out.println("Level Select start op");
         }
         if(e.getSource() == levelbuilder) {
-            System.out.println("Level builder start op");
+            GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
         }
         if(e.getSource() == exit) {
             System.exit(0);
