@@ -186,7 +186,7 @@ public class LevelEditor extends JPanel implements ActionListener {
 
     private void createItems() {
         JPanel itemlist = getPanel(Color.white);
-        addComp ( this, itemlist, 1, 0, 1, 3
+        addComp ( this, itemlist, 2, 0, 1, 3
             , GridBagConstraints.BOTH, 47, LevelLoader.height + 200 );
         itemlist.setLayout(new FlowLayout());
 
