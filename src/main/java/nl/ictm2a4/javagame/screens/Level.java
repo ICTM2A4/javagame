@@ -156,7 +156,7 @@ public class Level extends JPanel {
                     JSONArray coords = (JSONArray) torch;
                     int x = Integer.parseInt(coords.get(0).toString());
                     int y = Integer.parseInt(coords.get(1).toString());
-                    addCollidable(new Torch(x, y));
+                    addGameObject(new Torch(x, y));
                 }
             }
 

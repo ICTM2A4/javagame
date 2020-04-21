@@ -118,9 +118,30 @@ public class LevelEditor extends JPanel implements ActionListener {
                 if (!find.isPresent()) {
                     switch (current.getSimpleName().toLowerCase()) {
                         case "ground": {level.addGameObject(new Ground(gridX,gridY)); break;}
-                        case "endpoint": {level.addGameObject(new EndPoint(gridX, gridY)); break;}
-                        case "player": {level.addGameObject(new Player(gridX, gridY)); break;}
-                        case "torch": {level.addGameObject(new Torch(gridX, gridY)); break;}
+                        case "endpoint": {
+                            if(level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject instanceof Ground).findAny().isPresent()) {
+                                Optional<GameObject> endpoint = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
+                                if(endpoint.isPresent()) {
+                                    level.removeGameObject(endpoint.get());
+                                }
+                                level.addGameObject(new EndPoint(gridX,gridY));
+                            }
+                            break;}
+                        case "player": {
+                            if(level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject instanceof Ground).findAny().isPresent()) {
+                                Optional<GameObject> player = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+                                if(player.isPresent()) {
+                                    level.removeGameObject(player.get());
+                                }
+                                level.addGameObject(new Player(gridX, gridY));
+
+                            }
+                        break;}
+                        case "torch": {
+                            if(level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject instanceof Wall).findAny().isPresent()) {
+                                level.addGameObject(new Torch(gridX, gridY));
+                            }
+                        break;}
                     }
                     last = level.getGameObjects().get(level.getGameObjects().size() - 1);
                 }
