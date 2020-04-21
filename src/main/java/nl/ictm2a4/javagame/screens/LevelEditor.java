@@ -115,7 +115,7 @@ public class LevelEditor extends JPanel implements ActionListener {
             Optional<GameObject> find = level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
 
             if (e.getButton() == 1) { // left mouse button
-                if (!find.isPresent()) {
+                if (find.isEmpty()) {
                     switch (current.getSimpleName().toLowerCase()) {
                         case "ground": {
                             if (gridX > 0 &&
@@ -126,15 +126,26 @@ public class LevelEditor extends JPanel implements ActionListener {
                             break;
                         }
                         case "endpoint": {
-                            level.addGameObject(new EndPoint(gridX, gridY));
+                            if(level.fromCoordsToArray(e.getX(), e.getY()).anyMatch(gameObject -> gameObject instanceof Ground)) {
+                                Optional<GameObject> endpoint = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
+                                endpoint.ifPresent(level::removeGameObject);
+                                level.addGameObject(new EndPoint(gridX,gridY));
+                            }
                             break;
                         }
                         case "player": {
-                            level.addGameObject(new Player(gridX, gridY));
+                            if(level.fromCoordsToArray(e.getX(), e.getY()).anyMatch(gameObject -> gameObject instanceof Ground)) {
+                                Optional<GameObject> player = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+                                player.ifPresent(level::removeGameObject);
+                                level.addGameObject(new Player(gridX, gridY));
+
+                            }
                             break;
                         }
                         case "torch": {
-                            level.addGameObject(new Torch(gridX, gridY));
+                            if(level.fromCoordsToArray(e.getX(), e.getY()).anyMatch(gameObject -> gameObject instanceof Wall)) {
+                                level.addGameObject(new Torch(gridX, gridY));
+                            }
                             break;
                         }
                     }
@@ -143,10 +154,10 @@ public class LevelEditor extends JPanel implements ActionListener {
             }
 
             else if (e.getButton() == 3) { // right mouse button
-                if (find.isPresent()) {
-                    level.removeGameObject(find.get());
-                }
+                find.ifPresent(level::removeGameObject);
             }
+
+
 
             level.repaint();
             level.regenerateWalls();
@@ -203,7 +214,6 @@ public class LevelEditor extends JPanel implements ActionListener {
         itemlist.setLayout(new FlowLayout());
         items = new JLabel("Items");
         itemlist.add(items);
-
         for(Image image  : editorItems.keySet()) {
             itemlist.add(new JLabel(new ImageIcon(image)));
         }

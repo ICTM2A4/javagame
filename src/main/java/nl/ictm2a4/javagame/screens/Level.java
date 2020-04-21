@@ -50,6 +50,10 @@ public class Level extends JPanel {
         return gameObjects;
     }
 
+    /**
+     * Render the level
+     * @param g Graphics of the JPanel
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -63,6 +67,9 @@ public class Level extends JPanel {
         }
     }
 
+    /**
+     * Create a lightmap and draw all light cirlces on the map
+     */
     private void drawLights() {
         Graphics2D g = shadow.createGraphics();
 
@@ -70,15 +77,20 @@ public class Level extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(0,0,getWidth(),getHeight());
 
-        drawLight(g, player, 50);
-        getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> {
-            drawLight(g, torch, 50);
-        });
+        drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24), 50);
+        getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch ->
+            drawLight(g, new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
 
         g.dispose();
     }
 
-    private void drawLight(Graphics2D g2d, GameObject center, int radius) {
+    /**
+     * Draw a light circle on the lightmap
+     * @param g2d Graphics2D of the JPanel
+     * @param center The centre point of the light circle
+     * @param radius Radius of the light cirlce
+     */
+    private void drawLight(Graphics2D g2d, Point center, int radius) {
         int min = (radius - 2);
         int max = (radius + 6);
         radius = new Random().nextInt((max - min) + 1) + min;
@@ -86,10 +98,7 @@ public class Level extends JPanel {
         g2d.setComposite(AlphaComposite.DstOut);
         float[] dist = {0.0f, 1.0f};
         Color[] colors = new Color[]{Color.WHITE, new Color(0,0,0,0)};
-        Point2D pt = new Point2D.Float(center.getX() + (center.getWidth() / 2), center.getY() + (center.getHeight() / 2));
-
-        if (center instanceof Player)
-            pt = new Point2D.Float(center.getX() + (center.getWidth() / 2), center.getY() + (center.getHeight() / 2) - 24);
+        Point2D pt = new Point2D.Float(center.x, center.y);
 
         RadialGradientPaint paint = new RadialGradientPaint(pt, radius, dist, colors, MultipleGradientPaint.CycleMethod.NO_CYCLE);
         g2d.setPaint(paint);
@@ -122,6 +131,10 @@ public class Level extends JPanel {
         return this.name;
     }
 
+    /**
+     * Set the level name
+     * @param name levelname to set
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -182,6 +195,9 @@ public class Level extends JPanel {
         }
     }
 
+    /**
+     * Covert the level to a .JSON file
+     */
     public void saveLevel() {
         JSONObject object = new JSONObject();
         object.put("name", this.getName());
@@ -237,6 +253,10 @@ public class Level extends JPanel {
         }
     }
 
+    /**
+     * Set if the level should render dark overlay with light circles
+     * @param renderShadows Value of rendering shadows
+     */
     public void setRenderShadows(boolean renderShadows) {
         this.renderShadows = renderShadows;
     }
@@ -280,6 +300,7 @@ public class Level extends JPanel {
      * @param y y to check for
      * @return Optional GameObject based on the coords, use #.ifPresent() and #.get() to use
      */
+    @Deprecated
     public Optional<GameObject> fromCoords(int x, int y) {
         return getGameObjects().stream().filter(gameObject ->
             (gameObject.getX() <= x &&
@@ -289,6 +310,12 @@ public class Level extends JPanel {
         ).findAny();
     }
 
+    /**
+     * Find a list of GameObjects based on the x, y
+     * @param x x to search by
+     * @param y y to search by
+     * @return Stream of GameObjects where x, y are within the boundries
+     */
     public Stream<GameObject> fromCoordsToArray(int x, int y) {
         return Arrays.stream(getGameObjects().stream().filter(gameObject ->
             (gameObject.getX() <= x &&

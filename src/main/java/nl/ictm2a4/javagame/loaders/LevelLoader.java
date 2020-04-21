@@ -1,6 +1,5 @@
 package nl.ictm2a4.javagame.loaders;
 
-import nl.ictm2a4.javagame.gameobjects.Torch;
 import nl.ictm2a4.javagame.screens.MainMenu;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
@@ -87,6 +86,9 @@ public class LevelLoader implements Runnable {
         }
     }
 
+    /**
+     * Tick the current level
+     */
     private void tick() {
         currentLevel.tick();
     }
@@ -108,6 +110,9 @@ public class LevelLoader implements Runnable {
         thread = null;
     }
 
+    /**
+     * Resume the current level and request focus on the JPanel
+     */
     public void resume() {
         start();
         GameScreen.getInstance().requestFocus();
