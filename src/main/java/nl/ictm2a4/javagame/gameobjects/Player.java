@@ -4,7 +4,6 @@ import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.GameScreen;
-import nl.ictm2a4.javagame.screens.PauseScreen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
