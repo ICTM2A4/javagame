@@ -118,11 +118,11 @@ public class LevelEditor extends JPanel implements ActionListener {
             if (e.getButton() == 1) { // left mouse button
                 if (!find.isPresent()) {
                     switch (current.getSimpleName().toLowerCase()) {
-                        case "ground": {level.addCollidable(new Ground(gridX,gridY));
+                        case "ground": {level.addGameObject(new Ground(gridX,gridY));
                             break;}
-                        case "endpoint": {level.addCollidable(new EndPoint(gridX, gridY));
+                        case "endpoint": {level.addGameObject(new EndPoint(gridX, gridY));
                             break;}
-                        case "player": {level.addCollidable(new Player(gridX, gridY));
+                        case "player": {level.addGameObject(new Player(gridX, gridY));
                             break;}
                     }
                     last = level.getGameObjects().get(level.getGameObjects().size() - 1);
@@ -132,7 +132,7 @@ public class LevelEditor extends JPanel implements ActionListener {
             else if (e.getButton() == 3) { // right mouse button
                 if (find.isPresent()) {
                     System.out.println(find.get().getClass().getSimpleName());
-                    level.removeCollidable(find.get());
+                    level.removeGameObject(find.get());
                 }
             }
 

@@ -100,7 +100,7 @@ public class Level extends JPanel {
      * Add a GameObject to the level
      * @param gameObject GameObject to add
      */
-    public void addCollidable(GameObject gameObject) {
+    public void addGameObject(GameObject gameObject) {
         if (!this.gameObjects.contains(gameObject))
             this.gameObjects.add(gameObject);
     }
@@ -109,7 +109,7 @@ public class Level extends JPanel {
      * Remove a GameObject to the level
      * @param gameObject GameObject to remove
      */
-    public void removeCollidable(GameObject gameObject) {
+    public void removeGameObject(GameObject gameObject) {
         if (this.gameObjects.contains(gameObject))
             this.gameObjects.remove(gameObject);
     }
@@ -146,7 +146,7 @@ public class Level extends JPanel {
                 JSONArray coords = (JSONArray) ground;
                 int x = Integer.parseInt(coords.get(0).toString());
                 int y = Integer.parseInt(coords.get(1).toString());
-                addCollidable(new Ground(x,y));
+                addGameObject(new Ground(x,y));
             }
 
             // Read endpoint
@@ -154,7 +154,7 @@ public class Level extends JPanel {
             if (endpoint != null) {
                 int endX = Integer.parseInt(endpoint.get(0).toString());
                 int endY = Integer.parseInt(endpoint.get(1).toString());
-                addCollidable(new EndPoint(endX, endY));
+                addGameObject(new EndPoint(endX, endY));
             }
 
             // Read player startpoint
@@ -163,7 +163,7 @@ public class Level extends JPanel {
                 int playerX = Integer.parseInt(playerpoint.get(0).toString());
                 int playerY = Integer.parseInt(playerpoint.get(1).toString());
                 player = new Player(playerX, playerY);
-                addCollidable(player);
+                addGameObject(player);
             }
 
         } catch (IOException | ParseException e) {
@@ -239,8 +239,9 @@ public class Level extends JPanel {
                     if (_x == x && _y == y)
                         continue;
 
-                    if (fromCoords(_x * LevelLoader.gridWidth, _y * LevelLoader.gridHeight).isEmpty())
-                        addCollidable(new Wall(_x,_y));
+                    if (fromCoordsToArray(_x * LevelLoader.gridWidth, _y * LevelLoader.gridHeight)
+                        .filter(gameObject -> gameObject instanceof Wall || gameObject instanceof Ground).findAny().isEmpty())
+                        addGameObject(new Wall(_x,_y));
                 }
             }
         };
@@ -271,9 +272,9 @@ public class Level extends JPanel {
     public Stream<GameObject> fromCoordsToArray(int x, int y) {
         return Arrays.stream(getGameObjects().stream().filter(gameObject ->
             (gameObject.getX() <= x &&
-                gameObject.getY() <= y &&
-                gameObject.getX() + gameObject.getWidth() > x &&
-                gameObject.getY() + gameObject.getHeight() > y)
+            gameObject.getY() <= y &&
+            gameObject.getX() + gameObject.getWidth() > x &&
+            gameObject.getY() + gameObject.getHeight() > y)
         ).toArray(GameObject[]::new));
     }
 

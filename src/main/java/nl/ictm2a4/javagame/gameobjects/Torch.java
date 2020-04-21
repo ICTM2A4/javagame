@@ -16,6 +16,7 @@ public class Torch extends GameObject {
     public Torch(int gridX, int gridY) {
         super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, 32,32);
         setCollidable(false);
+        setyIndex(8);
     }
 
     @Override

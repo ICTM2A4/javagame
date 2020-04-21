@@ -164,10 +164,10 @@ public abstract class GameObject {
         String s = this.getClass().getCanonicalName();
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
         return new boolean[] {
-            level.fromCoords(getX(), getY() - LevelLoader.gridHeight).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
-            level.fromCoords(getX() + LevelLoader.gridWidth, getY()).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
-            level.fromCoords(getX(), getY() + LevelLoader.gridHeight).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
-            level.fromCoords(getX() - LevelLoader.gridWidth, getY()).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent()
+            level.fromCoordsToArray(getX(), getY() - LevelLoader.gridHeight).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX() + LevelLoader.gridWidth, getY()).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX(), getY() + LevelLoader.gridHeight).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX() - LevelLoader.gridWidth, getY()).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
         };
     }
 
