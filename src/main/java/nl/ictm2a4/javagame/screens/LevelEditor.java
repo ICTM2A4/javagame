@@ -1,10 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.enums.PlayerStatus;
-import nl.ictm2a4.javagame.gameobjects.EndPoint;
-import nl.ictm2a4.javagame.gameobjects.GameObject;
-import nl.ictm2a4.javagame.gameobjects.Ground;
-import nl.ictm2a4.javagame.gameobjects.Player;
+import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -14,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -38,6 +36,7 @@ public class LevelEditor extends JPanel implements ActionListener {
         editorItems.put(FileLoader.getInstance().getGroundTile(15), Ground.class);
         editorItems.put(FileLoader.getInstance().getCoinImage(0), EndPoint.class);
         editorItems.put(FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0), Player.class);
+        editorItems.put(FileLoader.getInstance().getTorchImage(0), Torch.class);
 
         displayGUI();
     }
@@ -118,12 +117,10 @@ public class LevelEditor extends JPanel implements ActionListener {
             if (e.getButton() == 1) { // left mouse button
                 if (!find.isPresent()) {
                     switch (current.getSimpleName().toLowerCase()) {
-                        case "ground": {level.addGameObject(new Ground(gridX,gridY));
-                            break;}
-                        case "endpoint": {level.addGameObject(new EndPoint(gridX, gridY));
-                            break;}
-                        case "player": {level.addGameObject(new Player(gridX, gridY));
-                            break;}
+                        case "ground": {level.addGameObject(new Ground(gridX,gridY)); break;}
+                        case "endpoint": {level.addGameObject(new EndPoint(gridX, gridY)); break;}
+                        case "player": {level.addGameObject(new Player(gridX, gridY)); break;}
+                        case "torch": {level.addGameObject(new Torch(gridX, gridY)); break;}
                     }
                     last = level.getGameObjects().get(level.getGameObjects().size() - 1);
                 }
@@ -131,14 +128,11 @@ public class LevelEditor extends JPanel implements ActionListener {
 
             else if (e.getButton() == 3) { // right mouse button
                 if (find.isPresent()) {
-                    System.out.println(find.get().getClass().getSimpleName());
                     level.removeGameObject(find.get());
                 }
             }
 
-//            System.out.println("last xmin: " + last.getX() + ", xmax: " + (last.getX() + last.getWidth()) + ", ymin: " + last.getY() + ", ymax: " + (last.getY() + last.getHeight()));
-//            System.out.println("mouse x: " + e.getX() + ", y: " + e.getY());
-//            System.out.println("match found: " + find.isPresent() + "\n");
+
 
             level.repaint();
             level.regenerateWalls();
@@ -152,7 +146,6 @@ public class LevelEditor extends JPanel implements ActionListener {
                 int ypx = 25;
                 for(Image image : editorItems.keySet()) {
                     if(e.getY() > ypx && e.getY() < (ypx += image.getHeight(itemlist))) {
-                        //System.out.println(image.getSource());
                         current = editorItems.get(image);
                     }
                 }
@@ -186,7 +179,6 @@ public class LevelEditor extends JPanel implements ActionListener {
         }
         level_Name = new JTextField(current_level, 10);
         nameField.add(level_Name);
-        System.out.println(LevelLoader.getInstance().getCurrentLevel().isPresent());
     }
 
     private void createItems() {

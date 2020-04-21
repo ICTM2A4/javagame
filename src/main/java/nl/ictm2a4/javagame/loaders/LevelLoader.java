@@ -33,7 +33,6 @@ public class LevelLoader implements Runnable {
      */
     public void loadLevel(int id) {
         currentLevel = new Level(id);
-        currentLevel.addGameObject(new Torch(6,6));
     }
 
     /**
