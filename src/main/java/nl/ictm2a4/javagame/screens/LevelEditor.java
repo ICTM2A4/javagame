@@ -117,10 +117,26 @@ public class LevelEditor extends JPanel implements ActionListener {
             if (e.getButton() == 1) { // left mouse button
                 if (!find.isPresent()) {
                     switch (current.getSimpleName().toLowerCase()) {
-                        case "ground": {level.addGameObject(new Ground(gridX,gridY)); break;}
-                        case "endpoint": {level.addGameObject(new EndPoint(gridX, gridY)); break;}
-                        case "player": {level.addGameObject(new Player(gridX, gridY)); break;}
-                        case "torch": {level.addGameObject(new Torch(gridX, gridY)); break;}
+                        case "ground": {
+                            if (gridX > 0 &&
+                                (LevelLoader.width / LevelLoader.gridWidth) - 1 > gridX &&
+                                gridY > 0 &&
+                                (LevelLoader.height / LevelLoader.gridHeight) - 1 > gridY)
+                                level.addGameObject(new Ground(gridX,gridY));
+                            break;
+                        }
+                        case "endpoint": {
+                            level.addGameObject(new EndPoint(gridX, gridY));
+                            break;
+                        }
+                        case "player": {
+                            level.addGameObject(new Player(gridX, gridY));
+                            break;
+                        }
+                        case "torch": {
+                            level.addGameObject(new Torch(gridX, gridY));
+                            break;
+                        }
                     }
                     last = level.getGameObjects().get(level.getGameObjects().size() - 1);
                 }
@@ -131,8 +147,6 @@ public class LevelEditor extends JPanel implements ActionListener {
                     level.removeGameObject(find.get());
                 }
             }
-
-
 
             level.repaint();
             level.regenerateWalls();
@@ -189,6 +203,7 @@ public class LevelEditor extends JPanel implements ActionListener {
         itemlist.setLayout(new FlowLayout());
         items = new JLabel("Items");
         itemlist.add(items);
+
         for(Image image  : editorItems.keySet()) {
             itemlist.add(new JLabel(new ImageIcon(image)));
         }
