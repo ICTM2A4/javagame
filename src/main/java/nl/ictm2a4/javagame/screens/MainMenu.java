@@ -58,7 +58,7 @@ public class MainMenu extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == start) {
-            LevelLoader.getInstance().startLevel(1);
+            LevelLoader.getInstance().startLevel(2);
             GameScreen.getInstance().setLocationRelativeTo(null);
         }
         if(e.getSource() == selectlevel) {
