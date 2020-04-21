@@ -43,21 +43,19 @@ public class LevelEditor extends JPanel implements ActionListener {
 
     private void displayGUI () {
 
-        this.setPreferredSize(new Dimension((LevelLoader.width + 47), (LevelLoader.height + 200)));
+        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 150)));
         setLayout ( new GridBagLayout () );
 
         LevelLoader.getInstance().loadLevel(2);
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
         level.setRenderShadows(false);
 
+        createEmptyStrip();
         createNameField();
-
-        addComp ( this, level, 0, 1, 1, 1
+        addComp ( this, level, 1, 1, 1, 1
             , GridBagConstraints.BOTH, LevelLoader.width, LevelLoader.height );
         level.addMouseListener(new LevelEditorMouseListener());
-
         createButtons();
-
         createItems();
 
         setVisible(true);
@@ -180,8 +178,8 @@ public class LevelEditor extends JPanel implements ActionListener {
 
     private void createButtons() {
         JPanel buttons = getPanel ( Color.white );
-        addComp ( this, buttons, 0, 2, 1, 1
-            , GridBagConstraints.BOTH, LevelLoader.width, 100 );
+        addComp ( this, buttons, 1, 2, 1, 1
+            , GridBagConstraints.BOTH, LevelLoader.width, 50 );
         buttons.setLayout(new FlowLayout());
         save = new JButton("Save");
         save.addActionListener(this);
@@ -194,7 +192,7 @@ public class LevelEditor extends JPanel implements ActionListener {
     private void createNameField() {
         String current_level = "";
         JPanel nameField = getPanel (Color.white);
-        addComp(this, nameField, 0, 0, 1, 1,
+        addComp(this, nameField, 1, 0, 1, 1,
             GridBagConstraints.BOTH, LevelLoader.width, 50);
         nameField.setLayout(new FlowLayout());
         preview = new JLabel("level name:");
@@ -209,7 +207,7 @@ public class LevelEditor extends JPanel implements ActionListener {
     private void createItems() {
         itemlist  = getPanel ( Color.white );
         itemlist.addMouseListener(new LevelItemsMouseListener());
-        addComp ( this, itemlist, 1, 0, 1, 3
+        addComp ( this, itemlist, 2, 0, 1, 3
             , GridBagConstraints.BOTH, 47, LevelLoader.height + 200 );
         itemlist.setLayout(new FlowLayout());
         items = new JLabel("Items");
@@ -218,5 +216,11 @@ public class LevelEditor extends JPanel implements ActionListener {
             itemlist.add(new JLabel(new ImageIcon(image)));
         }
         current = EndPoint.class;
+    }
+
+    private void createEmptyStrip() {
+        JPanel emptyStrip = getPanel( Color.white);
+        addComp(this, emptyStrip, 0, 0, 1, 3
+        , GridBagConstraints.BOTH, 47, LevelLoader.height + 200);
     }
 }
