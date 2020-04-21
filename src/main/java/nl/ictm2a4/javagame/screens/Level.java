@@ -149,6 +149,17 @@ public class Level extends JPanel {
                 addCollidable(new Ground(x,y));
             }
 
+            //Read all torch tiles
+            JSONArray torchTiles = (JSONArray) levelOjbect.get("torches");
+            if (torchTiles != null) {
+                for (Object torch : torchTiles) {
+                    JSONArray coords = (JSONArray) torch;
+                    int x = Integer.parseInt(coords.get(0).toString());
+                    int y = Integer.parseInt(coords.get(1).toString());
+                    addCollidable(new Torch(x, y));
+                }
+            }
+
             // Read endpoint
             JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
             if (endpoint != null) {
@@ -183,6 +194,15 @@ public class Level extends JPanel {
             groundTiles.add(groundArray);
         }
         object.put("ground",groundTiles);
+
+        JSONArray torchTiles = new JSONArray();
+        for(Torch torch : getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).toArray(Torch[]::new)) {
+            JSONArray torchArray = new JSONArray();
+            torchArray.add(torch.getX() / LevelLoader.gridWidth);
+            torchArray.add(torch.getY() / LevelLoader.gridHeight);
+            torchTiles.add(torchArray);
+        }
+        object.put("torches",torchTiles);
 
         JSONArray player = new JSONArray();
         Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
