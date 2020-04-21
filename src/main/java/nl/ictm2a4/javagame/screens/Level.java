@@ -3,9 +3,13 @@ package nl.ictm2a4.javagame.screens;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
@@ -21,6 +25,8 @@ public class Level extends JPanel {
     private ArrayList<GameObject> gameObjects;
     private String name;
     private Player player;
+    private BufferedImage shadow;
+    private boolean renderShadows;
 
     public Level(int id) {
         this.id = id;
@@ -31,6 +37,8 @@ public class Level extends JPanel {
 
         loadLevel();
         generateWalls();
+        renderShadows = true;
+        shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
     }
 
     /**
@@ -46,6 +54,46 @@ public class Level extends JPanel {
         super.paintComponent(g);
         getGameObjects().forEach(object -> object.draw(g));
         this.player.draw(g);
+
+        if (this.renderShadows) {
+            g.setColor(new Color(255,153,51,40));
+            g.fillRect(0,0,getWidth(),getHeight());
+            drawLights();
+            g.drawImage(shadow, 0, 0, null);
+        }
+    }
+
+    private void drawLights() {
+        Graphics2D g = shadow.createGraphics();
+
+        g.setComposite(AlphaComposite.Src);
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0,getWidth(),getHeight());
+
+        drawLight(g, player, 50);
+        getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> {
+            drawLight(g, torch, 50);
+        });
+
+        g.dispose();
+    }
+
+    private void drawLight(Graphics2D g2d, GameObject center, int radius) {
+        int min = (radius - 2);
+        int max = (radius + 6);
+        radius = new Random().nextInt((max - min) + 1) + min;
+
+        g2d.setComposite(AlphaComposite.DstOut);
+        float[] dist = {0.0f, 1.0f};
+        Color[] colors = new Color[]{Color.WHITE, new Color(0,0,0,0)};
+        Point2D pt = new Point2D.Float(center.getX() + (center.getWidth() / 2), center.getY() + (center.getHeight() / 2));
+
+        if (center instanceof Player)
+            pt = new Point2D.Float(center.getX() + (center.getWidth() / 2), center.getY() + (center.getHeight() / 2) - 24);
+
+        RadialGradientPaint paint = new RadialGradientPaint(pt, radius, dist, colors, MultipleGradientPaint.CycleMethod.NO_CYCLE);
+        g2d.setPaint(paint);
+        g2d.fillOval((int) pt.getX()-radius, (int) pt.getY() - radius,radius*2,radius*2);
     }
 
     /**
@@ -72,7 +120,7 @@ public class Level extends JPanel {
         JSONParser parser = new JSONParser();
 
         try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
-            Reader rd = new InputStreamReader(is, "UTF-8");
+            Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
             Object object = parser.parse(rd);
             JSONObject levelOjbect = (JSONObject) object;
 
@@ -106,6 +154,10 @@ public class Level extends JPanel {
         }
     }
 
+    public void setRenderShadows(boolean renderShadows) {
+        this.renderShadows = renderShadows;
+    }
+
     /**
      * Generate the walls based on the groundTiles
      *
@@ -128,7 +180,7 @@ public class Level extends JPanel {
                         addCollidable(new Wall(_x,_y));
                 }
             }
-        };
+        }
     }
 
     /**

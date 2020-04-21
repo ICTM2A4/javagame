@@ -70,5 +70,6 @@ public class MainMenu extends JPanel implements ActionListener {
         if(e.getSource() == exit) {
             System.exit(0);
         }
+
     }
 }

@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.loaders;
 
+import nl.ictm2a4.javagame.gameobjects.Torch;
 import nl.ictm2a4.javagame.screens.MainMenu;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
@@ -32,6 +33,7 @@ public class LevelLoader implements Runnable {
      */
     public void loadLevel(int id) {
         currentLevel = new Level(id);
+        currentLevel.addCollidable(new Torch(6,6));
     }
 
     /**

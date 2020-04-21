@@ -4,13 +4,11 @@ import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EndPoint extends GameObject {
 
     private final int animateDelay = 3;
-    private final int imageAmount = 7;
+    public static final int imageAmount = 7;
 
     private int currentImage = 0;
     private int animateCount = 0;

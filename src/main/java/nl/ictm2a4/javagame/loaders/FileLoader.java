@@ -1,19 +1,18 @@
 package nl.ictm2a4.javagame.loaders;
 
-import nl.ictm2a4.javagame.Main;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
+import nl.ictm2a4.javagame.gameobjects.EndPoint;
+import nl.ictm2a4.javagame.gameobjects.Torch;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FileLoader {
 
-    private ArrayList<Image> groundTiles, wallTiles, coinImages;
+    private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages;
     private HashMap<String, ArrayList<Image>> playerImages;
     private static FileLoader instance;
 
@@ -27,6 +26,7 @@ public class FileLoader {
         reloadWallTiles();
         reloadCoinImages();
         reloadPlayerImages();
+        reloadTorchImages();
     }
 
     /**
@@ -52,7 +52,7 @@ public class FileLoader {
      */
     public void reloadCoinImages() {
         coinImages = new ArrayList<>();
-        for(int i = 0; i < 7; i++)
+        for(int i = 0; i < EndPoint.imageAmount; i++)
             coinImages.add(loadImage("textures/coin-" + i + ".png"));
     }
 
@@ -70,6 +70,15 @@ public class FileLoader {
                 }
             }
         }
+    }
+
+    /**
+     * Relaad all torch images
+     */
+    public void reloadTorchImages() {
+        torchImages = new ArrayList<>();
+        for(int i = 0; i < Torch.imageAmount; i++)
+            torchImages.add(loadImage("textures/torch-" + i + ".png"));
     }
 
     /**
@@ -123,6 +132,10 @@ public class FileLoader {
      */
     public Image getPlayerImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
         return this.playerImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
+    }
+
+    public Image getTorchImage(int index) {
+        return this.torchImages.get(index);
     }
 
     /**
