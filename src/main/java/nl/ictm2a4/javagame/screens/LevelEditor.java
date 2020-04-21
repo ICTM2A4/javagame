@@ -7,12 +7,11 @@ import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class LevelEditor extends JPanel implements ActionListener {
@@ -21,12 +20,10 @@ public class LevelEditor extends JPanel implements ActionListener {
     private final int vGap = 0;
     private GridBagConstraints gbc;
     private JButton save, cancel;
-    private JLabel preview, items;
     private JTextField level_Name;
     private HashMap<Image, Class> editorItems;
     private Class current;
-    private JPanel itemlist;
-    private GameObject last;
+    private ArrayList<JButton> itemButtons;
 
     public LevelEditor() {
         gbc = new GridBagConstraints ();
@@ -149,7 +146,6 @@ public class LevelEditor extends JPanel implements ActionListener {
                             break;
                         }
                     }
-                    last = level.getGameObjects().get(level.getGameObjects().size() - 1);
                 }
             }
 
@@ -157,24 +153,8 @@ public class LevelEditor extends JPanel implements ActionListener {
                 find.ifPresent(level::removeGameObject);
             }
 
-
-
             level.repaint();
             level.regenerateWalls();
-        }
-    }
-
-    public class LevelItemsMouseListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            if(e.getButton() == 1) {
-                int ypx = 25;
-                for(Image image : editorItems.keySet()) {
-                    if(e.getY() > ypx && e.getY() < (ypx += image.getHeight(itemlist))) {
-                        current = editorItems.get(image);
-                    }
-                }
-            }
         }
     }
 
@@ -197,7 +177,7 @@ public class LevelEditor extends JPanel implements ActionListener {
         addComp(this, nameField, 0, 0, 1, 1,
             GridBagConstraints.BOTH, LevelLoader.width, 50);
         nameField.setLayout(new FlowLayout());
-        preview = new JLabel("level name:");
+        JLabel preview = new JLabel("level name:");
         nameField.add(preview);
         if(LevelLoader.getInstance().getCurrentLevel().isPresent()) {
             current_level = LevelLoader.getInstance().getCurrentLevel().get().getName();
@@ -207,16 +187,36 @@ public class LevelEditor extends JPanel implements ActionListener {
     }
 
     private void createItems() {
-        itemlist  = getPanel ( Color.white );
-        itemlist.addMouseListener(new LevelItemsMouseListener());
+        JPanel itemlist = getPanel(Color.white);
         addComp ( this, itemlist, 1, 0, 1, 3
             , GridBagConstraints.BOTH, 47, LevelLoader.height + 200 );
         itemlist.setLayout(new FlowLayout());
-        items = new JLabel("Items");
+
+        JLabel items = new JLabel("Items");
         itemlist.add(items);
+
+        itemButtons = new ArrayList<>();
         for(Image image  : editorItems.keySet()) {
-            itemlist.add(new JLabel(new ImageIcon(image)));
+            JButton button = new JButton();
+            button.add(new JLabel(new ImageIcon(image)));
+            itemButtons.add(button);
+
+            button.addActionListener(
+                e -> {
+                    current = editorItems.get(image);
+                    disableAllButtons();
+                    button.setBackground(Color.DARK_GRAY);
+                }
+            );
+
+            itemlist.add(button);
+            disableAllButtons();
+            button.setBackground(Color.DARK_GRAY);
+            current = editorItems.get(image);
         }
-        current = EndPoint.class;
+    }
+
+    private void disableAllButtons() {
+        itemButtons.forEach(b -> b.setBackground(Color.GRAY));
     }
 }
