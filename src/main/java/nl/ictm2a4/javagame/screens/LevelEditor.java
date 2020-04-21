@@ -47,10 +47,11 @@ public class LevelEditor extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension((LevelLoader.width + 47), (LevelLoader.height + 200)));
         setLayout ( new GridBagLayout () );
 
-        createNameField();
-
         LevelLoader.getInstance().loadLevel(2);
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
+
+        createNameField();
+
         addComp ( this, level, 0, 1, 1, 1
             , GridBagConstraints.BOTH, LevelLoader.width, LevelLoader.height );
         level.addMouseListener(new LevelEditorMouseListener());
@@ -89,10 +90,13 @@ public class LevelEditor extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
-        if(e.getSource() == save) {
-            level.setName("");
+        if(e.getSource() == save && !level_Name.getText().equals("")) {
+            level.setName(level_Name.getText());
             level.saveLevel();
-            GameScreen.getInstance().setPanel(new MainMenu());
+            JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
+        }
+        else if (level_Name.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "Je moet een naam invoeren");
         }
         if(e.getSource() == cancel) {
             GameScreen.getInstance().setPanel(new MainMenu());
@@ -113,9 +117,12 @@ public class LevelEditor extends JPanel implements ActionListener {
             if (e.getButton() == 1) { // left mouse button
                 if (!find.isPresent()) {
                     switch (current.getSimpleName().toLowerCase()) {
-                        case "ground": {level.addCollidable(new Ground(gridX,gridY)); break;}
-                        case "endpoint": {level.addCollidable(new EndPoint(gridX, gridY)); break;}
-                        case "player": {level.addCollidable(new Player(gridX, gridY)); break;}
+                        case "ground": {level.addCollidable(new Ground(gridX,gridY));
+                                        break;}
+                        case "endpoint": {level.addCollidable(new EndPoint(gridX, gridY));
+                                        break;}
+                        case "player": {level.addCollidable(new Player(gridX, gridY));
+                                        break;}
                     }
                     last = level.getGameObjects().get(level.getGameObjects().size() - 1);
                 }
@@ -128,9 +135,9 @@ public class LevelEditor extends JPanel implements ActionListener {
                 }
             }
 
-            System.out.println("last xmin: " + last.getX() + ", xmax: " + (last.getX() + last.getWidth()) + ", ymin: " + last.getY() + ", ymax: " + (last.getY() + last.getHeight()));
-            System.out.println("mouse x: " + e.getX() + ", y: " + e.getY());
-            System.out.println("match found: " + find.isPresent() + "\n");
+//            System.out.println("last xmin: " + last.getX() + ", xmax: " + (last.getX() + last.getWidth()) + ", ymin: " + last.getY() + ", ymax: " + (last.getY() + last.getHeight()));
+//            System.out.println("mouse x: " + e.getX() + ", y: " + e.getY());
+//            System.out.println("match found: " + find.isPresent() + "\n");
 
             level.repaint();
             level.regenerateWalls();
@@ -144,7 +151,7 @@ public class LevelEditor extends JPanel implements ActionListener {
                 int ypx = 25;
                 for(Image image : editorItems.keySet()) {
                     if(e.getY() > ypx && e.getY() < (ypx += image.getHeight(itemlist))) {
-                        System.out.println(image.getSource());
+                        //System.out.println(image.getSource());
                         current = editorItems.get(image);
                     }
                 }
@@ -166,14 +173,19 @@ public class LevelEditor extends JPanel implements ActionListener {
     }
 
     private void createNameField() {
+        String current_level = "";
         JPanel nameField = getPanel (Color.white);
         addComp(this, nameField, 0, 0, 1, 1,
             GridBagConstraints.BOTH, LevelLoader.width, 50);
         nameField.setLayout(new FlowLayout());
-        preview = new JLabel("Preview");
+        preview = new JLabel("level name:");
         nameField.add(preview);
-        level_Name = new JTextField("level name");
+        if(LevelLoader.getInstance().getCurrentLevel().isPresent()) {
+            current_level = LevelLoader.getInstance().getCurrentLevel().get().getName();
+        }
+        level_Name = new JTextField(current_level, 10);
         nameField.add(level_Name);
+        System.out.println(LevelLoader.getInstance().getCurrentLevel().isPresent());
     }
 
     private void createItems() {

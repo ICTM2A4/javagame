@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -128,7 +129,7 @@ public class Level extends JPanel {
 
     public void saveLevel() {
         JSONObject object = new JSONObject();
-        object.put("name", "test");
+        object.put("name", this.getName());
 
         JSONArray groundTiles = new JSONArray();
         for(Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground).toArray(Ground[]::new)) {
@@ -157,7 +158,12 @@ public class Level extends JPanel {
         }
 
         URL url = getClass().getResource("/levels/level-" + id + ".json");
-        File file = new File(url.getFile());
+        File file = null;
+        try {
+            file = new File(URLDecoder.decode(url.getPath(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(object.toJSONString());
