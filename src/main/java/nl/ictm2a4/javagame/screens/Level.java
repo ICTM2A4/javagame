@@ -28,6 +28,16 @@ public class Level extends JPanel {
     private BufferedImage shadow;
     private boolean renderShadows;
     private Optional<JSONObject> object;
+    private long score;
+    private long current = System.currentTimeMillis();
+
+    public int getId() {
+        return id;
+    }
+
+    public long getScore() {
+        return score;
+    }
 
     public Level(int id) {
         this.id = id;
@@ -40,7 +50,7 @@ public class Level extends JPanel {
         loadLevel();
         generateWalls();
 
-        renderShadows = true;
+        renderShadows = false;
         shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
     }
 
@@ -66,6 +76,9 @@ public class Level extends JPanel {
         return gameObjects;
     }
 
+    public void clearGameObjects() {
+        this.gameObjects = new ArrayList<>();
+    }
     /**
      * Render the level
      * @param g Graphics of the JPanel
@@ -159,7 +172,9 @@ public class Level extends JPanel {
      * Load the current level from it's JSON file
      */
     public void loadLevel() {
+        clearGameObjects();
         loadObject();
+        current = System.currentTimeMillis();
 
         if (!object.isPresent())
             return;
@@ -205,6 +220,7 @@ public class Level extends JPanel {
             player = new Player(playerX, playerY);
             addGameObject(player);
         }
+        regenerateWalls();
     }
 
     /**
@@ -349,6 +365,7 @@ public class Level extends JPanel {
     public void tick() {
         repaint();
         getGameObjects().forEach(GameObject::tick);
+        score = System.currentTimeMillis() - current;
 
         if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
             LevelLoader.getInstance().stop();
@@ -362,4 +379,5 @@ public class Level extends JPanel {
     public void restart() {
         loadLevel();
     }
+
 }
