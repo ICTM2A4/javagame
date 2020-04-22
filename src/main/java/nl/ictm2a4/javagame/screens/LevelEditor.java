@@ -90,7 +90,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             level.saveLevel();
             JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
         }
-        else if (level_Name.getText().equals("")){
+        else if (e.getSource() == save && level_Name.getText().equals("")){
             JOptionPane.showMessageDialog(this, "Je moet een naam invoeren");
         }
         if(e.getSource() == cancel) {

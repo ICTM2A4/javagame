@@ -2,7 +2,11 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.EndScreen;
+import nl.ictm2a4.javagame.screens.GameScreen;
+import nl.ictm2a4.javagame.screens.Level;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class EndPoint extends GameObject {
@@ -52,6 +56,7 @@ public class EndPoint extends GameObject {
 
         if (result && gameObject instanceof Player)
             LevelLoader.getInstance().stopLevel();
+            GameScreen.getInstance().setPanel(new EndScreen(), "finished!");
 
         return result;
     }
