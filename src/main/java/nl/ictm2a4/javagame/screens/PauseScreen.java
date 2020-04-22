@@ -56,7 +56,8 @@ public class PauseScreen extends JPanel implements ActionListener {
             GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get(), LevelLoader.getInstance().getCurrentLevel().get().getName());
         }
         if(e.getSource() == restart) {
-            LevelLoader.getInstance().startLevel(1);
+            LevelLoader.getInstance().getCurrentLevel().get().restart();
+            GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get(), LevelLoader.getInstance().getCurrentLevel().get().getName());
         }
         if(e.getSource() == quit) {
             LevelLoader.getInstance().stopLevel();

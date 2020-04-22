@@ -27,6 +27,7 @@ public class Level extends JPanel {
     private Player player;
     private BufferedImage shadow;
     private boolean renderShadows;
+    private Optional<JSONObject> object;
 
     public Level(int id) {
         this.id = id;
@@ -35,11 +36,26 @@ public class Level extends JPanel {
 
         this.setPreferredSize(new Dimension(LevelLoader.width, LevelLoader.height));
 
+        loadObject();
         loadLevel();
         generateWalls();
 
         renderShadows = true;
         shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
+    }
+
+    /**
+     * Load the JSONObject from the level file
+     */
+    public void loadObject() {
+        if (id >= LevelLoader.defaultLevelAmount) {
+            try {
+                LevelLoader.getInstance().getCustomLevelFile(id);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        object = LevelLoader.getInstance().getLevelObject(id);
     }
 
     /**
@@ -143,55 +159,51 @@ public class Level extends JPanel {
      * Load the current level from it's JSON file
      */
     public void loadLevel() {
-        JSONParser parser = new JSONParser();
+        loadObject();
 
-        try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
-            Reader rd = new InputStreamReader(is, "UTF-8");
-            Object object = parser.parse(rd);
-            JSONObject levelOjbect = (JSONObject) object;
+        if (!object.isPresent())
+            return;
 
-            // Read level name
-            name = levelOjbect.get("name").toString();
+        JSONObject levelObject = object.get();
 
-            // Read all ground tiles
-            JSONArray groundTiles = (JSONArray) levelOjbect.get("ground");
-            for(Object ground : groundTiles) {
-                JSONArray coords = (JSONArray) ground;
+        // Read level name
+        name = levelObject.get("name").toString();
+
+        // Read all ground tiles
+        JSONArray groundTiles = (JSONArray) levelObject.get("ground");
+        for(Object ground : groundTiles) {
+            JSONArray coords = (JSONArray) ground;
+            int x = Integer.parseInt(coords.get(0).toString());
+            int y = Integer.parseInt(coords.get(1).toString());
+            addGameObject(new Ground(x,y));
+        }
+
+        //Read all torch tiles
+        JSONArray torchTiles = (JSONArray) levelObject.get("torches");
+        if (torchTiles != null) {
+            for (Object torch : torchTiles) {
+                JSONArray coords = (JSONArray) torch;
                 int x = Integer.parseInt(coords.get(0).toString());
                 int y = Integer.parseInt(coords.get(1).toString());
-                addGameObject(new Ground(x,y));
+                addGameObject(new Torch(x, y));
             }
+        }
 
-            //Read all torch tiles
-            JSONArray torchTiles = (JSONArray) levelOjbect.get("torches");
-            if (torchTiles != null) {
-                for (Object torch : torchTiles) {
-                    JSONArray coords = (JSONArray) torch;
-                    int x = Integer.parseInt(coords.get(0).toString());
-                    int y = Integer.parseInt(coords.get(1).toString());
-                    addGameObject(new Torch(x, y));
-                }
-            }
+        // Read endpoint
+        JSONArray endpoint = (JSONArray) levelObject.get("endpoint");
+        if (endpoint != null) {
+            int endX = Integer.parseInt(endpoint.get(0).toString());
+            int endY = Integer.parseInt(endpoint.get(1).toString());
+            addGameObject(new EndPoint(endX, endY));
+        }
 
-            // Read endpoint
-            JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
-            if (endpoint != null) {
-                int endX = Integer.parseInt(endpoint.get(0).toString());
-                int endY = Integer.parseInt(endpoint.get(1).toString());
-                addGameObject(new EndPoint(endX, endY));
-            }
-
-            // Read player startpoint
-            JSONArray playerpoint = (JSONArray) levelOjbect.get("player");
-            if (playerpoint != null) {
-                int playerX = Integer.parseInt(playerpoint.get(0).toString());
-                int playerY = Integer.parseInt(playerpoint.get(1).toString());
-                player = new Player(playerX, playerY);
-                addGameObject(player);
-            }
-
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
+        // Read player startpoint
+        JSONArray playerpoint = (JSONArray) levelObject.get("player");
+        if (playerpoint != null) {
+            int playerX = Integer.parseInt(playerpoint.get(0).toString());
+            int playerY = Integer.parseInt(playerpoint.get(1).toString());
+            player = new Player(playerX, playerY);
+            addGameObject(player);
         }
     }
 
@@ -237,19 +249,20 @@ public class Level extends JPanel {
             object.put("endpoint", endpoint);
         }
 
-        URL url = getClass().getResource("/levels/level-" + id + ".json");
         File file = null;
         try {
-            file = new File(URLDecoder.decode(url.getPath(), "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
+            file = LevelLoader.getInstance().getCustomLevelFile(id);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(object.toJSONString());
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (file != null) {
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(object.toJSONString());
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -287,6 +300,11 @@ public class Level extends JPanel {
         };
     }
 
+    /**
+     * Regenerate all walls
+     * - remove all walls
+     * - create new walls
+     */
     public void regenerateWalls() {
         Wall[] walls = getGameObjects().stream().filter(gameObject -> gameObject instanceof Wall).toArray(Wall[]::new);
         for (Wall wall : walls)
@@ -336,5 +354,12 @@ public class Level extends JPanel {
             LevelLoader.getInstance().stop();
             GameScreen.getInstance().setPanel(new PauseScreen(), "Paused");
         }
+    }
+
+    /**
+     * Restart the current level
+     */
+    public void restart() {
+        loadLevel();
     }
 }

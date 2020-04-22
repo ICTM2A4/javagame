@@ -3,10 +3,20 @@ package nl.ictm2a4.javagame.loaders;
 import nl.ictm2a4.javagame.screens.MainMenu;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import javax.swing.*;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.Optional;
 
 public class LevelLoader implements Runnable {
+
+    private final Path customLevelsPath = Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath() + File.separator + GameScreen.gameName).replaceAll("%20", " "));
+    public static final int defaultLevelAmount = 3;
 
     private static LevelLoader instance;
 
@@ -24,6 +34,11 @@ public class LevelLoader implements Runnable {
 
     public LevelLoader() {
         instance = this;
+
+        File gameFolder = new File(customLevelsPath.toUri());
+        if (!gameFolder.exists()) {
+            gameFolder.mkdir();
+        }
     }
 
     /**
@@ -50,6 +65,8 @@ public class LevelLoader implements Runnable {
      */
     public boolean startLevel() {
         if (currentLevel == null) return false;
+        currentLevel.setRenderShadows(true);
+        currentLevel.loadLevel();
         GameScreen.getInstance().setPanel(currentLevel, currentLevel.getName());
         start();
         return true;
@@ -132,5 +149,106 @@ public class LevelLoader implements Runnable {
      */
     public static LevelLoader getInstance() {
         return instance;
+    }
+
+    private File checkFolders() {
+        File customLevelsFolder = new File((customLevelsPath + File.separator + "customlevels").replaceAll("%20", ""));
+
+        if (!customLevelsFolder.exists())
+            customLevelsFolder.mkdir();
+
+        return customLevelsFolder;
+    }
+
+    /**
+     * Create a custom level file
+     * @param id The id of the level
+     * @return The created file
+     * @throws IOException
+     */
+    public File createCustomLevelFile(int id) throws IOException {
+
+        File customLevelsFolder = checkFolders();
+
+        File file = new File(customLevelsFolder.getPath() + File.separator + "level-"+id+".json");
+        file.createNewFile();
+
+
+        JSONObject object = new JSONObject();
+        object.put("name", "");
+        object.put("ground", new JSONArray());
+
+        try(FileWriter writer = new FileWriter(file)) {
+            writer.write(object.toJSONString());
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file;
+    }
+
+    /**
+     * Get a custom level file from the filesystem
+     * @param id The id of the level
+     * @return Get the custom level file
+     * @throws IOException
+     */
+    public File getCustomLevelFile(int id) throws IOException {
+        File customLevelsFolder = checkFolders();
+        File file = new File(customLevelsFolder.getPath() + File.separator + "level-"+id+".json");
+        if (!file.exists())
+            return createCustomLevelFile(id);
+        else
+            return file;
+    }
+
+    /**
+     * Return a level JSON object from default levels or custom level
+     * @param id The id of the level
+     * @return Optional JSON object
+     */
+    public Optional<JSONObject> getLevelObject(int id) {
+        JSONParser parser = new JSONParser();
+        Optional<JSONObject> levelOjbect = Optional.empty();
+
+        if (id < LevelLoader.defaultLevelAmount) {
+            try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
+                Reader rd = new InputStreamReader(is, "UTF-8");
+                Object object = parser.parse(rd);
+                levelOjbect = Optional.of((JSONObject) object);
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            File customLevelsFolder = new File((customLevelsPath + File.separator + "customlevels").replaceAll("%20", ""));
+            File file = new File(customLevelsFolder.getPath() + File.separator + "level-" + id + ".json");
+
+            try (InputStream is = new FileInputStream(file)) {
+                Reader rd = new InputStreamReader(is, "UTF-8");
+                Object object = parser.parse(rd);
+                levelOjbect = Optional.of((JSONObject) object);
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return levelOjbect;
+    }
+
+    /**
+     * Get a new level id
+     * @return Integer of new level id
+     */
+    public int getNewLevelId() {
+        File customLevelFolder = checkFolders();
+        return defaultLevelAmount + customLevelFolder.listFiles().length;
+    }
+
+    /**
+     * Create a new custom level
+     */
+    public void createCustomLevel() {
+        LevelLoader.getInstance().loadLevel(LevelLoader.getInstance().getNewLevelId());
     }
 }
