@@ -14,8 +14,10 @@ import java.util.List;
 
 public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
+    public static final String gameName = "JavaGame";
+
     private static GameScreen instance;
-    private String title = "Java game";
+    private String title = gameName;
     private List<Integer> pressedKeys;
 
     public GameScreen() {

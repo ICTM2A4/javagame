@@ -8,10 +8,8 @@ import nl.ictm2a4.javagame.loaders.LevelLoader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class LevelEditor extends JPanel implements ActionListener {
@@ -43,7 +41,6 @@ public class LevelEditor extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 150)));
         setLayout ( new GridBagLayout () );
 
-        LevelLoader.getInstance().loadLevel(2);
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
         level.setRenderShadows(false);
 
