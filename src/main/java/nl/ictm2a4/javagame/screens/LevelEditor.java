@@ -11,8 +11,9 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-public class LevelEditor extends JPanel implements ActionListener {
+public class LevelEditor extends JPanel implements ActionListener, MouseMotionListener {
 
     private final int hGap = 0;
     private final int vGap = 0;
@@ -49,6 +50,8 @@ public class LevelEditor extends JPanel implements ActionListener {
         addComp ( this, level, 1, 1, 1, 1
             , GridBagConstraints.BOTH, LevelLoader.width, LevelLoader.height );
         level.addMouseListener(new LevelEditorMouseListener());
+        level.addMouseMotionListener(this);
+
         createButtons();
         createItems();
 
@@ -95,6 +98,43 @@ public class LevelEditor extends JPanel implements ActionListener {
         }
     }
 
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        int gridX = Math.round(e.getX() / 32);
+        int gridY = Math.round(e.getY() / 32);
+
+        Level level = LevelLoader.getInstance().getCurrentLevel().get();
+        Stream<GameObject> objectStream = level.fromCoordsToArray(e.getX(), e.getY());
+        Optional<GameObject> find = objectStream.filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
+
+        if (SwingUtilities.isLeftMouseButton(e)) { // left mouse button
+            if (find.isEmpty()) {
+                switch (current.getSimpleName().toLowerCase()) {
+                    case "ground": {
+                        if (gridX > 0 &&
+                            (LevelLoader.width / LevelLoader.gridWidth) - 1 > gridX &&
+                            gridY > 0 &&
+                            (LevelLoader.height / LevelLoader.gridHeight) - 1 > gridY)
+                            level.addGameObject(new Ground(gridX, gridY));
+                        break;
+                    }
+                }
+            }
+
+        }
+        else if (SwingUtilities.isRightMouseButton(e)) { // right mouse button
+            find.ifPresent(level::removeGameObject);
+        }
+
+        level.repaint();
+        level.regenerateWalls();
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
+    }
+
     public class LevelEditorMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
@@ -114,7 +154,7 @@ public class LevelEditor extends JPanel implements ActionListener {
                                 (LevelLoader.width / LevelLoader.gridWidth) - 1 > gridX &&
                                 gridY > 0 &&
                                 (LevelLoader.height / LevelLoader.gridHeight) - 1 > gridY)
-                                level.addGameObject(new Ground(gridX,gridY));
+                                level.addGameObject(new Ground(gridX, gridY));
                             break;
                         }
                         case "endpoint": {
