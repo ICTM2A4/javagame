@@ -69,6 +69,7 @@ public class Level extends JPanel {
 
     /**
      * Get all loaded GameObjects in the Level
+     * 
      * @return ArrayList of GameObjects
      */
     public ArrayList<GameObject> getGameObjects() {
@@ -80,16 +81,18 @@ public class Level extends JPanel {
     }
     /**
      * Render the level
+     * 
      * @param g Graphics of the JPanel
      */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        getGameObjects().stream().sorted(Comparator.comparingInt(GameObject::getyIndex)).forEach(object -> object.draw(g));
+        getGameObjects().stream().sorted(Comparator.comparingInt(GameObject::getyIndex))
+                .forEach(object -> object.draw(g));
 
         if (this.renderShadows) {
-            g.setColor(new Color(255,153,51,40));
-            g.fillRect(0,0,getWidth(),getHeight());
+            g.setColor(new Color(255, 153, 51, 40));
+            g.fillRect(0, 0, getWidth(), getHeight());
             drawLights();
             g.drawImage(shadow, 0, 0, null);
         }
@@ -103,11 +106,12 @@ public class Level extends JPanel {
 
         g.setComposite(AlphaComposite.Src);
         g.setColor(Color.BLACK);
-        g.fillRect(0,0,getWidth(),getHeight());
+        g.fillRect(0, 0, getWidth(), getHeight());
 
-        drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24), 50);
-        getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch ->
-            drawLight(g, new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
+        drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24),
+                50);
+        getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> drawLight(g,
+                new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
 
         getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).forEach(endPoint ->
             drawLight(g, new Point(endPoint.getX() + (endPoint.getWidth() / 2), endPoint.getY() + (endPoint.getHeight() / 2)), 12));
@@ -117,7 +121,8 @@ public class Level extends JPanel {
 
     /**
      * Draw a light circle on the lightmap
-     * @param g2d Graphics2D of the JPanel
+     * 
+     * @param g2d    Graphics2D of the JPanel
      * @param center The centre point of the light circle
      * @param radius Radius of the light cirlce
      */
@@ -129,17 +134,19 @@ public class Level extends JPanel {
         }
 
         g2d.setComposite(AlphaComposite.DstOut);
-        float[] dist = {0.0f, 1.0f};
-        Color[] colors = new Color[]{Color.WHITE, new Color(0,0,0,0)};
+        float[] dist = { 0.0f, 1.0f };
+        Color[] colors = new Color[] { Color.WHITE, new Color(0, 0, 0, 0) };
         Point2D pt = new Point2D.Float(center.x, center.y);
 
-        RadialGradientPaint paint = new RadialGradientPaint(pt, radius, dist, colors, MultipleGradientPaint.CycleMethod.NO_CYCLE);
+        RadialGradientPaint paint = new RadialGradientPaint(pt, radius, dist, colors,
+                MultipleGradientPaint.CycleMethod.NO_CYCLE);
         g2d.setPaint(paint);
-        g2d.fillOval((int) pt.getX()-radius, (int) pt.getY() - radius,radius*2,radius*2);
+        g2d.fillOval((int) pt.getX() - radius, (int) pt.getY() - radius, radius * 2, radius * 2);
     }
 
     /**
      * Add a GameObject to the level
+     * 
      * @param gameObject GameObject to add
      */
     public void addGameObject(GameObject gameObject) {
@@ -149,6 +156,7 @@ public class Level extends JPanel {
 
     /**
      * Remove a GameObject to the level
+     * 
      * @param gameObject GameObject to remove
      */
     public void removeGameObject(GameObject gameObject) {
@@ -158,6 +166,7 @@ public class Level extends JPanel {
 
     /**
      * Get the name of the level
+     * 
      * @return Levelname as String
      */
     public String getName() {
@@ -166,6 +175,7 @@ public class Level extends JPanel {
 
     /**
      * Set the level name
+     * 
      * @param name levelname to set
      */
     public void setName(String name) {
@@ -198,14 +208,14 @@ public class Level extends JPanel {
 
         // Read all ground tiles
         JSONArray groundTiles = (JSONArray) levelObject.get("ground");
-        for(Object ground : groundTiles) {
+        for (Object ground : groundTiles) {
             JSONArray coords = (JSONArray) ground;
             int x = Integer.parseInt(coords.get(0).toString());
             int y = Integer.parseInt(coords.get(1).toString());
-            addGameObject(new Ground(x,y));
+            addGameObject(new Ground(x, y));
         }
 
-        //Read all torch tiles
+        // Read all torch tiles
         JSONArray torchTiles = (JSONArray) levelObject.get("torches");
         if (torchTiles != null) {
             for (Object torch : torchTiles) {
@@ -213,6 +223,18 @@ public class Level extends JPanel {
                 int x = Integer.parseInt(coords.get(0).toString());
                 int y = Integer.parseInt(coords.get(1).toString());
                 addGameObject(new Torch(x, y));
+            }
+        }
+
+        // Read all keys
+        JSONArray keys = (JSONArray) levelOjbect.get("keys");
+        if (keys != null) {
+            for (Object key : keys) {
+                JSONArray coords = (JSONArray) key;
+                int x = Integer.parseInt(coords.get(0).toString());
+                int y = Integer.parseInt(coords.get(1).toString());
+                int code = Integer.parseInt(coords.get(2).toString());
+                addCollidable(new Key(x, y, code));
             }
         }
 
@@ -243,34 +265,37 @@ public class Level extends JPanel {
         object.put("name", this.getName());
 
         JSONArray groundTiles = new JSONArray();
-        for(Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground).toArray(Ground[]::new)) {
+        for (Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground)
+                .toArray(Ground[]::new)) {
             JSONArray groundArray = new JSONArray();
             groundArray.add(ground.getX() / LevelLoader.GRIDWIDTH);
             groundArray.add(ground.getY() / LevelLoader.GRIDHEIGHT);
             groundTiles.add(groundArray);
         }
-        object.put("ground",groundTiles);
+        object.put("ground", groundTiles);
 
         JSONArray torchTiles = new JSONArray();
-        for(Torch torch : getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).toArray(Torch[]::new)) {
+        for (Torch torch : getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch)
+                .toArray(Torch[]::new)) {
             JSONArray torchArray = new JSONArray();
             torchArray.add(torch.getX() / LevelLoader.GRIDWIDTH);
             torchArray.add(torch.getY() / LevelLoader.GRIDHEIGHT);
             torchTiles.add(torchArray);
         }
-        object.put("torches",torchTiles);
+        object.put("torches", torchTiles);
 
         JSONArray player = new JSONArray();
-        Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+        Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player)
+                .findFirst();
         if (oPlayer.isPresent()) {
             player.add(oPlayer.get().getX() / LevelLoader.GRIDWIDTH);
             player.add(oPlayer.get().getY() / LevelLoader.GRIDHEIGHT);
             object.put("player", player);
         }
 
-
         JSONArray endpoint = new JSONArray();
-        Optional<GameObject> end = getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
+        Optional<GameObject> end = getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint)
+                .findFirst();
         if (end.isPresent()) {
             endpoint.add(end.get().getX() / LevelLoader.GRIDWIDTH);
             endpoint.add(end.get().getY() / LevelLoader.GRIDHEIGHT);
@@ -296,6 +321,7 @@ public class Level extends JPanel {
 
     /**
      * Set if the level should render dark overlay with light circles
+     * 
      * @param renderShadows Value of rendering shadows
      */
     public void setRenderShadows(boolean renderShadows) {
@@ -309,18 +335,19 @@ public class Level extends JPanel {
     /**
      * Generate the walls based on the groundTiles
      *
-     * Loop over all ground tiles and check if the
-     * 8 positions around the ground tile are occupied, if empty generate wall
+     * Loop over all ground tiles and check if the 8 positions around the ground
+     * tile are occupied, if empty generate wall
      */
     private void generateWalls() {
-        Ground[] groundTiles = getGameObjects().stream().filter(object -> (object instanceof Ground)).toArray(Ground[]::new);
+        Ground[] groundTiles = getGameObjects().stream().filter(object -> (object instanceof Ground))
+                .toArray(Ground[]::new);
 
         for(Ground ground : groundTiles) {
             int x = ground.getX() / LevelLoader.GRIDWIDTH;
             int y = ground.getY() / LevelLoader.GRIDHEIGHT;
 
-            for (int _x = x-1; _x <= x+1; _x++) {
-                for (int _y = y-1; _y <= y+1; _y++) {
+            for (int _x = x - 1; _x <= x + 1; _x++) {
+                for (int _y = y - 1; _y <= y + 1; _y++) {
                     if (_x == x && _y == y)
                         continue;
 
@@ -329,13 +356,12 @@ public class Level extends JPanel {
                         addGameObject(new Wall(_x,_y));
                 }
             }
-        };
+        }
+        ;
     }
 
     /**
-     * Regenerate all walls
-     * - remove all walls
-     * - create new walls
+     * Regenerate all walls - remove all walls - create new walls
      */
     public void regenerateWalls() {
         Wall[] walls = getGameObjects().stream().filter(gameObject -> gameObject instanceof Wall).toArray(Wall[]::new);
@@ -346,33 +372,34 @@ public class Level extends JPanel {
 
     /**
      * Find a GameObject based on the x and y coordinates
+     * 
      * @param x x to check for
      * @param y y to check for
-     * @return Optional GameObject based on the coords, use #.ifPresent() and #.get() to use
+     * @return Optional GameObject based on the coords, use #.ifPresent() and
+     *         #.get() to use
      */
     @Deprecated
     public Optional<GameObject> fromCoords(int x, int y) {
-        return getGameObjects().stream().filter(gameObject ->
-            (gameObject.getX() <= x &&
-                gameObject.getY() <= y &&
-                gameObject.getX() + gameObject.getWidth() > x &&
-                gameObject.getY() + gameObject.getHeight() > y)
-        ).findAny();
+        return getGameObjects().stream()
+                .filter(gameObject -> (gameObject.getX() <= x && gameObject.getY() <= y
+                        && gameObject.getX() + gameObject.getWidth() > x
+                        && gameObject.getY() + gameObject.getHeight() > y))
+                .findAny();
     }
 
     /**
      * Find a list of GameObjects based on the x, y
+     * 
      * @param x x to search by
      * @param y y to search by
      * @return Stream of GameObjects where x, y are within the boundries
      */
     public Stream<GameObject> fromCoordsToArray(int x, int y) {
-        return Arrays.stream(getGameObjects().stream().filter(gameObject ->
-            (gameObject.getX() <= x &&
-            gameObject.getY() <= y &&
-            gameObject.getX() + gameObject.getWidth() > x &&
-            gameObject.getY() + gameObject.getHeight() > y)
-        ).toArray(GameObject[]::new));
+        return Arrays.stream(getGameObjects().stream()
+                .filter(gameObject -> (gameObject.getX() <= x && gameObject.getY() <= y
+                        && gameObject.getX() + gameObject.getWidth() > x
+                        && gameObject.getY() + gameObject.getHeight() > y))
+                .toArray(GameObject[]::new));
     }
 
     /**
