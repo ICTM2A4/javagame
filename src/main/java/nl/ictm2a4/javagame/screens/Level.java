@@ -6,10 +6,10 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.stream.Stream;
 
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
@@ -37,6 +37,7 @@ public class Level extends JPanel {
 
         loadLevel();
         generateWalls();
+
         renderShadows = true;
         shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
     }
@@ -49,11 +50,14 @@ public class Level extends JPanel {
         return gameObjects;
     }
 
+    /**
+     * Render the level
+     * @param g Graphics of the JPanel
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        getGameObjects().forEach(object -> object.draw(g));
-        this.player.draw(g);
+        getGameObjects().stream().sorted(Comparator.comparingInt(GameObject::getyIndex)).forEach(object -> object.draw(g));
 
         if (this.renderShadows) {
             g.setColor(new Color(255,153,51,40));
@@ -63,6 +67,9 @@ public class Level extends JPanel {
         }
     }
 
+    /**
+     * Create a lightmap and draw all light cirlces on the map
+     */
     private void drawLights() {
         Graphics2D g = shadow.createGraphics();
 
@@ -70,15 +77,20 @@ public class Level extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(0,0,getWidth(),getHeight());
 
-        drawLight(g, player, 50);
-        getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> {
-            drawLight(g, torch, 50);
-        });
+        drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24), 50);
+        getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch ->
+            drawLight(g, new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
 
         g.dispose();
     }
 
-    private void drawLight(Graphics2D g2d, GameObject center, int radius) {
+    /**
+     * Draw a light circle on the lightmap
+     * @param g2d Graphics2D of the JPanel
+     * @param center The centre point of the light circle
+     * @param radius Radius of the light cirlce
+     */
+    private void drawLight(Graphics2D g2d, Point center, int radius) {
         int min = (radius - 2);
         int max = (radius + 6);
         radius = new Random().nextInt((max - min) + 1) + min;
@@ -86,10 +98,7 @@ public class Level extends JPanel {
         g2d.setComposite(AlphaComposite.DstOut);
         float[] dist = {0.0f, 1.0f};
         Color[] colors = new Color[]{Color.WHITE, new Color(0,0,0,0)};
-        Point2D pt = new Point2D.Float(center.getX() + (center.getWidth() / 2), center.getY() + (center.getHeight() / 2));
-
-        if (center instanceof Player)
-            pt = new Point2D.Float(center.getX() + (center.getWidth() / 2), center.getY() + (center.getHeight() / 2) - 24);
+        Point2D pt = new Point2D.Float(center.x, center.y);
 
         RadialGradientPaint paint = new RadialGradientPaint(pt, radius, dist, colors, MultipleGradientPaint.CycleMethod.NO_CYCLE);
         g2d.setPaint(paint);
@@ -100,9 +109,18 @@ public class Level extends JPanel {
      * Add a GameObject to the level
      * @param gameObject GameObject to add
      */
-    public void addCollidable(GameObject gameObject) {
+    public void addGameObject(GameObject gameObject) {
         if (!this.gameObjects.contains(gameObject))
             this.gameObjects.add(gameObject);
+    }
+
+    /**
+     * Remove a GameObject to the level
+     * @param gameObject GameObject to remove
+     */
+    public void removeGameObject(GameObject gameObject) {
+        if (this.gameObjects.contains(gameObject))
+            this.gameObjects.remove(gameObject);
     }
 
     /**
@@ -114,13 +132,21 @@ public class Level extends JPanel {
     }
 
     /**
+     * Set the level name
+     * @param name levelname to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * Load the current level from it's JSON file
      */
     public void loadLevel() {
         JSONParser parser = new JSONParser();
 
         try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
-            Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
+            Reader rd = new InputStreamReader(is, "UTF-8");
             Object object = parser.parse(rd);
             JSONObject levelOjbect = (JSONObject) object;
 
@@ -133,27 +159,104 @@ public class Level extends JPanel {
                 JSONArray coords = (JSONArray) ground;
                 int x = Integer.parseInt(coords.get(0).toString());
                 int y = Integer.parseInt(coords.get(1).toString());
-                addCollidable(new Ground(x,y));
+                addGameObject(new Ground(x,y));
+            }
+
+            //Read all torch tiles
+            JSONArray torchTiles = (JSONArray) levelOjbect.get("torches");
+            if (torchTiles != null) {
+                for (Object torch : torchTiles) {
+                    JSONArray coords = (JSONArray) torch;
+                    int x = Integer.parseInt(coords.get(0).toString());
+                    int y = Integer.parseInt(coords.get(1).toString());
+                    addGameObject(new Torch(x, y));
+                }
             }
 
             // Read endpoint
             JSONArray endpoint = (JSONArray) levelOjbect.get("endpoint");
-            int endX = Integer.parseInt(endpoint.get(0).toString());
-            int endY = Integer.parseInt(endpoint.get(1).toString());
-            addCollidable(new EndPoint(endX, endY));
+            if (endpoint != null) {
+                int endX = Integer.parseInt(endpoint.get(0).toString());
+                int endY = Integer.parseInt(endpoint.get(1).toString());
+                addGameObject(new EndPoint(endX, endY));
+            }
 
             // Read player startpoint
             JSONArray playerpoint = (JSONArray) levelOjbect.get("player");
-            int playerX = Integer.parseInt(playerpoint.get(0).toString());
-            int playerY = Integer.parseInt(playerpoint.get(1).toString());
-            player = new Player(playerX, playerY);
-            addCollidable(player);
+            if (playerpoint != null) {
+                int playerX = Integer.parseInt(playerpoint.get(0).toString());
+                int playerY = Integer.parseInt(playerpoint.get(1).toString());
+                player = new Player(playerX, playerY);
+                addGameObject(player);
+            }
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Covert the level to a .JSON file
+     */
+    public void saveLevel() {
+        JSONObject object = new JSONObject();
+        object.put("name", this.getName());
+
+        JSONArray groundTiles = new JSONArray();
+        for(Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground).toArray(Ground[]::new)) {
+            JSONArray groundArray = new JSONArray();
+            groundArray.add(ground.getX() / LevelLoader.gridWidth);
+            groundArray.add(ground.getY() / LevelLoader.gridHeight);
+            groundTiles.add(groundArray);
+        }
+        object.put("ground",groundTiles);
+
+        JSONArray torchTiles = new JSONArray();
+        for(Torch torch : getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).toArray(Torch[]::new)) {
+            JSONArray torchArray = new JSONArray();
+            torchArray.add(torch.getX() / LevelLoader.gridWidth);
+            torchArray.add(torch.getY() / LevelLoader.gridHeight);
+            torchTiles.add(torchArray);
+        }
+        object.put("torches",torchTiles);
+
+        JSONArray player = new JSONArray();
+        Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+        if (oPlayer.isPresent()) {
+            player.add(oPlayer.get().getX() / LevelLoader.gridWidth);
+            player.add(oPlayer.get().getY() / LevelLoader.gridHeight);
+            object.put("player", player);
+        }
+
+
+        JSONArray endpoint = new JSONArray();
+        Optional<GameObject> end = getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
+        if (end.isPresent()) {
+            endpoint.add(end.get().getX() / LevelLoader.gridWidth);
+            endpoint.add(end.get().getY() / LevelLoader.gridHeight);
+            object.put("endpoint", endpoint);
+        }
+
+        URL url = getClass().getResource("/levels/level-" + id + ".json");
+        File file = null;
+        try {
+            file = new File(URLDecoder.decode(url.getPath(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(object.toJSONString());
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Set if the level should render dark overlay with light circles
+     * @param renderShadows Value of rendering shadows
+     */
     public void setRenderShadows(boolean renderShadows) {
         this.renderShadows = renderShadows;
     }
@@ -176,11 +279,19 @@ public class Level extends JPanel {
                     if (_x == x && _y == y)
                         continue;
 
-                    if (fromCoords(_x * LevelLoader.gridWidth, _y * LevelLoader.gridHeight).isEmpty())
-                        addCollidable(new Wall(_x,_y));
+                    if (fromCoordsToArray(_x * LevelLoader.gridWidth, _y * LevelLoader.gridHeight)
+                        .filter(gameObject -> gameObject instanceof Wall || gameObject instanceof Ground).findAny().isEmpty())
+                        addGameObject(new Wall(_x,_y));
                 }
             }
-        }
+        };
+    }
+
+    public void regenerateWalls() {
+        Wall[] walls = getGameObjects().stream().filter(gameObject -> gameObject instanceof Wall).toArray(Wall[]::new);
+        for (Wall wall : walls)
+            getGameObjects().remove(wall);
+        generateWalls();
     }
 
     /**
@@ -189,8 +300,29 @@ public class Level extends JPanel {
      * @param y y to check for
      * @return Optional GameObject based on the coords, use #.ifPresent() and #.get() to use
      */
+    @Deprecated
     public Optional<GameObject> fromCoords(int x, int y) {
-        return getGameObjects().stream().filter(object -> (object.getX() == x && object.getY() == y)).findAny();
+        return getGameObjects().stream().filter(gameObject ->
+            (gameObject.getX() <= x &&
+                gameObject.getY() <= y &&
+                gameObject.getX() + gameObject.getWidth() > x &&
+                gameObject.getY() + gameObject.getHeight() > y)
+        ).findAny();
+    }
+
+    /**
+     * Find a list of GameObjects based on the x, y
+     * @param x x to search by
+     * @param y y to search by
+     * @return Stream of GameObjects where x, y are within the boundries
+     */
+    public Stream<GameObject> fromCoordsToArray(int x, int y) {
+        return Arrays.stream(getGameObjects().stream().filter(gameObject ->
+            (gameObject.getX() <= x &&
+            gameObject.getY() <= y &&
+            gameObject.getX() + gameObject.getWidth() > x &&
+            gameObject.getY() + gameObject.getHeight() > y)
+        ).toArray(GameObject[]::new));
     }
 
     /**

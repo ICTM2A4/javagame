@@ -9,12 +9,20 @@ public abstract class GameObject {
 
     private int x, y, width, height;
     private boolean collidable = true;
+    private boolean isEntity;
+    private int yIndex;
 
     public GameObject(int x, int y, int width, int height) {
+        this(x,y,width,height,true);
+    }
+
+    public GameObject(int x, int y, int width, int height, boolean isEntity) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.isEntity = isEntity;
+        this.yIndex = 0;
     }
 
     /**
@@ -58,6 +66,14 @@ public abstract class GameObject {
 
         // The objects overlap on either or bot@h of the axis.
         return true;
+    }
+
+    /**
+     * Set the yIndex of the object, used in the drawing order
+     * @param yIndex index of the object
+     */
+    public void setyIndex(int yIndex) {
+        this.yIndex = yIndex;
     }
 
     /**
@@ -127,6 +143,14 @@ public abstract class GameObject {
     }
 
     /**
+     * Get the Y index of the object
+     * @return Yindex of object
+     */
+    public int getyIndex() {
+        return yIndex;
+    }
+
+    /**
      * Locate all connected faces to a GameObject of same object type
      *
      * [0]: north
@@ -140,10 +164,10 @@ public abstract class GameObject {
         String s = this.getClass().getCanonicalName();
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
         return new boolean[] {
-            level.fromCoords(getX(), getY() - LevelLoader.gridHeight).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
-            level.fromCoords(getX() + LevelLoader.gridWidth, getY()).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
-            level.fromCoords(getX(), getY() + LevelLoader.gridHeight).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent(),
-            level.fromCoords(getX() - LevelLoader.gridWidth, getY()).filter(o -> s.equals(o.getClass().getCanonicalName())).isPresent()
+            level.fromCoordsToArray(getX(), getY() - LevelLoader.gridHeight).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX() + LevelLoader.gridWidth, getY()).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX(), getY() + LevelLoader.gridHeight).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX() - LevelLoader.gridWidth, getY()).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
         };
     }
 
@@ -159,4 +183,12 @@ public abstract class GameObject {
      * Tick the GameObject
      */
     public void tick() {}
+
+    /**
+     * Get if the object is an entity
+     * @return boolean isEntity
+     */
+    public boolean isEntity() {
+        return this.isEntity;
+    }
 }

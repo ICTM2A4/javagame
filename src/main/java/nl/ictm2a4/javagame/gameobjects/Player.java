@@ -21,8 +21,9 @@ public class Player extends GameObject {
     public Player(int gridX, int gridY) {
         super(((gridX * LevelLoader.gridWidth) + 4),
             ((gridY * LevelLoader.gridHeight) + 2),
-            16, 20);
+            16, 20, true);
         setCollidable(false);
+        setyIndex(10);
         status = PlayerStatus.IDLE;
         direction = PlayerStatus.Direction.RIGHT;
     }

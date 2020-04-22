@@ -21,6 +21,9 @@ public class FileLoader {
         loadImages();
     }
 
+    /**
+     * Load all the images
+     */
     private void loadImages() {
         reloadGroundTiles();
         reloadWallTiles();

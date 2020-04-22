@@ -25,7 +25,7 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
         new FileLoader();
         new LevelLoader();
-        pressedKeys = new ArrayList<Integer>();
+        pressedKeys = new ArrayList<>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -77,6 +77,11 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         setTitle(title);
     }
 
+    /**
+     * Set the panel of the GameScreen and update the title
+     * @param panel The new JPanel to set
+     * @param title The title to append to the gametitle
+     */
     public void setPanel(JPanel panel, String title) {
         setContentPane(panel);
         pack();
@@ -84,6 +89,11 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         requestFocus();
         addTitle(title);
     }
+
+    /**
+     * Set the panel of the GameScreen and reset the title
+     * @param panel The new JPanel to set
+     */
     public void setPanel(JPanel panel) {
         setPanel(panel, "");
         resetTitle();
