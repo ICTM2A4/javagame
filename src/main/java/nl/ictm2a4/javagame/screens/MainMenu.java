@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class MainMenu extends JPanel implements ActionListener {
 
@@ -62,9 +63,10 @@ public class MainMenu extends JPanel implements ActionListener {
             LevelLoader.getInstance().startLevel();
         }
         if(e.getSource() == selectlevel) {
-            System.out.println("Level Select start op");
+            GameScreen.getInstance().setPanel(new LevelSelectScreen(), "Select Level");
         }
         if(e.getSource() == levelbuilder) {
+            LevelLoader.getInstance().createCustomLevel();
             GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
         }
         if(e.getSource() == exit) {
