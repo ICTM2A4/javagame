@@ -1,6 +1,5 @@
 package nl.ictm2a4.javagame.screens;
 
-import com.sun.tools.jconsole.JConsolePlugin;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import javax.swing.*;
@@ -44,7 +43,8 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         add(hFill0);
         Jplevel = new JPanel();
         Jplevel.setLayout(new GridLayout(0, 3, 5, 5));
-        Jplevel.setPreferredSize(new Dimension(160, 480));
+        Jplevel.setMinimumSize(new Dimension(160, 60));
+        Jplevel.revalidate();
         Jplevel.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(Jplevel);
         JScrollPane scrollFrame1 = new JScrollPane(Jplevel);
@@ -54,7 +54,6 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         for(int i = 0; i < LevelLoader.defaultLevelAmount; i++) {
             JButton button = new JButton();
             button.add(new JLabel("level " + (1 + i)));
-            button.setPreferredSize(new Dimension(10, 17));
             levels.add(button);
             Jplevel.add(button);
 
@@ -72,7 +71,8 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         JpcustomLevel = new JPanel();
         JpcustomLevel.setLayout(new GridLayout(0, 3, 5, 5));
         JpcustomLevel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JpcustomLevel.setPreferredSize(new Dimension(160, 480));
+        JpcustomLevel.setMinimumSize(new Dimension(160, 60));
+        JpcustomLevel.revalidate();
         add(JpcustomLevel);
 
         JScrollPane scrollFrame2 = new JScrollPane(JpcustomLevel);

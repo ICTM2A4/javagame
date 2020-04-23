@@ -16,7 +16,7 @@ import java.util.Optional;
 public class LevelLoader implements Runnable {
 
     private final Path customLevelsPath = Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath() + File.separator + GameScreen.gameName).replaceAll("%20", " "));
-    public static final int defaultLevelAmount = 3;
+    public static final int defaultLevelAmount = 10;
 
     private static LevelLoader instance;
 
