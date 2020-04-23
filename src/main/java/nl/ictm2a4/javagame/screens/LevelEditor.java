@@ -11,8 +11,9 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-public class LevelEditor extends JPanel implements ActionListener {
+public class LevelEditor extends JPanel implements ActionListener, MouseMotionListener {
 
     private final int hGap = 0;
     private final int vGap = 0;
@@ -37,8 +38,7 @@ public class LevelEditor extends JPanel implements ActionListener {
     }
 
     private void displayGUI () {
-
-        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 150)));
+        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 80)));
         setLayout ( new GridBagLayout () );
 
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
@@ -49,6 +49,8 @@ public class LevelEditor extends JPanel implements ActionListener {
         addComp ( this, level, 1, 1, 1, 1
             , GridBagConstraints.BOTH, LevelLoader.width, LevelLoader.height );
         level.addMouseListener(new LevelEditorMouseListener());
+        level.addMouseMotionListener(this);
+
         createButtons();
         createItems();
 
@@ -87,12 +89,49 @@ public class LevelEditor extends JPanel implements ActionListener {
             level.saveLevel();
             JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
         }
-        else if (level_Name.getText().equals("")){
+        else if (e.getSource() == save && level_Name.getText().equals("")){
             JOptionPane.showMessageDialog(this, "Je moet een naam invoeren");
         }
         if(e.getSource() == cancel) {
             GameScreen.getInstance().setPanel(new MainMenu());
         }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        int gridX = Math.round(e.getX() / 32);
+        int gridY = Math.round(e.getY() / 32);
+
+        Level level = LevelLoader.getInstance().getCurrentLevel().get();
+        Stream<GameObject> objectStream = level.fromCoordsToArray(e.getX(), e.getY());
+        Optional<GameObject> find = objectStream.filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
+
+        if (SwingUtilities.isLeftMouseButton(e)) { // left mouse button
+            if (find.isEmpty()) {
+                switch (current.getSimpleName().toLowerCase()) {
+                    case "ground": {
+                        if (gridX > 0 &&
+                            (LevelLoader.width / LevelLoader.gridWidth) - 1 > gridX &&
+                            gridY > 0 &&
+                            (LevelLoader.height / LevelLoader.gridHeight) - 1 > gridY)
+                            level.addGameObject(new Ground(gridX, gridY));
+                        break;
+                    }
+                }
+            }
+
+        }
+        else if (SwingUtilities.isRightMouseButton(e)) { // right mouse button
+            find.ifPresent(level::removeGameObject);
+        }
+
+        level.repaint();
+        level.regenerateWalls();
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
     }
 
     public class LevelEditorMouseListener extends MouseAdapter {
@@ -114,7 +153,7 @@ public class LevelEditor extends JPanel implements ActionListener {
                                 (LevelLoader.width / LevelLoader.gridWidth) - 1 > gridX &&
                                 gridY > 0 &&
                                 (LevelLoader.height / LevelLoader.gridHeight) - 1 > gridY)
-                                level.addGameObject(new Ground(gridX,gridY));
+                                level.addGameObject(new Ground(gridX, gridY));
                             break;
                         }
                         case "endpoint": {
@@ -156,7 +195,7 @@ public class LevelEditor extends JPanel implements ActionListener {
     private void createButtons() {
         JPanel buttons = getPanel ( Color.white );
         addComp ( this, buttons, 1, 2, 1, 1
-            , GridBagConstraints.BOTH, LevelLoader.width, 50 );
+            , GridBagConstraints.BOTH, LevelLoader.width, 40 );
         buttons.setLayout(new FlowLayout());
         save = new JButton("Save");
         save.addActionListener(this);
@@ -170,7 +209,7 @@ public class LevelEditor extends JPanel implements ActionListener {
         String current_level = "";
         JPanel nameField = getPanel (Color.white);
         addComp(this, nameField, 1, 0, 1, 1,
-            GridBagConstraints.BOTH, LevelLoader.width, 50);
+            GridBagConstraints.BOTH, LevelLoader.width, 40);
         nameField.setLayout(new FlowLayout());
         JLabel preview = new JLabel("level name:");
         nameField.add(preview);

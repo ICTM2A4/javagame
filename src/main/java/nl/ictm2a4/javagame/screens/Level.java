@@ -6,8 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -16,8 +14,6 @@ import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class Level extends JPanel {
 
@@ -28,20 +24,31 @@ public class Level extends JPanel {
     private BufferedImage shadow;
     private boolean renderShadows;
     private Optional<JSONObject> object;
+    private long score;
+    private long current = System.currentTimeMillis();
+
+    public int getId() {
+        return id;
+    }
+
+    public long getScore() {
+        return score;
+    }
 
     public Level(int id) {
         this.id = id;
         gameObjects = new ArrayList<>();
         setBackground(Color.black);
 
+        setLayout(new FlowLayout());
         this.setPreferredSize(new Dimension(LevelLoader.width, LevelLoader.height));
 
         loadObject();
         loadLevel();
         generateWalls();
-
-        renderShadows = true;
+      
         shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
+        setVisible(true);
     }
 
     /**
@@ -66,6 +73,9 @@ public class Level extends JPanel {
         return gameObjects;
     }
 
+    public void clearGameObjects() {
+        this.gameObjects = new ArrayList<>();
+    }
     /**
      * Render the level
      * @param g Graphics of the JPanel
@@ -159,7 +169,9 @@ public class Level extends JPanel {
      * Load the current level from it's JSON file
      */
     public void loadLevel() {
+        clearGameObjects();
         loadObject();
+        current = System.currentTimeMillis();
 
         if (!object.isPresent())
             return;
@@ -205,6 +217,7 @@ public class Level extends JPanel {
             player = new Player(playerX, playerY);
             addGameObject(player);
         }
+        regenerateWalls();
     }
 
     /**
@@ -349,6 +362,7 @@ public class Level extends JPanel {
     public void tick() {
         repaint();
         getGameObjects().forEach(GameObject::tick);
+        score = System.currentTimeMillis() - current;
 
         if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
             LevelLoader.getInstance().stop();
@@ -362,4 +376,5 @@ public class Level extends JPanel {
     public void restart() {
         loadLevel();
     }
+
 }

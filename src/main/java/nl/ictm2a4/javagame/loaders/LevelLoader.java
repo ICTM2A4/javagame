@@ -25,10 +25,10 @@ public class LevelLoader implements Runnable {
     private int FPS = 30;
     private long targetTime = 1000 / FPS;
 
-    public static final int width = 640;
-    public static final int height = 480;
     public static final int gridWidth = 32;
     public static final int gridHeight = 32;
+    public static final int width = 1184;
+    public static final int height = 640;
 
     private Level currentLevel;
 
@@ -67,7 +67,7 @@ public class LevelLoader implements Runnable {
         if (currentLevel == null) return false;
         currentLevel.setRenderShadows(true);
         currentLevel.loadLevel();
-        GameScreen.getInstance().setPanel(currentLevel, currentLevel.getName());
+        GameScreen.getInstance().setPanel(currentLevel);
         start();
         return true;
     }
