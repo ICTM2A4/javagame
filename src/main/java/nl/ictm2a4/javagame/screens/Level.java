@@ -107,6 +107,9 @@ public class Level extends JPanel {
         getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch ->
             drawLight(g, new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
 
+        getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).forEach(endPoint ->
+            drawLight(g, new Point(endPoint.getX() + (endPoint.getWidth() / 2), endPoint.getY() + (endPoint.getHeight() / 2)), 12));
+
         g.dispose();
     }
 
