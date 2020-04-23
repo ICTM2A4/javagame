@@ -188,6 +188,12 @@ public class LevelLoader implements Runnable {
         return file;
     }
 
+    public void removeCustomLevelFile(int id) {
+        File customLevelsFolder = checkFolders();
+        File file = new File(customLevelsFolder.getPath() + File.separator + "level-"+id+".json");
+        file.delete();
+    }
+
     /**
      * Get a custom level file from the filesystem
      * @param id The id of the level
