@@ -33,6 +33,7 @@ public class EndScreen extends JPanel implements ActionListener {
 
         add(hFill0);
         score = new JLabel("tijd: " + points / 1000);
+        score.setForeground(Color.WHITE);
         add(score);
         add(hFill1);
         nextLevel = new JButton("Next Level");

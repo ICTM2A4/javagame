@@ -58,6 +58,12 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         setVisible(true);
     }
 
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(FileLoader.loadImage("level-editor-background.png"), 0, 0, this);
+    }
+
     private void addComp(JPanel panel, JComponent comp
         , int x, int y, int gWidth
         , int gHeight, int fill
@@ -223,6 +229,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             GridBagConstraints.BOTH, LevelLoader.width, 40);
         nameField.setLayout(new FlowLayout());
         JLabel preview = new JLabel("level name:");
+        preview.setForeground(Color.WHITE);
         nameField.add(preview);
         if(LevelLoader.getInstance().getCurrentLevel().isPresent()) {
             current_level = LevelLoader.getInstance().getCurrentLevel().get().getName();
@@ -238,6 +245,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         itemlist.setLayout(new FlowLayout());
 
         JLabel items = new JLabel("Items");
+        items.setForeground(Color.WHITE);
         itemlist.add(items);
 
         itemButtons = new ArrayList<>();
