@@ -21,7 +21,7 @@ public class Level extends JPanel {
     private ArrayList<GameObject> gameObjects;
     private String name;
     private Player player;
-    private BufferedImage shadow;
+    public BufferedImage shadow;
     private boolean renderShadows;
     private Optional<JSONObject> object;
     private long score;

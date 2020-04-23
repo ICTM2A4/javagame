@@ -3,9 +3,11 @@ package nl.ictm2a4.javagame.loaders;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.gameobjects.EndPoint;
 import nl.ictm2a4.javagame.gameobjects.Torch;
+import nl.ictm2a4.javagame.screens.Level;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,6 +149,22 @@ public class FileLoader {
      */
     public static FileLoader getInstance() {
         return instance;
+    }
+
+    public BufferedImage getLevelThumbnail(int id) {
+        Level level = new Level(id);
+
+        BufferedImage image = new BufferedImage(LevelLoader.width, LevelLoader.height, BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.createGraphics();
+
+        level.setRenderShadows(true);
+//        level.tick();
+        level.paintComponent(g);
+
+        g.dispose();
+
+
+        return image;
     }
 }
 
