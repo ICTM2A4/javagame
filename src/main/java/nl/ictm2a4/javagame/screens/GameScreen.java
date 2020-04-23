@@ -31,7 +31,6 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-
         setLayout(new BorderLayout());
         setContentPane(new MainMenu());
         pack();
