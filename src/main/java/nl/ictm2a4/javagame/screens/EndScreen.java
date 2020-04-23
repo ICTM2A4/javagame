@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Optional;
 
 public class EndScreen extends JPanel implements ActionListener {
 
@@ -54,6 +55,7 @@ public class EndScreen extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e ) {
+        GameScreen.getInstance().achieveLevel(levelId + 1);
 
         if(e.getSource() == nextLevel) {
             LevelLoader.getInstance().startLevel(levelId + 1);

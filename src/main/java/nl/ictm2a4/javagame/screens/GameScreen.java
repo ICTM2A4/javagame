@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameScreen extends JFrame implements ActionListener, KeyListener {
@@ -20,6 +21,7 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
     private String title = gameName;
     private List<Integer> pressedKeys;
     public static JPanel fixed;
+    private List<Integer> achievedList;
 
     public GameScreen() {
         setTitle(title);
@@ -47,6 +49,9 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
         addKeyListener(this);
         setVisible(true);
+
+        achievedList = new ArrayList<>();
+        achievedList.add(0);
     }
 
     @Override
@@ -123,5 +128,14 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
 
     public List<Integer> getPressedKeys() {
         return pressedKeys;
+    }
+
+    public List<Integer> getAchievedList() {
+        return this.achievedList;
+    }
+
+    public void achieveLevel(int id) {
+        if (!this.achievedList.contains(id))
+            this.achievedList.add(id);
     }
 }
