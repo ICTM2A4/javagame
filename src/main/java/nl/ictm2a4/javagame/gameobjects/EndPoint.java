@@ -4,23 +4,21 @@ import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.EndScreen;
 import nl.ictm2a4.javagame.screens.GameScreen;
-import nl.ictm2a4.javagame.screens.Level;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class EndPoint extends GameObject {
 
-    private final int animateDelay = 3;
-    public static final int imageAmount = 7;
+    private final int ANIMATEDELAY = 3;
+    public static final int IMAGEAMOUNT = 7;
 
     private int currentImage = 0;
     private int animateCount = 0;
 
     public EndPoint(int gridX, int gridY) {
         super(
-            gridX * LevelLoader.gridWidth + ((LevelLoader.gridWidth - 16) / 2),
-            gridY * LevelLoader.gridHeight + ((LevelLoader.gridHeight - 16) / 2) - 2,
+            gridX * LevelLoader.GRIDWIDTH + ((LevelLoader.GRIDWIDTH - 16) / 2),
+            gridY * LevelLoader.GRIDHEIGHT + ((LevelLoader.GRIDHEIGHT - 16) / 2) - 2,
             16,16);
         setyIndex(9);
     }
@@ -38,10 +36,10 @@ public class EndPoint extends GameObject {
     @Override
     public void tick() {
         animateCount++;
-        if (animateCount - animateDelay == 0) {
+        if (animateCount - ANIMATEDELAY == 0) {
             animateCount = 0;
             currentImage++;
-            if (currentImage == imageAmount) currentImage = 0;
+            if (currentImage == IMAGEAMOUNT) currentImage = 0;
         }
     }
 

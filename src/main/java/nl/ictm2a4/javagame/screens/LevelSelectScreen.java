@@ -13,13 +13,7 @@ import java.util.Optional;
 
 public class LevelSelectScreen extends JPanel implements ActionListener {
 
-    private JLabel selectLevel, custom_Levels;
-    private JButton editLevel, back;
-    private ArrayList<JButton> levels;
-    private ArrayList<JButton> customLevels;
-    private JPanel Jplevel, JpcustomLevel;
-    private final int hGap = 0;
-    private final int vGap = 0;
+    private JButton back;
     private GridBagConstraints gbc;
 
     private void addComp(JPanel panel, JComponent comp
@@ -49,6 +43,8 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
     public LevelSelectScreen() {
         gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        int hGap = 0;
+        int vGap = 0;
         gbc.insets = new Insets(hGap, vGap, hGap, vGap);
 
         displayGUI();
@@ -99,34 +95,32 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
                 new Dimension(0, 10),
                 new Dimension(0, 20));
 
-        selectLevel = new JLabel("Select Level:");
+        JLabel selectLevel = new JLabel("Select Level:");
         selectLevel.setForeground(Color.WHITE);
         center.add(selectLevel);
         center.add(hFill0);
-        Jplevel = new JPanel();
-        Jplevel.setLayout(new GridLayout(0, 3, 5, 5));
-        Jplevel.setMinimumSize(new Dimension(160, 60));
-        Jplevel.revalidate();
-        Jplevel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        center.add(Jplevel);
-        JScrollPane scrollFrame1 = new JScrollPane(Jplevel);
+        JPanel jplevel = new JPanel();
+        jplevel.setLayout(new GridLayout(0, 3, 5, 5));
+        jplevel.setMinimumSize(new Dimension(160, 60));
+        jplevel.revalidate();
+        jplevel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        center.add(jplevel);
+        JScrollPane scrollFrame1 = new JScrollPane(jplevel);
         scrollFrame1.setBorder(BorderFactory.createEmptyBorder());
 
-        Jplevel.setAutoscrolls(true);
-        Jplevel.setBackground(new Color(0, 0, 0, 0));
+        jplevel.setAutoscrolls(true);
+        jplevel.setBackground(new Color(0, 0, 0, 0));
         scrollFrame1.setBackground(new Color(0, 0, 0, 0));
         center.add(scrollFrame1);
 
-        levels = new ArrayList<>();
-        for(int i = 0; i < LevelLoader.defaultLevelAmount; i++) {
+        for(int i = 0; i < LevelLoader.DEFAULTLEVELAMOUNT; i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if (object.isPresent()) {
                 JButton button = new JButton();
                 button.add(new JLabel("" + object.get().get("name")));
                 button.setPreferredSize(new Dimension(10, 30));
                 button.setMaximumSize(new Dimension(10, 30));
-                levels.add(button);
-                Jplevel.add(button);
+                jplevel.add(button);
 
                 if (GameScreen.getInstance().getAchievedList().contains(i)) {
                     int finalI = i;
@@ -142,41 +136,39 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         }
 
         center.add(hFill1);
-        custom_Levels = new JLabel("Select Custom Level:");
+        JLabel custom_Levels = new JLabel("Select Custom Level:");
         custom_Levels.setForeground(Color.WHITE);
         center.add(custom_Levels);
         center.add(hFill4);
-        JpcustomLevel = new JPanel();
-        JpcustomLevel.setLayout(new GridLayout(0, 3, 5, 5));
-        JpcustomLevel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JpcustomLevel.setMinimumSize(new Dimension(160, 60));
-        JpcustomLevel.setBackground(new Color(0, 0, 0, 0));
-        JpcustomLevel.revalidate();
-        center.add(JpcustomLevel);
+        JPanel jpcustomLevel = new JPanel();
+        jpcustomLevel.setLayout(new GridLayout(0, 3, 5, 5));
+        jpcustomLevel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jpcustomLevel.setMinimumSize(new Dimension(160, 60));
+        jpcustomLevel.setBackground(new Color(0, 0, 0, 0));
+        jpcustomLevel.revalidate();
+        center.add(jpcustomLevel);
 
-        JScrollPane scrollFrame2 = new JScrollPane(JpcustomLevel);
+        JScrollPane scrollFrame2 = new JScrollPane(jpcustomLevel);
         scrollFrame2.setBorder(BorderFactory.createEmptyBorder());
-        JpcustomLevel.setAutoscrolls(true);
+        jpcustomLevel.setAutoscrolls(true);
         scrollFrame2.setBackground(new Color(0, 0, 0, 0));
         center.add(scrollFrame2);
 
-        customLevels = new ArrayList<>();
-        for(int i = LevelLoader.defaultLevelAmount; i < LevelLoader.getInstance().getNewLevelId(); i++) {
+        for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < LevelLoader.getInstance().getNewLevelId(); i++) {
             JPanel container = new JPanel();
             container.setLayout(new GridLayout(2, 0,5 ,5 ));
             container.setAlignmentX(Component.CENTER_ALIGNMENT);
             container.setBackground(new Color(0, 0, 0, 0));
 
-            editLevel = new JButton("Edit Level " + (1 + i - LevelLoader.defaultLevelAmount));
+            JButton editLevel = new JButton("Edit Level " + (1 + i - LevelLoader.DEFAULTLEVELAMOUNT));
 
             JButton button = new JButton();
-            button.add(new JLabel("level " + (1 + i - LevelLoader.defaultLevelAmount)));
+            button.add(new JLabel("level " + (1 + i - LevelLoader.DEFAULTLEVELAMOUNT)));
             button.setPreferredSize(new Dimension(10, 17));
             button.setMaximumSize(new Dimension(10, 17));
-            customLevels.add(button);
             container.add(button);
             container.add(editLevel);
-            JpcustomLevel.add(container);
+            jpcustomLevel.add(container);
 
             int loadLevel = i;
             button.addActionListener(

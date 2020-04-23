@@ -7,12 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Optional;
 
 public class EndScreen extends JPanel implements ActionListener {
 
     private JButton nextLevel, backToMainMenu;
-    private JLabel score;
     int levelId = LevelLoader.getInstance().getCurrentLevel().get().getId();
     long points = LevelLoader.getInstance().getCurrentLevel().get().getScore();
 
@@ -32,14 +30,14 @@ public class EndScreen extends JPanel implements ActionListener {
                 new Dimension(0, 75));
 
         add(hFill0);
-        score = new JLabel("tijd: " + points / 1000);
+        JLabel score = new JLabel("tijd: " + points / 1000);
         score.setForeground(Color.WHITE);
         add(score);
         add(hFill1);
         nextLevel = new JButton("Next Level");
         nextLevel.addActionListener(this);
         add(nextLevel);
-        nextLevel.setVisible(LevelLoader.defaultLevelAmount > levelId + 1);
+        nextLevel.setVisible(LevelLoader.DEFAULTLEVELAMOUNT > levelId + 1);
         add(hFill2);
         backToMainMenu = new JButton("Back to Main menu");
         backToMainMenu.addActionListener(this);

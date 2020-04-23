@@ -15,11 +15,9 @@ import java.util.stream.Stream;
 
 public class LevelEditor extends JPanel implements ActionListener, MouseMotionListener {
 
-    private final int hGap = 0;
-    private final int vGap = 0;
     private GridBagConstraints gbc;
     private JButton save, cancel;
-    private JTextField level_Name;
+    private JTextField levelName;
     private HashMap<Image, Class> editorItems;
     private Class current;
     private ArrayList<JButton> itemButtons;
@@ -27,7 +25,9 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     public LevelEditor() {
         gbc = new GridBagConstraints ();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gbc.insets = new Insets( hGap, vGap, hGap, vGap );
+        int hGap = 0;
+        int vGap = 0;
+        gbc.insets = new Insets(hGap, vGap, hGap, vGap);
         editorItems = new HashMap<>();
         editorItems.put(FileLoader.getInstance().getGroundTile(15), Ground.class);
         editorItems.put(FileLoader.getInstance().getCoinImage(0), EndPoint.class);
@@ -38,7 +38,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void displayGUI () {
-        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 80)));
+        this.setPreferredSize(new Dimension((LevelLoader.WIDTH + 2*47), (LevelLoader.HEIGHT + 80)));
         setLayout ( new GridBagLayout () );
         setBackground(Color.DARK_GRAY);
 
@@ -48,7 +48,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         createEmptyStrip();
         createNameField();
         addComp ( this, level, 1, 1, 1, 1
-            , GridBagConstraints.BOTH, LevelLoader.width, LevelLoader.height );
+            , GridBagConstraints.BOTH, LevelLoader.WIDTH, LevelLoader.HEIGHT);
         level.addMouseListener(new LevelEditorMouseListener());
         level.addMouseMotionListener(this);
 
@@ -92,7 +92,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     public void actionPerformed(ActionEvent e) {
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
         if(e.getSource() == save) {
-            if (level_Name.getText().equals("")) {
+            if (levelName.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Je moet een naam invoeren");
                 return;
             }
@@ -105,7 +105,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
                 return;
             }
 
-            level.setName(level_Name.getText());
+            level.setName(levelName.getText());
             level.saveLevel();
             JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
         }
@@ -130,9 +130,9 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
                 switch (current.getSimpleName().toLowerCase()) {
                     case "ground": {
                         if (gridX > 0 &&
-                            (LevelLoader.width / LevelLoader.gridWidth) - 1 > gridX &&
+                            (LevelLoader.WIDTH / LevelLoader.GRIDWIDTH) - 1 > gridX &&
                             gridY > 0 &&
-                            (LevelLoader.height / LevelLoader.gridHeight) - 1 > gridY)
+                            (LevelLoader.HEIGHT / LevelLoader.GRIDHEIGHT) - 1 > gridY)
                             level.addGameObject(new Ground(gridX, gridY));
                         break;
                     }
@@ -167,9 +167,9 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
                     switch (current.getSimpleName().toLowerCase()) {
                         case "ground": {
                             if (gridX > 0 &&
-                                (LevelLoader.width / LevelLoader.gridWidth) - 1 > gridX &&
+                                (LevelLoader.WIDTH / LevelLoader.GRIDWIDTH) - 1 > gridX &&
                                 gridY > 0 &&
-                                (LevelLoader.height / LevelLoader.gridHeight) - 1 > gridY)
+                                (LevelLoader.HEIGHT / LevelLoader.GRIDHEIGHT) - 1 > gridY)
                                 level.addGameObject(new Ground(gridX, gridY));
                             break;
                         }
@@ -212,7 +212,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     private void createButtons() {
         JPanel buttons = getPanel();
         addComp ( this, buttons, 1, 2, 1, 1
-            , GridBagConstraints.BOTH, LevelLoader.width, 40 );
+            , GridBagConstraints.BOTH, LevelLoader.WIDTH, 40 );
         buttons.setLayout(new FlowLayout());
         save = new JButton("Save");
         save.addActionListener(this);
@@ -226,7 +226,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         String current_level = "";
         JPanel nameField = getPanel();
         addComp(this, nameField, 1, 0, 1, 1,
-            GridBagConstraints.BOTH, LevelLoader.width, 40);
+            GridBagConstraints.BOTH, LevelLoader.WIDTH, 40);
         nameField.setLayout(new FlowLayout());
         JLabel preview = new JLabel("level name:");
         preview.setForeground(Color.WHITE);
@@ -234,14 +234,14 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         if(LevelLoader.getInstance().getCurrentLevel().isPresent()) {
             current_level = LevelLoader.getInstance().getCurrentLevel().get().getName();
         }
-        level_Name = new JTextField(current_level, 10);
-        nameField.add(level_Name);
+        levelName = new JTextField(current_level, 10);
+        nameField.add(levelName);
     }
 
     private void createItems() {
         JPanel itemlist = getPanel();
         addComp ( this, itemlist, 2, 1, 1, 2
-            , GridBagConstraints.BOTH, 47, LevelLoader.height + 40 );
+            , GridBagConstraints.BOTH, 47, LevelLoader.HEIGHT + 40 );
         itemlist.setLayout(new FlowLayout());
 
         JLabel items = new JLabel("Items");
@@ -276,6 +276,6 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     private void createEmptyStrip() {
         JPanel emptyStrip = getPanel();
         addComp(this, emptyStrip, 0, 0, 1, 3
-        , GridBagConstraints.BOTH, 47, LevelLoader.height + 80);
+        , GridBagConstraints.BOTH, 47, LevelLoader.HEIGHT + 80);
     }
 }

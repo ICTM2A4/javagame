@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Player extends GameObject {
 
-    private final int animateDelay = 4;
+    private final int ANIMATEDELAY = 4;
     private int currentImage = 0;
     private int animateCount = 0;
 
@@ -19,8 +19,8 @@ public class Player extends GameObject {
     private PlayerStatus.Direction direction;
 
     public Player(int gridX, int gridY) {
-        super(((gridX * LevelLoader.gridWidth) + 4),
-            ((gridY * LevelLoader.gridHeight) + 2),
+        super(((gridX * LevelLoader.GRIDWIDTH) + 4),
+            ((gridY * LevelLoader.GRIDHEIGHT) + 2),
             16, 20, true);
         setCollidable(false);
         setyIndex(10);
@@ -89,7 +89,7 @@ public class Player extends GameObject {
         checkMove();
 
         animateCount++;
-        if (animateCount % animateDelay == 0) {
+        if (animateCount % ANIMATEDELAY == 0) {
             animateCount = 0;
             currentImage++;
         }

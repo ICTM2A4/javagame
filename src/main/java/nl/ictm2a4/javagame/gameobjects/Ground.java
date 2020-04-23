@@ -8,7 +8,7 @@ import java.awt.*;
 public class Ground extends GameObject {
 
     public Ground(int gridX, int gridY) {
-        super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
+        super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
         setCollidable(false);
     }
 

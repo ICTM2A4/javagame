@@ -41,13 +41,13 @@ public class Level extends JPanel {
         setBackground(Color.black);
 
         setLayout(new FlowLayout());
-        this.setPreferredSize(new Dimension(LevelLoader.width, LevelLoader.height));
+        this.setPreferredSize(new Dimension(LevelLoader.WIDTH, LevelLoader.HEIGHT));
 
         loadObject();
         loadLevel();
         generateWalls();
       
-        shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
+        shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
     }
 
@@ -55,7 +55,7 @@ public class Level extends JPanel {
      * Load the JSONObject from the level file
      */
     public void loadObject() {
-        if (id >= LevelLoader.defaultLevelAmount) {
+        if (id >= LevelLoader.DEFAULTLEVELAMOUNT) {
             try {
                 LevelLoader.getInstance().getCustomLevelFile(id);
             } catch (IOException e) {
@@ -233,8 +233,8 @@ public class Level extends JPanel {
         JSONArray groundTiles = new JSONArray();
         for(Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground).toArray(Ground[]::new)) {
             JSONArray groundArray = new JSONArray();
-            groundArray.add(ground.getX() / LevelLoader.gridWidth);
-            groundArray.add(ground.getY() / LevelLoader.gridHeight);
+            groundArray.add(ground.getX() / LevelLoader.GRIDWIDTH);
+            groundArray.add(ground.getY() / LevelLoader.GRIDHEIGHT);
             groundTiles.add(groundArray);
         }
         object.put("ground",groundTiles);
@@ -242,8 +242,8 @@ public class Level extends JPanel {
         JSONArray torchTiles = new JSONArray();
         for(Torch torch : getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).toArray(Torch[]::new)) {
             JSONArray torchArray = new JSONArray();
-            torchArray.add(torch.getX() / LevelLoader.gridWidth);
-            torchArray.add(torch.getY() / LevelLoader.gridHeight);
+            torchArray.add(torch.getX() / LevelLoader.GRIDWIDTH);
+            torchArray.add(torch.getY() / LevelLoader.GRIDHEIGHT);
             torchTiles.add(torchArray);
         }
         object.put("torches",torchTiles);
@@ -251,8 +251,8 @@ public class Level extends JPanel {
         JSONArray player = new JSONArray();
         Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
         if (oPlayer.isPresent()) {
-            player.add(oPlayer.get().getX() / LevelLoader.gridWidth);
-            player.add(oPlayer.get().getY() / LevelLoader.gridHeight);
+            player.add(oPlayer.get().getX() / LevelLoader.GRIDWIDTH);
+            player.add(oPlayer.get().getY() / LevelLoader.GRIDHEIGHT);
             object.put("player", player);
         }
 
@@ -260,8 +260,8 @@ public class Level extends JPanel {
         JSONArray endpoint = new JSONArray();
         Optional<GameObject> end = getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
         if (end.isPresent()) {
-            endpoint.add(end.get().getX() / LevelLoader.gridWidth);
-            endpoint.add(end.get().getY() / LevelLoader.gridHeight);
+            endpoint.add(end.get().getX() / LevelLoader.GRIDWIDTH);
+            endpoint.add(end.get().getY() / LevelLoader.GRIDHEIGHT);
             object.put("endpoint", endpoint);
         }
 
@@ -300,15 +300,15 @@ public class Level extends JPanel {
         Ground[] groundTiles = getGameObjects().stream().filter(object -> (object instanceof Ground)).toArray(Ground[]::new);
 
         for(Ground ground : groundTiles) {
-            int x = ground.getX() / LevelLoader.gridWidth;
-            int y = ground.getY() / LevelLoader.gridHeight;
+            int x = ground.getX() / LevelLoader.GRIDWIDTH;
+            int y = ground.getY() / LevelLoader.GRIDHEIGHT;
 
             for (int _x = x-1; _x <= x+1; _x++) {
                 for (int _y = y-1; _y <= y+1; _y++) {
                     if (_x == x && _y == y)
                         continue;
 
-                    if (fromCoordsToArray(_x * LevelLoader.gridWidth, _y * LevelLoader.gridHeight)
+                    if (fromCoordsToArray(_x * LevelLoader.GRIDWIDTH, _y * LevelLoader.GRIDHEIGHT)
                         .filter(gameObject -> gameObject instanceof Wall || gameObject instanceof Ground).findAny().isEmpty())
                         addGameObject(new Wall(_x,_y));
                 }

@@ -55,7 +55,7 @@ public class FileLoader {
      */
     public void reloadCoinImages() {
         coinImages = new ArrayList<>();
-        for(int i = 0; i < EndPoint.imageAmount; i++)
+        for(int i = 0; i < EndPoint.IMAGEAMOUNT; i++)
             coinImages.add(loadImage("textures/coin-" + i + ".png"));
     }
 
@@ -80,7 +80,7 @@ public class FileLoader {
      */
     public void reloadTorchImages() {
         torchImages = new ArrayList<>();
-        for(int i = 0; i < Torch.imageAmount; i++)
+        for(int i = 0; i < Torch.IMAGEAMOUNT; i++)
             torchImages.add(loadImage("textures/torch-" + i + ".png"));
     }
 

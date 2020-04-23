@@ -10,32 +10,34 @@ import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Optional;
 
 public class LevelLoader implements Runnable {
 
-    private final Path customLevelsPath = Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath() + File.separator + GameScreen.gameName).replaceAll("%20", " "));
-    public static final int defaultLevelAmount = 10;
+    private final Path CUSTOMLEVELSPATH = Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath() + File.separator + GameScreen.GAMENAME).replaceAll("%20", " "));
+    public static final int DEFAULTLEVELAMOUNT = 10;
 
     private static LevelLoader instance;
 
     private Thread thread;
-    private  boolean isRunning = false;
+    private  boolean isRunning;
     private int FPS = 30;
     private long targetTime = 1000 / FPS;
 
-    public static final int gridWidth = 32;
-    public static final int gridHeight = 32;
-    public static final int width = 1184;
-    public static final int height = 640;
+    public static final int GRIDWIDTH = 32;
+    public static final int GRIDHEIGHT = 32;
+    public static final int WIDTH = 1184;
+    public static final int HEIGHT = 640;
 
     private Level currentLevel;
 
     public LevelLoader() {
         instance = this;
 
-        File gameFolder = new File(customLevelsPath.toUri());
+        File gameFolder = new File(CUSTOMLEVELSPATH.toUri());
         if (!gameFolder.exists()) {
             gameFolder.mkdir();
         }
@@ -152,7 +154,7 @@ public class LevelLoader implements Runnable {
     }
 
     private File checkFolders() {
-        File customLevelsFolder = new File((customLevelsPath + File.separator + "customlevels").replaceAll("%20", ""));
+        File customLevelsFolder = new File((CUSTOMLEVELSPATH + File.separator + "customlevels").replaceAll("%20", ""));
 
         if (!customLevelsFolder.exists())
             customLevelsFolder.mkdir();
@@ -188,10 +190,10 @@ public class LevelLoader implements Runnable {
         return file;
     }
 
-    public void removeCustomLevelFile(int id) {
+    public boolean removeCustomLevelFile(int id) {
         File customLevelsFolder = checkFolders();
         File file = new File(customLevelsFolder.getPath() + File.separator + "level-"+id+".json");
-        file.delete();
+        return file.delete();
     }
 
     /**
@@ -218,20 +220,20 @@ public class LevelLoader implements Runnable {
         JSONParser parser = new JSONParser();
         Optional<JSONObject> levelOjbect = Optional.empty();
 
-        if (id < LevelLoader.defaultLevelAmount) {
+        if (id < LevelLoader.DEFAULTLEVELAMOUNT) {
             try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
-                Reader rd = new InputStreamReader(is, "UTF-8");
+                Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
                 Object object = parser.parse(rd);
                 levelOjbect = Optional.of((JSONObject) object);
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
         } else {
-            File customLevelsFolder = new File((customLevelsPath + File.separator + "customlevels").replaceAll("%20", ""));
+            File customLevelsFolder = new File((CUSTOMLEVELSPATH + File.separator + "customlevels").replaceAll("%20", ""));
             File file = new File(customLevelsFolder.getPath() + File.separator + "level-" + id + ".json");
 
             try (InputStream is = new FileInputStream(file)) {
-                Reader rd = new InputStreamReader(is, "UTF-8");
+                Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
                 Object object = parser.parse(rd);
                 levelOjbect = Optional.of((JSONObject) object);
             } catch (IOException | ParseException e) {
@@ -248,7 +250,7 @@ public class LevelLoader implements Runnable {
      */
     public int getNewLevelId() {
         File customLevelFolder = checkFolders();
-        return defaultLevelAmount + customLevelFolder.listFiles().length;
+        return DEFAULTLEVELAMOUNT + Objects.requireNonNull(customLevelFolder.listFiles()).length;
     }
 
     /**

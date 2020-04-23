@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GameScreen extends JFrame implements ActionListener, KeyListener {
+public class GameScreen extends JFrame implements KeyListener {
 
-    public static final String gameName = "JavaGame";
+    public static final String GAMENAME = "JavaGame";
 
     private static GameScreen instance;
-    private String title = gameName;
+    private String title = GAMENAME;
     private List<Integer> pressedKeys;
     public static JPanel fixed;
     private List<Integer> achievedList;
@@ -54,10 +54,6 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         achievedList.add(0);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {

@@ -8,7 +8,7 @@ import java.awt.*;
 public class Wall extends GameObject {
 
     public Wall(int gridX, int gridY) {
-        super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
+        super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
     }
 
     @Override
