@@ -19,6 +19,7 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
     private static GameScreen instance;
     private String title = gameName;
     private List<Integer> pressedKeys;
+    public static JPanel fixed;
 
     public GameScreen() {
         setTitle(title);
@@ -28,14 +29,22 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
         new FileLoader();
         new LevelLoader();
         pressedKeys = new ArrayList<>();
+        setBackground(Color.BLACK);
+
+        setUndecorated(true);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        fixed = new JPanel();
+        fixed.setLayout(new GridBagLayout());
+        fixed.setBackground(Color.BLACK);
+        getContentPane().add(fixed);
+
+        setPanel(new MainMenu());
+        LevelLoader.getInstance().loadLevel(0);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        setLayout(new BorderLayout());
-        setContentPane(new MainMenu());
-        pack();
-        setLocationRelativeTo(null);
         addKeyListener(this);
         setVisible(true);
     }
@@ -84,12 +93,15 @@ public class GameScreen extends JFrame implements ActionListener, KeyListener {
      * @param panel The new JPanel to set
      * @param title The title to append to the gametitle
      */
+    @Deprecated
     public void setPanel(JPanel panel, String title) {
-        setContentPane(panel);
-        pack();
-        setLocationRelativeTo(null);
+        fixed.removeAll();
+        fixed.add(panel);
+
+        fixed.revalidate();
+
         requestFocus();
-        addTitle(title);
+        fixed.repaint();
     }
 
     /**

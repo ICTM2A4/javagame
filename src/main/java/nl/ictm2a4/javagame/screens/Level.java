@@ -6,8 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -16,8 +14,6 @@ import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class Level extends JPanel {
 
@@ -34,14 +30,15 @@ public class Level extends JPanel {
         gameObjects = new ArrayList<>();
         setBackground(Color.black);
 
+        setLayout(new FlowLayout());
         this.setPreferredSize(new Dimension(LevelLoader.width, LevelLoader.height));
 
         loadObject();
         loadLevel();
         generateWalls();
 
-        renderShadows = true;
         shadow = new BufferedImage(LevelLoader.width,LevelLoader.height,BufferedImage.TYPE_INT_ARGB);
+        setVisible(true);
     }
 
     /**

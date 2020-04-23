@@ -38,8 +38,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void displayGUI () {
-
-        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 150)));
+        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 80)));
         setLayout ( new GridBagLayout () );
 
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
@@ -196,7 +195,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     private void createButtons() {
         JPanel buttons = getPanel ( Color.white );
         addComp ( this, buttons, 1, 2, 1, 1
-            , GridBagConstraints.BOTH, LevelLoader.width, 50 );
+            , GridBagConstraints.BOTH, LevelLoader.width, 40 );
         buttons.setLayout(new FlowLayout());
         save = new JButton("Save");
         save.addActionListener(this);
@@ -210,7 +209,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         String current_level = "";
         JPanel nameField = getPanel (Color.white);
         addComp(this, nameField, 1, 0, 1, 1,
-            GridBagConstraints.BOTH, LevelLoader.width, 50);
+            GridBagConstraints.BOTH, LevelLoader.width, 40);
         nameField.setLayout(new FlowLayout());
         JLabel preview = new JLabel("level name:");
         nameField.add(preview);
