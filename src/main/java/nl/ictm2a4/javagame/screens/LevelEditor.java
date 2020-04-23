@@ -38,8 +38,9 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void displayGUI () {
-        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 200)));
+        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 80)));
         setLayout ( new GridBagLayout () );
+        setBackground(Color.DARK_GRAY);
 
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
         level.setRenderShadows(false);
@@ -73,10 +74,10 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         panel.add(comp, gbc);
     }
 
-    private JPanel getPanel ( Color bColor ) {
+    private JPanel getPanel () {
         JPanel panel = new JPanel();
-        panel.setOpaque ( true );
-        panel.setBackground ( bColor );
+        panel.setOpaque (true);
+        panel.setBackground(new Color(0,0,0,0));
 
         return panel;
     }
@@ -84,15 +85,27 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     @Override
     public void actionPerformed(ActionEvent e) {
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
-        if(e.getSource() == save && !level_Name.getText().equals("")) {
+        if(e.getSource() == save) {
+            if (level_Name.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Je moet een naam invoeren");
+                return;
+            }
+            else if (level.getGameObjects().stream().filter(object -> object instanceof Player).findFirst().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Je moet een player plaatsen");
+                return;
+            }
+            else if (level.getGameObjects().stream().filter(object -> object instanceof EndPoint).findFirst().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Je moet een eindpunt plaatsen");
+                return;
+            }
+
             level.setName(level_Name.getText());
             level.saveLevel();
             JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
         }
-        else if (e.getSource() == save && level_Name.getText().equals("")){
-            JOptionPane.showMessageDialog(this, "Je moet een naam invoeren");
-        }
         if(e.getSource() == cancel) {
+            if (LevelLoader.getInstance().getLevelObject(level.getId()).get().get("player") == null)
+                LevelLoader.getInstance().removeCustomLevelFile(level.getId());
             GameScreen.getInstance().setPanel(new MainMenu());
         }
     }
@@ -130,9 +143,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
+    public void mouseMoved(MouseEvent e) {}
 
     public class LevelEditorMouseListener extends MouseAdapter {
         @Override
@@ -193,7 +204,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void createButtons() {
-        JPanel buttons = getPanel ( Color.white );
+        JPanel buttons = getPanel();
         addComp ( this, buttons, 1, 2, 1, 1
             , GridBagConstraints.BOTH, LevelLoader.width, 40 );
         buttons.setLayout(new FlowLayout());
@@ -207,7 +218,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
     private void createNameField() {
         String current_level = "";
-        JPanel nameField = getPanel (Color.white);
+        JPanel nameField = getPanel();
         addComp(this, nameField, 1, 0, 1, 1,
             GridBagConstraints.BOTH, LevelLoader.width, 40);
         nameField.setLayout(new FlowLayout());
@@ -221,9 +232,9 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void createItems() {
-        JPanel itemlist = getPanel(Color.white);
-        addComp ( this, itemlist, 2, 0, 1, 3
-            , GridBagConstraints.BOTH, 47, LevelLoader.height + 200 );
+        JPanel itemlist = getPanel();
+        addComp ( this, itemlist, 2, 1, 1, 2
+            , GridBagConstraints.BOTH, 47, LevelLoader.height + 40 );
         itemlist.setLayout(new FlowLayout());
 
         JLabel items = new JLabel("Items");
@@ -255,8 +266,8 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void createEmptyStrip() {
-        JPanel emptyStrip = getPanel( Color.white);
+        JPanel emptyStrip = getPanel();
         addComp(this, emptyStrip, 0, 0, 1, 3
-        , GridBagConstraints.BOTH, 47, LevelLoader.height + 200);
+        , GridBagConstraints.BOTH, 47, LevelLoader.height + 80);
     }
 }
