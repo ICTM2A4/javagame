@@ -374,7 +374,7 @@ public class Level extends JPanel {
      * Restart the current level
      */
     public void restart() {
-        loadLevel();
+        LevelLoader.getInstance().startLevel();
     }
 
 }

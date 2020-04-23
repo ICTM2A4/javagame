@@ -1,13 +1,14 @@
 package nl.ictm2a4.javagame.screens;
 
-import com.sun.tools.jconsole.JConsolePlugin;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class LevelSelectScreen extends JPanel implements ActionListener {
 
@@ -44,7 +45,8 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         add(hFill0);
         Jplevel = new JPanel();
         Jplevel.setLayout(new GridLayout(0, 3, 5, 5));
-        Jplevel.setPreferredSize(new Dimension(160, 480));
+        Jplevel.setMinimumSize(new Dimension(160,30));
+        Jplevel.revalidate();
         Jplevel.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(Jplevel);
         JScrollPane scrollFrame1 = new JScrollPane(Jplevel);
@@ -52,18 +54,27 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         this.add(scrollFrame1);
         levels = new ArrayList<>();
         for(int i = 0; i < LevelLoader.defaultLevelAmount; i++) {
-            JButton button = new JButton();
-            button.add(new JLabel("level " + (1 + i)));
-            button.setPreferredSize(new Dimension(10, 17));
-            levels.add(button);
-            Jplevel.add(button);
 
-            int finalI = i;
-            button.addActionListener(
-                    e -> {
-                        LevelLoader.getInstance().startLevel(finalI);
-                    }
-            );
+            Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
+            if (object.isPresent()) {
+                JButton button = new JButton();
+                button.add(new JLabel("level " + (1 + i) + " - " + object.get().get("name")));
+                button.setPreferredSize(new Dimension(10, 30));
+                button.setMaximumSize(new Dimension(10, 30));
+                levels.add(button);
+                Jplevel.add(button);
+
+                if (GameScreen.getInstance().getAchievedList().contains(i)) {
+                    int finalI = i;
+                    button.addActionListener(
+                        e -> {
+                            LevelLoader.getInstance().startLevel(finalI);
+                        }
+                    );
+                } else {
+                    button.setBackground(new Color(200,80,80));
+                }
+            }
         }
         add(hFill1);
         custom_Levels = new JLabel("Select Custom Level:");
