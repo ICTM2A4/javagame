@@ -21,7 +21,7 @@ public class Level extends JPanel {
     private ArrayList<GameObject> gameObjects;
     private String name;
     private Player player;
-    private BufferedImage shadow;
+    public BufferedImage shadow;
     private boolean renderShadows;
     private Optional<JSONObject> object;
 
@@ -84,17 +84,17 @@ public class Level extends JPanel {
      * Create a lightmap and draw all light cirlces on the map
      */
     private void drawLights() {
-        Graphics2D g = shadow.createGraphics();
+        Graphics2D g2 = shadow.createGraphics();
 
-        g.setComposite(AlphaComposite.Src);
-        g.setColor(Color.BLACK);
-        g.fillRect(0,0,getWidth(),getHeight());
+        g2.setComposite(AlphaComposite.Src);
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0,0,getWidth(),getHeight());
 
-        drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24), 50);
+        drawLight(g2, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24), 50);
         getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch ->
-            drawLight(g, new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
+            drawLight(g2, new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
 
-        g.dispose();
+        g2.dispose();
     }
 
     /**
