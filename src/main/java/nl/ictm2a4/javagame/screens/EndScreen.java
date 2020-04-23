@@ -32,7 +32,7 @@ public class EndScreen extends JPanel implements ActionListener {
                 new Dimension(0, 75));
 
         add(hFill0);
-        score = new JLabel("score: " + points / 1000);
+        score = new JLabel("tijd: " + points / 1000);
         add(score);
         add(hFill1);
         nextLevel = new JButton("Next Level");

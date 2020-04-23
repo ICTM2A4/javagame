@@ -45,7 +45,7 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         add(hFill0);
         Jplevel = new JPanel();
         Jplevel.setLayout(new GridLayout(0, 3, 5, 5));
-        Jplevel.setMinimumSize(new Dimension(160,30));
+        Jplevel.setMinimumSize(new Dimension(160, 60));
         Jplevel.revalidate();
         Jplevel.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(Jplevel);
@@ -54,7 +54,6 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         this.add(scrollFrame1);
         levels = new ArrayList<>();
         for(int i = 0; i < LevelLoader.defaultLevelAmount; i++) {
-
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if (object.isPresent()) {
                 JButton button = new JButton();
@@ -83,7 +82,8 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         JpcustomLevel = new JPanel();
         JpcustomLevel.setLayout(new GridLayout(0, 3, 5, 5));
         JpcustomLevel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JpcustomLevel.setPreferredSize(new Dimension(160, 480));
+        JpcustomLevel.setMinimumSize(new Dimension(160, 60));
+        JpcustomLevel.revalidate();
         add(JpcustomLevel);
 
         JScrollPane scrollFrame2 = new JScrollPane(JpcustomLevel);
