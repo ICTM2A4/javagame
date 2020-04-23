@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.screens;
 
+import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import org.json.simple.JSONObject;
 
@@ -127,6 +128,12 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         add(hFill4);
 
         setVisible(true);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(FileLoader.loadImage("level-selector-background.png"), 0, 0, this);
     }
 
     @Override
