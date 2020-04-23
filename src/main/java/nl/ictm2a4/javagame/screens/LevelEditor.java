@@ -38,7 +38,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void displayGUI () {
-        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 80)));
+        this.setPreferredSize(new Dimension((LevelLoader.width + 2*47), (LevelLoader.height + 200)));
         setLayout ( new GridBagLayout () );
 
         Level level = LevelLoader.getInstance().getCurrentLevel().get();

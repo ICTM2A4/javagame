@@ -54,10 +54,11 @@ public class EndPoint extends GameObject {
     public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
         boolean result = super.checkCollideSingle(gameObject,x,y);
 
-        if (result && gameObject instanceof Player)
+        if (result && gameObject instanceof Player) {
             LevelLoader.getInstance().stopLevel();
             GameScreen.getInstance().setPanel(new EndScreen(), "finished!");
+        }
+            return result;
 
-        return result;
     }
 }
