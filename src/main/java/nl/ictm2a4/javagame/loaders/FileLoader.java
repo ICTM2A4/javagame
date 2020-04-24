@@ -62,7 +62,8 @@ public class FileLoader {
 
     public void reloadKeyImages() {
         keyImages = new ArrayList<>();
-        keyImages.add(loadImage("textures/key-0.png"));
+        for(int i = 0; i < 4; i++)
+            keyImages.add(loadImage("textures/key-" + i + ".png"));
     }
 
     public void reloadDoorImages() {
