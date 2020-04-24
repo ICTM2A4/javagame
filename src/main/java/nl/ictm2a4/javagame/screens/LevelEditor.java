@@ -149,7 +149,8 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {}
+    public void mouseMoved(MouseEvent e) {
+    }
 
     public class LevelEditorMouseListener extends MouseAdapter {
         @Override

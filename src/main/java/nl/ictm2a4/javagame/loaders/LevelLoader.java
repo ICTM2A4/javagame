@@ -67,6 +67,7 @@ public class LevelLoader implements Runnable {
      */
     public boolean startLevel() {
         if (currentLevel == null) return false;
+        loadLevel(currentLevel.getId());
         currentLevel.setRenderShadows(true);
         currentLevel.loadLevel();
         GameScreen.getInstance().setPanel(currentLevel);
