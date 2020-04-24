@@ -68,7 +68,8 @@ public class FileLoader {
 
     public void reloadDoorImages() {
         doorImages = new ArrayList<>();
-        doorImages.add(loadImage("textures/door-0.png"));
+        for(int i = 0; i < 4; i++)
+            doorImages.add(loadImage("textures/door-" + i + ".png"));
     }
 
     /**

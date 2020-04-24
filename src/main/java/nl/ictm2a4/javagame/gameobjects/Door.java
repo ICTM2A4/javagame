@@ -25,7 +25,7 @@ public class Door extends GameObject {
     @Override
     public void draw(Graphics g) {
         if(!open){
-            g.drawImage(FileLoader.getInstance().getDoorImage(0),
+            g.drawImage(FileLoader.getInstance().getDoorImage(keyCode < 3 ? keyCode : 0),
                     getX(), getY(),
                     LevelLoader.getInstance().getCurrentLevel().get());
         }
