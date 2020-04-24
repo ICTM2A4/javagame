@@ -15,7 +15,7 @@ public class Door extends GameObject {
         super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
 
         this.keyCode = keyCode;
-        setCollidable(true);
+        setCollidable(!open);
     }
 
     public int getKeyCode(){
@@ -45,6 +45,6 @@ public class Door extends GameObject {
             }
         }
 
-        return false;
+        return result;
     }
 }
