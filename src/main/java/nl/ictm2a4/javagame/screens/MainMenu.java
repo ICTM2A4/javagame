@@ -13,7 +13,7 @@ public class MainMenu extends JPanel implements ActionListener {
 
     public MainMenu() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setAlignmentY(Component.LEFT_ALIGNMENT);
+        //setAlignmentY(Component.LEFT_ALIGNMENT);
         this.setPreferredSize(new Dimension(360, 360));
 
         Box.Filler hFill1 = new Box.Filler(new Dimension(0,5),
