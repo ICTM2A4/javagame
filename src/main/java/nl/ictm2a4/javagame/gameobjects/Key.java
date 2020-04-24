@@ -26,8 +26,9 @@ public class Key extends GameObject {
 
     @Override
     public void draw(Graphics g) {
+
         if(active){
-            g.drawImage(FileLoader.getInstance().getKeyImage(0),
+            g.drawImage(FileLoader.getInstance().getKeyImage(keyCode < 3 ? keyCode : 0),
                     getX(), getY(),
                     LevelLoader.getInstance().getCurrentLevel().get());
         }
