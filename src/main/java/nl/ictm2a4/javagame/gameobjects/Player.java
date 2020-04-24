@@ -110,7 +110,7 @@ public class Player extends GameObject {
         inventory.remove(key);
     }
 
-    public Key[] showInventory(){
+    public Key[] getInventory(){
         return inventory.toArray(Key[]::new);
     }
 
