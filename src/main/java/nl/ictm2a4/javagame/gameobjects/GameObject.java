@@ -60,10 +60,6 @@ public abstract class GameObject {
                 .toArray(GameObject[]::new);
     }
 
-    public GameObject[] getCollisionList(int x, int y){
-        return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().filter(gameObject -> gameObject.checkCollideSingle(this, x, y) && gameObject.isCollidable()).toArray(GameObject[]::new);
-    }
-
      /**
      * Returns whether there is a collision between this gameobject and another gameobject at a specified location. Useful for checking if an object can move anywhere.
      *
