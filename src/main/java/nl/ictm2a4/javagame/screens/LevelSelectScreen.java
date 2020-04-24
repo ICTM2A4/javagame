@@ -115,10 +115,7 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         for(int i = 0; i < LevelLoader.DEFAULTLEVELAMOUNT; i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if (object.isPresent()) {
-                JButton button = new JButton();
-                button.add(new JLabel("" + object.get().get("name")));
-                button.setPreferredSize(new Dimension(10, 30));
-                button.setMaximumSize(new Dimension(10, 30));
+                JButton button = new JButton("" + object.get().get("name"));
                 jplevel.add(button);
 
                 if (GameScreen.getInstance().getAchievedList().contains(i)) {
@@ -140,7 +137,7 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         center.add(custom_Levels);
         center.add(hFill4);
         JPanel jpcustomLevel = new JPanel();
-        jpcustomLevel.setLayout(new GridLayout(0, 3, 5, 5));
+        jpcustomLevel.setLayout(new GridLayout(0, 2, 5, 5));
         jpcustomLevel.setAlignmentX(Component.LEFT_ALIGNMENT);
         jpcustomLevel.setMinimumSize(new Dimension(160, 60));
         jpcustomLevel.setBackground(new Color(0, 0, 0, 0));
@@ -154,32 +151,30 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         center.add(scrollFrame2);
 
         for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < LevelLoader.getInstance().getNewLevelId(); i++) {
-            JPanel container = new JPanel();
-            container.setLayout(new GridLayout(2, 0,5 ,5 ));
-            container.setAlignmentX(Component.CENTER_ALIGNMENT);
-            container.setBackground(new Color(0, 0, 0, 0));
+            Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
+            if(object.isPresent()) {
+                JPanel container = new JPanel();
+                container.setLayout(new GridLayout(2, 0, 5, 5));
+                container.setBackground(new Color(0, 0, 0, 0));
 
-            JButton editLevel = new JButton("Edit Level " + (1 + i - LevelLoader.DEFAULTLEVELAMOUNT));
+                JButton editLevel = new JButton("Edit level " + object.get().get("name"));
+                JButton button = new JButton("Start " + object.get().get("name"));
+                container.add(button);
+                container.add(editLevel);
+                jpcustomLevel.add(container);
 
-            JButton button = new JButton();
-            button.add(new JLabel("level " + (1 + i - LevelLoader.DEFAULTLEVELAMOUNT)));
-            button.setPreferredSize(new Dimension(10, 17));
-            button.setMaximumSize(new Dimension(10, 17));
-            container.add(button);
-            container.add(editLevel);
-            jpcustomLevel.add(container);
-
-            int loadLevel = i;
-            button.addActionListener(
-                    e -> {
-                        LevelLoader.getInstance().startLevel(loadLevel);
-                    });
-            editLevel.addActionListener(
-                    e -> {
-                        LevelLoader.getInstance().loadLevel(loadLevel);
-                        GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
-                    }
-            );
+                int loadLevel = i;
+                button.addActionListener(
+                        e -> {
+                            LevelLoader.getInstance().startLevel(loadLevel);
+                        });
+                editLevel.addActionListener(
+                        e -> {
+                            LevelLoader.getInstance().loadLevel(loadLevel);
+                            GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
+                        }
+                );
+            }
         }
         center.add(hFill3);
         back = new JButton("back");
