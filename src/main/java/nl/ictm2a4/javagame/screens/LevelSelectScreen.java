@@ -152,27 +152,29 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
 
         for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < LevelLoader.getInstance().getNewLevelId(); i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
-            JPanel container = new JPanel();
-            container.setLayout(new GridLayout(2, 0,5 ,5 ));
-            container.setBackground(new Color(0, 0, 0, 0));
+            if(object.isPresent()) {
+                JPanel container = new JPanel();
+                container.setLayout(new GridLayout(2, 0, 5, 5));
+                container.setBackground(new Color(0, 0, 0, 0));
 
-            JButton editLevel = new JButton("Edit level " + object.get().get("name"));
-            JButton button = new JButton("Start " + object.get().get("name"));
-            container.add(button);
-            container.add(editLevel);
-            jpcustomLevel.add(container);
+                JButton editLevel = new JButton("Edit level " + object.get().get("name"));
+                JButton button = new JButton("Start " + object.get().get("name"));
+                container.add(button);
+                container.add(editLevel);
+                jpcustomLevel.add(container);
 
-            int loadLevel = i;
-            button.addActionListener(
-                    e -> {
-                        LevelLoader.getInstance().startLevel(loadLevel);
-                    });
-            editLevel.addActionListener(
-                    e -> {
-                        LevelLoader.getInstance().loadLevel(loadLevel);
-                        GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
-                    }
-            );
+                int loadLevel = i;
+                button.addActionListener(
+                        e -> {
+                            LevelLoader.getInstance().startLevel(loadLevel);
+                        });
+                editLevel.addActionListener(
+                        e -> {
+                            LevelLoader.getInstance().loadLevel(loadLevel);
+                            GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
+                        }
+                );
+            }
         }
         center.add(hFill3);
         back = new JButton("back");
