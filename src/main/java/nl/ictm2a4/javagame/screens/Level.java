@@ -227,14 +227,26 @@ public class Level extends JPanel {
         }
 
         // Read all keys
-        JSONArray keys = (JSONArray) levelOjbect.get("keys");
+        JSONArray keys = (JSONArray) levelObject.get("keys");
         if (keys != null) {
             for (Object key : keys) {
                 JSONArray coords = (JSONArray) key;
                 int x = Integer.parseInt(coords.get(0).toString());
                 int y = Integer.parseInt(coords.get(1).toString());
                 int code = Integer.parseInt(coords.get(2).toString());
-                addCollidable(new Key(x, y, code));
+                addGameObject(new Key(x, y, code));
+            }
+        }
+
+        // Read all keys
+        JSONArray doors = (JSONArray) levelObject.get("doors");
+        if (doors != null) {
+            for (Object door : doors) {
+                JSONArray coords = (JSONArray) door;
+                int x = Integer.parseInt(coords.get(0).toString());
+                int y = Integer.parseInt(coords.get(1).toString());
+                int code = Integer.parseInt(coords.get(2).toString());
+                addGameObject(new Door(x, y, code));
             }
         }
 

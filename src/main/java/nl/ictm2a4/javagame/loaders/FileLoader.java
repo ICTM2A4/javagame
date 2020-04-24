@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FileLoader {
-    private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages;
+    private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages, doorImages;
     private HashMap<String, ArrayList<Image>> playerImages;
     private static FileLoader instance;
 
@@ -30,6 +30,7 @@ public class FileLoader {
         reloadPlayerImages();
         reloadTorchImages();
         reloadKeyImages();
+        reloadDoorImages();
     }
 
     /**
@@ -62,6 +63,11 @@ public class FileLoader {
     public void reloadKeyImages() {
         keyImages = new ArrayList<>();
         keyImages.add(loadImage("textures/key-0.png"));
+    }
+
+    public void reloadDoorImages() {
+        doorImages = new ArrayList<>();
+        doorImages.add(loadImage("textures/door-0.png"));
     }
 
     /**
@@ -115,6 +121,10 @@ public class FileLoader {
 
     public Image getKeyImage(int index) {
         return this.keyImages.get(index);
+    }
+
+    public Image getDoorImage(int index) {
+        return this.doorImages.get(index);
     }
 
     /**

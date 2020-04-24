@@ -2,22 +2,20 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
-import nl.ictm2a4.javagame.screens.EndScreen;
-import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
+import java.util.Arrays;
 
-public class Key extends GameObject {
-
+public class Door extends GameObject {
     private int keyCode;
 
-    public boolean active = true;
+    public boolean open = false;
 
-    public Key(int gridX, int gridY, int keyCode){
+    public Door(int gridX, int gridY, int keyCode){
         super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
 
         this.keyCode = keyCode;
-        setCollidable(false);
+        setCollidable(true);
     }
 
     public int getKeyCode(){
@@ -26,8 +24,8 @@ public class Key extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        if(active){
-            g.drawImage(FileLoader.getInstance().getKeyImage(0),
+        if(!open){
+            g.drawImage(FileLoader.getInstance().getDoorImage(0),
                     getX(), getY(),
                     LevelLoader.getInstance().getCurrentLevel().get());
         }
@@ -37,14 +35,13 @@ public class Key extends GameObject {
     public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
         boolean result = super.checkCollideSingle(gameObject,x,y);
 
-        if (result && gameObject instanceof Player && active){
-
+        if (result && gameObject instanceof Player && !open){
             Player player = (Player) gameObject;
-            if(!player.inventoryHasKey(keyCode)){
+            if(player.inventoryHasKey(keyCode)){
                 // Deur openen
-                player.addToInventory(this);
-                System.out.println("Sleutel opgepakt");
-                active = false;
+                System.out.println("Deur geopend");
+                open = true;
+                setCollidable(false);
             }
         }
 
