@@ -19,7 +19,7 @@ public class Player extends GameObject {
     private PlayerStatus status;
     private PlayerStatus.Direction direction;
 
-    private ArrayList<Key> inventory;
+    private List<Pickup> inventory;
 
     public Player(int gridX, int gridY) {
         super(((gridX * LevelLoader.GRIDWIDTH) + 4),
@@ -102,19 +102,19 @@ public class Player extends GameObject {
 
     }
 
-    public void addToInventory(Key key) {
-        inventory.add(key);
+    public void addToInventory(Pickup pickup) {
+        inventory.add(pickup);
     }
 
-    public void removeFromInventory(Key key) {
-        inventory.remove(key);
+    public void removeFromInventory(Pickup pickup) {
+        inventory.remove(pickup);
     }
 
-    public Key[] getInventory(){
-        return inventory.toArray(Key[]::new);
+    public List<Pickup> getInventory(){
+        return inventory;
     }
 
     public boolean inventoryHasKey(int keycode){
-        return inventory.stream().filter(key -> key.getKeyCode() == keycode).count() > 0;
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> ((Key) key).getKeyCode() == keycode).count() > 0;
     }
 }

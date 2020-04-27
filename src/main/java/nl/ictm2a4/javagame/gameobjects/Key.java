@@ -7,15 +7,12 @@ import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
 
-public class Key extends GameObject {
+public class Key extends Pickup {
 
     private int keyCode;
 
-    public boolean active = true;
-
     public Key(int gridX, int gridY, int keyCode){
-        super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
-
+        super(gridX, gridY);
         this.keyCode = keyCode;
         setCollidable(false);
     }
@@ -34,21 +31,5 @@ public class Key extends GameObject {
         }
     }
 
-    @Override
-    public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
-        boolean result = super.checkCollideSingle(gameObject,x,y);
 
-        if (result && gameObject instanceof Player && active){
-
-            Player player = (Player) gameObject;
-            if(!player.inventoryHasKey(keyCode)){
-                // Deur openen
-                player.addToInventory(this);
-                System.out.println("Sleutel opgepakt");
-                active = false;
-            }
-        }
-
-        return false;
-    }
 }
