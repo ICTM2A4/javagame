@@ -4,6 +4,9 @@ import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 public class Door extends GameObject {
@@ -38,13 +41,20 @@ public class Door extends GameObject {
         if (result && gameObject instanceof Player && !open){
             Player player = (Player) gameObject;
             if(player.inventoryHasKey(keyCode)){
-                // Deur openen
-                System.out.println("Deur geopend");
-                open = true;
-                setCollidable(false);
+                setOpen();
             }
         }
 
         return result;
+    }
+
+    public void setOpen(){
+        this.open = true;
+        setCollidable(false);
+    }
+
+    public void setClosed(){
+        this.open = false;
+        setCollidable(true);
     }
 }

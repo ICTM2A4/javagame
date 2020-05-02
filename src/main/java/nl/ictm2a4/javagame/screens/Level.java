@@ -238,7 +238,19 @@ public class Level extends JPanel {
             }
         }
 
-        // Read all keys
+        // Read all levers
+        JSONArray levers = (JSONArray) levelObject.get("levers");
+        if (levers != null) {
+            for (Object lever : levers) {
+                JSONArray coords = (JSONArray) lever;
+                int x = Integer.parseInt(coords.get(0).toString());
+                int y = Integer.parseInt(coords.get(1).toString());
+                int code = Integer.parseInt(coords.get(2).toString());
+                addGameObject(new Lever(x, y, code));
+            }
+        }
+
+        // Read all doors
         JSONArray doors = (JSONArray) levelObject.get("doors");
         if (doors != null) {
             for (Object door : doors) {
