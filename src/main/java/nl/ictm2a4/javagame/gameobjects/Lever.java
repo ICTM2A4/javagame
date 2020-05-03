@@ -16,6 +16,7 @@ public class Lever extends GameObject {
     public Lever(int gridX, int gridY, int keyCode) {
         super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
         setCollidable(false);
+        this.keycode = keyCode;
     }
 
     @Override
