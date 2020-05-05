@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 
-public class Lever extends GameObject {
+public class Lever extends GameObject {//implements EventListener, KeyListener {
     private boolean active;
 
     private int doorCode;
