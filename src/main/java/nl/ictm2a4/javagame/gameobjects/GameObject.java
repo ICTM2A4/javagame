@@ -42,7 +42,22 @@ public abstract class GameObject {
      * @return If there is a collision between this object and any other game object at the given coordinates
      */
     public boolean checkCollide(int x, int y) {
-        return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream().anyMatch(gameObject -> gameObject.checkCollideSingle(this, x, y) && gameObject.isCollidable());
+        return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream()
+                .anyMatch(gameObject -> gameObject.checkCollideSingle(this, x, y) && gameObject.isCollidable());
+    }
+
+    public GameObject[] checkCollideGameObjects(int x, int y) {
+        return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()
+                .stream()
+                .filter(gameObject -> gameObject.checkCollideSingle(this, x, y) && gameObject.isCollidable())
+                .toArray(GameObject[]::new);
+    }
+
+    public GameObject[] checkCollideAllGameObjects(int x, int y) {
+        return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()
+                .stream()
+                .filter(gameObject -> gameObject.checkCollideSingle(this, x, y))
+                .toArray(GameObject[]::new);
     }
 
     public GameObject[] getCollisionList(int x, int y){

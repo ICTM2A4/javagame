@@ -6,9 +6,12 @@ import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Arrays;
+import java.util.EventListener;
 import java.util.List;
 
-public class Lever extends GameObject {
+public class Lever extends GameObject {//implements EventListener, KeyListener {
     private boolean active;
 
     private int keycode;
@@ -40,15 +43,13 @@ public class Lever extends GameObject {
     };
 
     @Override
-    public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
-        boolean result = super.checkCollideSingle(gameObject,x,y);
+    public void tick() {
+        GameObject[] collisions = checkCollideAllGameObjects(getX(), getY());
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
 
-        if (result && gameObject instanceof Player && !active && pressedKeys.contains(KeyEvent.VK_SPACE)){
+        if(!active && Arrays.stream(collisions).anyMatch(gameObject -> gameObject instanceof Player) && pressedKeys.contains(KeyEvent.VK_SPACE)){
+            System.out.println("HENDEL GEACTIVEERD");
             activate();
-            System.out.println("Geactiveerd");
         }
-
-        return result;
     }
 }
