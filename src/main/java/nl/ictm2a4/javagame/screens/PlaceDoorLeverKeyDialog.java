@@ -1,6 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,17 +9,19 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
     private JLabel doorCodeLabel;
     private JTextField doorCodeTextField;
     private JButton okButton, cancelButton;
+    private JFrame frame;
 
     private boolean confirmed;
 
     public PlaceDoorLeverKeyDialog(JFrame frame){
         super(frame, true);
         setSize(480, 240);
+        setLayout(new FlowLayout(FlowLayout.CENTER));
 
         JLabel doorCodeLabel = new JLabel("Code");
         add(doorCodeLabel);
 
-        JTextField doorCodeTextField = new JTextField();
+        JTextField doorCodeTextField = new JTextField(20);
         add(doorCodeTextField);
 
         JButton okButton = new JButton("Ok");
@@ -30,6 +33,7 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
         add(cancelButton);
 
         setVisible(true);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
     public void actionPerformed(ActionEvent e) {}
@@ -46,7 +50,7 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
         return doorCode;
     }
 
-    public boolean getConfirmed(){
+    public boolean isConfirmed(){
         return confirmed;
     }
 

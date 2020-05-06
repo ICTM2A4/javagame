@@ -131,8 +131,8 @@ public class FileLoader {
         return this.keyImages.get(index);
     }
 
-    public Image getLeverImage(int index) {
-        return this.leverImages.get(index);
+    public Image getLeverImage(int doorCode) {
+        return this.leverImages.get(doorCode);
     }
 
     public Image getDoorImage(int index) {
