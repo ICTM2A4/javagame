@@ -9,7 +9,6 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
     private JLabel doorCodeLabel;
     private JTextField doorCodeTextField;
     private JButton okButton, cancelButton;
-    private JFrame frame;
 
     private boolean confirmed;
 
