@@ -21,7 +21,7 @@ public class Level extends JPanel {
     private ArrayList<GameObject> gameObjects;
     private String name;
     private Player player;
-    public BufferedImage shadow;
+    private BufferedImage shadow;
     private boolean renderShadows;
     private Optional<JSONObject> object;
     private long score;
@@ -46,7 +46,7 @@ public class Level extends JPanel {
         loadObject();
         loadLevel();
         generateWalls();
-      
+
         shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
     }
@@ -353,9 +353,9 @@ public class Level extends JPanel {
     public Stream<GameObject> fromCoordsToArray(int x, int y) {
         return Arrays.stream(getGameObjects().stream().filter(gameObject ->
             (gameObject.getX() <= x &&
-            gameObject.getY() <= y &&
-            gameObject.getX() + gameObject.getWidth() > x &&
-            gameObject.getY() + gameObject.getHeight() > y)
+                gameObject.getY() <= y &&
+                gameObject.getX() + gameObject.getWidth() > x &&
+                gameObject.getY() + gameObject.getHeight() > y)
         ).toArray(GameObject[]::new));
     }
 
