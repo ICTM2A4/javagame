@@ -4,31 +4,27 @@ import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Arrays;
 
 public class Door extends GameObject {
-    private int keyCode;
+    private int doorCode;
 
     public boolean open = false;
 
-    public Door(int gridX, int gridY, int keyCode){
+    public Door(int gridX, int gridY, int doorCode){
         super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
 
-        this.keyCode = keyCode;
+        this.doorCode = doorCode;
         setCollidable(!open);
     }
 
-    public int getKeyCode(){
-        return keyCode;
+    public int getDoorCode(){
+        return doorCode;
     }
 
     @Override
     public void draw(Graphics g) {
         if(!open){
-            g.drawImage(FileLoader.getInstance().getDoorImage(keyCode < 3 ? keyCode : 0),
+            g.drawImage(FileLoader.getInstance().getDoorImage(doorCode < 3 ? doorCode : 0),
                     getX(), getY(),
                     LevelLoader.getInstance().getCurrentLevel().get());
         }
@@ -40,7 +36,7 @@ public class Door extends GameObject {
 
         if (result && gameObject instanceof Player && !open){
             Player player = (Player) gameObject;
-            if(player.inventoryHasKey(keyCode)){
+            if(player.inventoryHasKey(doorCode)){
                 setOpen();
             }
         }

@@ -115,6 +115,6 @@ public class Player extends GameObject {
     }
 
     public boolean inventoryHasKey(int keycode){
-        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> ((Key) key).getKeyCode() == keycode).count() > 0;
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> ((Key) key).getDoorCode() == keycode).count() > 0;
     }
 }

@@ -6,20 +6,18 @@ import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Arrays;
-import java.util.EventListener;
 import java.util.List;
 
 public class Lever extends GameObject {
     private boolean active;
 
-    private int keycode;
+    private int doorCode;
 
-    public Lever(int gridX, int gridY, int keyCode) {
+    public Lever(int gridX, int gridY, int doorCode) {
         super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
         setCollidable(false);
-        this.keycode = keyCode;
+        this.doorCode = doorCode;
     }
 
     @Override
@@ -34,7 +32,7 @@ public class Lever extends GameObject {
     private void activate(){
         for(Door door : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream()
                 .filter(gameObject -> gameObject instanceof Door)
-                .filter(gameObject -> ((Door)gameObject).getKeyCode() == keycode)
+                .filter(gameObject -> ((Door)gameObject).getDoorCode() == doorCode)
                 .toArray(Door[]::new)){
             door.setOpen();
         }
