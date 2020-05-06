@@ -6,7 +6,7 @@
 
     <groupId>nl.ictm2a4</groupId>
     <artifactId>javagame</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>JavaGame</name>
     <description>A JavaGame made by Paul, Sietse en Jochem</description>
