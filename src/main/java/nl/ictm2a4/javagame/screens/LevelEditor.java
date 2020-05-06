@@ -89,6 +89,24 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         return panel;
     }
 
+    public void removeObjects(Level level) {
+        ArrayList<GameObject> removeList = new ArrayList<>();
+        level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> {
+            if(level.fromCoordsToArray(torch.getX(), torch.getY()).noneMatch(gameObject -> gameObject instanceof Wall)) {
+                removeList.add(torch);
+            }
+        }
+        );
+        removeList.forEach(level::removeGameObject);
+        level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Player || gameObject instanceof EndPoint).forEach(gameObject -> {
+            if(level.fromCoordsToArray(Math.round(gameObject.getX() / LevelLoader.GRIDWIDTH) * LevelLoader.GRIDWIDTH, Math.round(gameObject.getY() / LevelLoader.GRIDHEIGHT) * LevelLoader.GRIDHEIGHT).noneMatch(gameObject2 -> gameObject2 instanceof Ground)) {
+                removeList.add(gameObject);
+            }
+        }
+        );
+        removeList.forEach(level::removeGameObject);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
@@ -163,7 +181,8 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
             Level level = LevelLoader.getInstance().getCurrentLevel().get();
 
-            Optional<GameObject> find = level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
+            Stream<GameObject> objectStream = level.fromCoordsToArray(e.getX(), e.getY());
+            Optional<GameObject> find = objectStream.filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
 
             if (e.getButton() == 1) { // left mouse button
                 if (find.isEmpty()) {
@@ -209,6 +228,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
             level.repaint();
             level.regenerateWalls();
+            removeObjects(level);
         }
     }
 
