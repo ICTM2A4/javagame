@@ -9,7 +9,6 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
     private JLabel doorCodeLabel;
     private JTextField doorCodeTextField;
     private JButton okButton, cancelButton;
-    private JFrame frame;
 
     private boolean confirmed;
 
@@ -18,17 +17,17 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
         setSize(480, 240);
         setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        JLabel doorCodeLabel = new JLabel("Code");
+        doorCodeLabel = new JLabel("Code");
         add(doorCodeLabel);
 
-        JTextField doorCodeTextField = new JTextField(20);
+        doorCodeTextField = new JTextField(20);
         add(doorCodeTextField);
 
-        JButton okButton = new JButton("Ok");
+        okButton = new JButton("Ok");
         okButton.addActionListener(this::onOkClicked);
         add(okButton);
 
-        JButton cancelButton = new JButton("Cancel");
+        cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(this::onCancelClicked);
         add(cancelButton);
 
@@ -42,7 +41,7 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
         int doorCode = 0;
 
         try{
-            doorCode = Integer.parseInt(doorCodeLabel.getText());
+            doorCode = Integer.parseInt(doorCodeTextField.getText());
         } catch (Exception ex){
             // doorCode zo laten
         }
