@@ -22,7 +22,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     private ArrayList<JButton> itemButtons;
     private Level level;
 
-    public LevelEditor() {
+    public LevelEditor(JFrame frame) {
         gbc = new GridBagConstraints ();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         int hGap = 0;
