@@ -89,6 +89,24 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         return panel;
     }
 
+    public void removeObjects(Level level) {
+        ArrayList<GameObject> removeList = new ArrayList<>();
+        level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> { // deze heeft muur nodig!
+            if(level.fromCoordsToArray(torch.getX(), torch.getY()).noneMatch(gameObject -> gameObject instanceof Wall)) {
+                removeList.add(torch);
+            }
+        }
+        );
+        removeList.forEach(level::removeGameObject);
+        level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Player || gameObject instanceof EndPoint).forEach(gameObject -> {
+            if(level.fromCoordsToArray(Math.round(gameObject.getX() / LevelLoader.GRIDWIDTH) * LevelLoader.GRIDWIDTH, Math.round(gameObject.getY() / LevelLoader.GRIDHEIGHT) * LevelLoader.GRIDHEIGHT).noneMatch(gameObject2 -> gameObject2 instanceof Ground)) {
+                removeList.add(gameObject);
+            }
+        }
+        );
+        removeList.forEach(level::removeGameObject);
+    }
+  
     @Override
     public void actionPerformed(ActionEvent e) {
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
@@ -148,6 +166,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
         level.repaint();
         level.regenerateWalls();
+        removeObjects(level);
     }
 
     @Override
@@ -209,6 +228,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
             level.repaint();
             level.regenerateWalls();
+            removeObjects(level);
         }
     }
 
