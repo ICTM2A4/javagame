@@ -2,49 +2,38 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.uicomponents.CButton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class MainMenu extends JPanel implements ActionListener {
 
-    private JButton start, selectlevel, levelbuilder, exit;
+    private ArrayList<CButton> buttons;
 
     public MainMenu() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        //setAlignmentY(Component.LEFT_ALIGNMENT);
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(5,0,5,0);
+        gbc.anchor = GridBagConstraints.WEST;
+
         this.setPreferredSize(new Dimension(360, 360));
+        buttons = new ArrayList<>();
 
-        Box.Filler hFill1 = new Box.Filler(new Dimension(0,5),
-                new Dimension(0, 10),
-                new Dimension(0, 20));
-        Box.Filler hFill2 = new Box.Filler(new Dimension(0,5),
-                new Dimension(0, 10),
-                new Dimension(0, 20));
-        Box.Filler hFill3 = new Box.Filler(new Dimension(0,5),
-                new Dimension(0, 10),
-                new Dimension(0, 20));
-        Box.Filler hFill0 = new Box.Filler(new Dimension(0,25),
-                new Dimension(0, 50),
-                new Dimension(0, 75));
+        String[] buttonNames = {"Start","Select level","Level Builder","Exit"};
 
-        add(hFill0);
-        start = new JButton("Start");
-        start.addActionListener(this);
-        add(start);
-        add(hFill1);
-        selectlevel = new JButton("Select Level");
-        selectlevel.addActionListener(this);
-        add(selectlevel);
-        add(hFill2);
-        levelbuilder = new JButton("Level Builder");
-        levelbuilder.addActionListener(this);
-        add(levelbuilder);
-        add(hFill3);
-        exit = new JButton("Exit");
-        exit.addActionListener(this);
-        add(exit);
+        for(String name : buttonNames) {
+            CButton button = new CButton(name);
+            buttons.add(button);
+            button.addActionListener(this);
+            button.setMargin(new Insets(0, 0, 0, 0));
+            add(button, gbc);
+        }
 
         setVisible(true);
     }
@@ -58,17 +47,17 @@ public class MainMenu extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if(e.getSource() == start) {
+        if(e.getSource() == buttons.get(0)) { // start
             LevelLoader.getInstance().startLevel();
         }
-        if(e.getSource() == selectlevel) {
-            GameScreen.getInstance().setPanel(new LevelSelectScreen(), "Select Level");
+        if(e.getSource() == buttons.get(1)) { // select level
+            GameScreen.getInstance().setPanel(new LevelSelectScreen());
         }
-        if(e.getSource() == levelbuilder) {
+        if(e.getSource() == buttons.get(2)) { // level builder
             LevelLoader.getInstance().createCustomLevel();
-            GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
+            GameScreen.getInstance().setPanel(new LevelEditor());
         }
-        if(e.getSource() == exit) {
+        if(e.getSource() == buttons.get(3)) { // exit
             System.exit(0);
         }
 
