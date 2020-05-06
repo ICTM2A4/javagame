@@ -22,7 +22,7 @@ public class Level extends JPanel {
     private String name;
     private Player player;
     private BufferedImage shadow;
-    private boolean renderShadows;
+    private boolean renderShadows, animateLights;
     private Optional<JSONObject> object;
     private long score;
     private long current = System.currentTimeMillis();
@@ -46,7 +46,9 @@ public class Level extends JPanel {
         loadObject();
         loadLevel();
         generateWalls();
-      
+
+        animateLights = true;
+
         shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
     }
@@ -91,6 +93,8 @@ public class Level extends JPanel {
             drawLights();
             g.drawImage(shadow, 0, 0, null);
         }
+        g.setColor(Color.GREEN);
+        g.drawString("fps: " + LevelLoader.getInstance().getFPS(), 20, 20);
     }
 
     /**
@@ -120,9 +124,11 @@ public class Level extends JPanel {
      * @param radius Radius of the light cirlce
      */
     private void drawLight(Graphics2D g2d, Point center, int radius) {
-        int min = (radius - 2);
-        int max = (radius + 6);
-        radius = new Random().nextInt((max - min) + 1) + min;
+        if (animateLights) {
+            int min = (radius - 2);
+            int max = (radius + 6);
+            radius = new Random().nextInt((max - min) + 1) + min;
+        }
 
         g2d.setComposite(AlphaComposite.DstOut);
         float[] dist = {0.0f, 1.0f};
@@ -166,6 +172,14 @@ public class Level extends JPanel {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isAnimateLights() {
+        return animateLights;
+    }
+
+    public void setAnimateLights(boolean animateLights) {
+        this.animateLights = animateLights;
     }
 
     /**
@@ -290,6 +304,10 @@ public class Level extends JPanel {
         this.renderShadows = renderShadows;
     }
 
+    public boolean isRenderShadows() {
+        return renderShadows;
+    }
+
     /**
      * Generate the walls based on the groundTiles
      *
@@ -369,7 +387,7 @@ public class Level extends JPanel {
 
         if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
             LevelLoader.getInstance().stop();
-            GameScreen.getInstance().setPanel(new PauseScreen(), "Paused");
+            GameScreen.getInstance().setPanel(new PauseScreen());
         }
     }
 

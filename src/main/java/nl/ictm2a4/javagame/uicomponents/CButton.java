@@ -23,4 +23,7 @@ public class CButton extends JButton {
         g.drawImage(FileLoader.loadImage("button-background.png"), 0, 0, this);
         g.drawString(this.getText(), 20, 20);
     }
+
+    public void add() {
+    }
 }
