@@ -2,43 +2,38 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class PauseScreen extends JPanel implements ActionListener {
 
-    private JButton resume, restart, quit;
+    private ArrayList<CButton> buttons;
 
     public PauseScreen() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setAlignmentY(Component.LEFT_ALIGNMENT);
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(5,0,5,0);
+        gbc.anchor = GridBagConstraints.WEST;
+
         this.setPreferredSize(new Dimension(360, 360));
+        buttons = new ArrayList<>();
 
-        Box.Filler hFill1 = new Box.Filler(new Dimension(0,5),
-                new Dimension(0, 10),
-                new Dimension(0, 20));
-        Box.Filler hFill2 = new Box.Filler(new Dimension(0,5),
-                new Dimension(0, 10),
-                new Dimension(0, 20));
-        Box.Filler hFill0 = new Box.Filler(new Dimension(0,25),
-                new Dimension(0, 50),
-                new Dimension(0, 75));
+        String[] buttonNames = {"Resume", "Restart", "Back to main menu"};
 
-        add(hFill0);
-        resume = new JButton("Resume");
-        resume.addActionListener(this);
-        add(resume);
-        add(hFill1);
-        restart = new JButton("Restart");
-        restart.addActionListener(this);
-        add(restart);
-        add(hFill2);
-        quit = new JButton("Quit");
-        quit.addActionListener(this);
-        add(quit);
+        for(String name : buttonNames) {
+            CButton button = new CButton(name);
+            buttons.add(button);
+            button.addActionListener(this);
+            button.setMargin(new Insets(0, 0, 0, 0));
+            add(button, gbc);
+        }
 
         setVisible(true);
     }
@@ -51,15 +46,15 @@ public class PauseScreen extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == resume) {
+        if(e.getSource() == buttons.get(0)) { // resume
             LevelLoader.getInstance().resume();
-            GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get(), LevelLoader.getInstance().getCurrentLevel().get().getName());
+            GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get());
         }
-        if(e.getSource() == restart) {
+        if(e.getSource() == buttons.get(1)) { // restart
             LevelLoader.getInstance().getCurrentLevel().get().restart();
-            GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get(), LevelLoader.getInstance().getCurrentLevel().get().getName());
+            GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get());
         }
-        if(e.getSource() == quit) {
+        if(e.getSource() == buttons.get(2)) { // quit
             LevelLoader.getInstance().stopLevel();
         }
     }

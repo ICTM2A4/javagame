@@ -4,6 +4,7 @@ import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -105,7 +106,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         );
         removeList.forEach(level::removeGameObject);
     }
-
+  
     @Override
     public void actionPerformed(ActionEvent e) {
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
@@ -165,6 +166,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
         level.repaint();
         level.regenerateWalls();
+        removeObjects(level);
     }
 
     @Override
@@ -180,8 +182,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
             Level level = LevelLoader.getInstance().getCurrentLevel().get();
 
-            Stream<GameObject> objectStream = level.fromCoordsToArray(e.getX(), e.getY());
-            Optional<GameObject> find = objectStream.filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
+            Optional<GameObject> find = level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject.getClass().getCanonicalName().equals(current.getCanonicalName())).findAny();
 
             if (e.getButton() == 1) { // left mouse button
                 if (find.isEmpty()) {
@@ -236,10 +237,10 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         addComp ( this, buttons, 1, 2, 1, 1
             , GridBagConstraints.BOTH, LevelLoader.WIDTH, 40 );
         buttons.setLayout(new FlowLayout());
-        save = new JButton("Save");
+        save = new CButton("Save");
         save.addActionListener(this);
         buttons.add(save);
-        cancel = new JButton("Cancel");
+        cancel = new CButton("Cancel");
         cancel.addActionListener(this);
         buttons.add(cancel);
     }
