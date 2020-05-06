@@ -25,7 +25,7 @@ public class PauseScreen extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(360, 360));
         buttons = new ArrayList<>();
 
-        String[] buttonNames = {"Resume", "Restart", "Back to main menu"};
+        String[] buttonNames = {"Resume", "Restart", "Settings", "Back to main menu"};
 
         for(String name : buttonNames) {
             CButton button = new CButton(name);
@@ -54,8 +54,11 @@ public class PauseScreen extends JPanel implements ActionListener {
             LevelLoader.getInstance().getCurrentLevel().get().restart();
             GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get());
         }
-        if(e.getSource() == buttons.get(2)) { // quit
+        if(e.getSource() == buttons.get(3)) { // quit
             LevelLoader.getInstance().stopLevel();
+        }
+        if (e.getSource() == buttons.get(2)) { //Settings
+            GameScreen.getInstance().setPanel(new SettingScreen());
         }
     }
 }

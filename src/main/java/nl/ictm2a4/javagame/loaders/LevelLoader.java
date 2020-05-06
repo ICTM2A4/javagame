@@ -85,6 +85,7 @@ public class LevelLoader implements Runnable {
 
     @Override
     public void run() {
+        System.out.println(targetTime);
         long start, elapsed, wait;
         while(isRunning) {
             start = System.nanoTime();
@@ -152,6 +153,15 @@ public class LevelLoader implements Runnable {
      */
     public static LevelLoader getInstance() {
         return instance;
+    }
+
+    public void setFPS(int FPS) {
+        this.FPS = FPS;
+        this.targetTime = 1000 / this.FPS;
+    }
+
+    public int getFPS() {
+        return FPS;
     }
 
     private File checkFolders() {
