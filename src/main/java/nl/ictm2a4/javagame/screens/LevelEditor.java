@@ -90,7 +90,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
     public void removeObjects(Level level) {
         ArrayList<GameObject> removeList = new ArrayList<>();
-        level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> {
+        level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> { // deze heeft muur nodig!
             if(level.fromCoordsToArray(torch.getX(), torch.getY()).noneMatch(gameObject -> gameObject instanceof Wall)) {
                 removeList.add(torch);
             }
