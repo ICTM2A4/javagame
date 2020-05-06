@@ -115,7 +115,9 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         for(int i = 0; i < LevelLoader.DEFAULTLEVELAMOUNT; i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if (object.isPresent()) {
-                JButton button = new JButton("" + object.get().get("name"));
+//                JButton button = new JButton("" + object.get().get("name"));
+                JButton button = new JButton();
+                button.add(new JLabel(new ImageIcon(FileLoader.getInstance().getLevelThumbnail(i))));
                 jplevel.add(button);
 
                 if (GameScreen.getInstance().getAchievedList().contains(i)) {

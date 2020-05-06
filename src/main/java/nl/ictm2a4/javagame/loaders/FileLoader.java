@@ -154,17 +154,25 @@ public class FileLoader {
     public BufferedImage getLevelThumbnail(int id) {
         Level level = new Level(id);
 
-        BufferedImage image = new BufferedImage(LevelLoader.width, LevelLoader.height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(LevelLoader.WIDTH, LevelLoader.HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.createGraphics();
 
         level.setRenderShadows(true);
-//        level.tick();
+        level.tick();
         level.paintComponent(g);
 
         g.dispose();
 
+        int newH = LevelLoader.HEIGHT / 16;
+        int newW = LevelLoader.WIDTH / 16;
+        Image tmp = image.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
-        return image;
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+
+        return dimg;
     }
 }
 
