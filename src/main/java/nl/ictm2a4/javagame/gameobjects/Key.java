@@ -2,8 +2,6 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
-import nl.ictm2a4.javagame.screens.EndScreen;
-import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
 
