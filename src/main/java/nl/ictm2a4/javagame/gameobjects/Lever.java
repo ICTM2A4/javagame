@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
 
-public class Lever extends GameObject {//implements EventListener, KeyListener {
+public class Lever extends GameObject {
     private boolean active;
 
     private int keycode;
@@ -48,7 +48,6 @@ public class Lever extends GameObject {//implements EventListener, KeyListener {
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
 
         if(!active && Arrays.stream(collisions).anyMatch(gameObject -> gameObject instanceof Player) && pressedKeys.contains(KeyEvent.VK_SPACE)){
-            System.out.println("HENDEL GEACTIVEERD");
             activate();
         }
     }
