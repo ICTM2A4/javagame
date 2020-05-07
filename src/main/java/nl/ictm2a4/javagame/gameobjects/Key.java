@@ -24,7 +24,7 @@ public class Key extends Pickup {
     public void draw(Graphics g) {
 
         if(active){
-            g.drawImage(FileLoader.getInstance().getKeyImage(doorCode < 3 ? doorCode : 0),
+            g.drawImage(FileLoader.getInstance().getKeyImage(doorCode <= 3 ? doorCode : 0),
                     getX(), getY(),
                     LevelLoader.getInstance().getCurrentLevel().get());
         }

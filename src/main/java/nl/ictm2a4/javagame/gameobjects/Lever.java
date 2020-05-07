@@ -28,10 +28,17 @@ public class Lever extends GameObject {
     @Override
     public void draw(Graphics g) {
         if(!active){
-            g.drawImage(FileLoader.getInstance().getLeverImage(0),
+            g.drawImage(FileLoader.getInstance().getLeverImage(doorCode <= 3 ? doorCode : 0),
                     getX(), getY(),
+                    32, 32,
+                    LevelLoader.getInstance().getCurrentLevel().get());
+        } else {
+            g.drawImage(FileLoader.getInstance().getLeverImage(doorCode <= 3 ? doorCode : 0),
+                    getX() + 32, getY(),
+                    -32, 32,
                     LevelLoader.getInstance().getCurrentLevel().get());
         }
+
     }
 
     private void activate(){

@@ -54,7 +54,8 @@ public class FileLoader {
 
     public void reloadLeverImages(){
         leverImages = new ArrayList<>();
-        leverImages.add(loadImage("textures/lever-0.png"));
+        for(int i = 0; i < 4; i++)
+            leverImages.add(loadImage("textures/lever-" + i + ".png"));
     }
 
     /**
