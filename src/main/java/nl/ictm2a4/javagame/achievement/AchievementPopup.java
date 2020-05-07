@@ -1,8 +1,6 @@
 package nl.ictm2a4.javagame.achievement;
 
 import nl.ictm2a4.javagame.loaders.LevelLoader;
-import nl.ictm2a4.javagame.screens.GameScreen;
-import nl.ictm2a4.javagame.screens.Level;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +23,7 @@ public class AchievementPopup extends JPanel {
 
         add(new Label(tekst));
         System.out.println(tekst);
+        this.tekst = tekst;
     }
 
     public boolean render(int frame) {
@@ -38,8 +37,7 @@ public class AchievementPopup extends JPanel {
             startX = startX - (frame - 30);
 
         setBounds(startX, startY, 100, 30);
-
-        return true;
+        return false;
     }
 
 }
