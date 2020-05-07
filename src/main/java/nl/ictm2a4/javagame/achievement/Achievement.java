@@ -15,6 +15,8 @@ public abstract class Achievement implements Listener {
     }
 
     public void achieve(String tekst) {
+        if (isAchieved())
+            return;
         this.achieved = true;
         AchievementHandler.getInstance().achieve(tekst);
     }
