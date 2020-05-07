@@ -1,5 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
+import nl.ictm2a4.javagame.achievement.AchievementHandler;
+import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -56,6 +58,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         addKeyListener(this);
         setVisible(true);
+
+        // start event handlers
+        new EventManager();
 
         achievedList = new ArrayList<>();
         achievedList.add(0);
@@ -197,5 +202,11 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     private void tick() {
         LevelLoader.getInstance().tick();
+    }
+
+
+    private void registerAchievements() {
+        new AchievementHandler();
+        new LevelOneAchieved();
     }
 }
