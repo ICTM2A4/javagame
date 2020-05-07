@@ -21,6 +21,10 @@ public class Lever extends GameObject {
         setyIndex(4);
     }
 
+    public int getDoorCode(){
+        return doorCode;
+    }
+
     @Override
     public void draw(Graphics g) {
         if(!active){

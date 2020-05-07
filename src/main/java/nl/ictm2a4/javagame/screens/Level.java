@@ -315,6 +315,7 @@ public class Level extends JPanel {
             JSONArray doorArray = new JSONArray();
             doorArray.add(door.getX() / LevelLoader.GRIDWIDTH);
             doorArray.add(door.getY() / LevelLoader.GRIDHEIGHT);
+            doorArray.add(door.getDoorCode());
             doors.add(doorArray);
         }
         object.put("doors", doors);
@@ -326,6 +327,8 @@ public class Level extends JPanel {
             JSONArray leverArray = new JSONArray();
             leverArray.add(lever.getX() / LevelLoader.GRIDWIDTH);
             leverArray.add(lever.getY() / LevelLoader.GRIDHEIGHT);
+            leverArray.add(lever.getDoorCode());
+
             levers.add(leverArray);
         }
         object.put("levers", levers);
@@ -337,6 +340,7 @@ public class Level extends JPanel {
             JSONArray keyArray = new JSONArray();
             keyArray.add(key.getX() / LevelLoader.GRIDWIDTH);
             keyArray.add(key.getY() / LevelLoader.GRIDHEIGHT);
+            keyArray.add(key.getDoorCode());
             keys.add(keyArray);
         }
         object.put("keys", keys);
