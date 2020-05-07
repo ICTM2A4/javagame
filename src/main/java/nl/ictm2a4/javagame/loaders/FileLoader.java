@@ -79,11 +79,6 @@ public class FileLoader {
             doorImages.add(loadImage("textures/door-" + i + ".png"));
     }
 
-    public void reloadDoorImages() {
-        doorImages = new ArrayList<>();
-        doorImages.add(loadImage("textures/door-0.png"));
-    }
-
     /**
      * Reload all player images
      */
