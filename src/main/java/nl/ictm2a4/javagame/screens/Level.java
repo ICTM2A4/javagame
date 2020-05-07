@@ -308,6 +308,39 @@ public class Level extends JPanel {
         }
         object.put("torches", torchTiles);
 
+        // Door
+        JSONArray doors = new JSONArray();
+        for (Door door : getGameObjects().stream().filter(gameObject -> gameObject instanceof Door)
+                .toArray(Door[]::new)) {
+            JSONArray doorArray = new JSONArray();
+            doorArray.add(door.getX() / LevelLoader.GRIDWIDTH);
+            doorArray.add(door.getY() / LevelLoader.GRIDHEIGHT);
+            doors.add(doorArray);
+        }
+        object.put("doors", doors);
+
+        // Lever
+        JSONArray levers = new JSONArray();
+        for (Lever lever : getGameObjects().stream().filter(gameObject -> gameObject instanceof Lever)
+                .toArray(Lever[]::new)) {
+            JSONArray leverArray = new JSONArray();
+            leverArray.add(lever.getX() / LevelLoader.GRIDWIDTH);
+            leverArray.add(lever.getY() / LevelLoader.GRIDHEIGHT);
+            levers.add(leverArray);
+        }
+        object.put("levers", levers);
+
+        // Key
+        JSONArray keys = new JSONArray();
+        for (Key key : getGameObjects().stream().filter(gameObject -> gameObject instanceof Key)
+                .toArray(Key[]::new)) {
+            JSONArray keyArray = new JSONArray();
+            keyArray.add(key.getX() / LevelLoader.GRIDWIDTH);
+            keyArray.add(key.getY() / LevelLoader.GRIDHEIGHT);
+            keys.add(keyArray);
+        }
+        object.put("keys", keys);
+
         JSONArray player = new JSONArray();
         Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player)
                 .findFirst();

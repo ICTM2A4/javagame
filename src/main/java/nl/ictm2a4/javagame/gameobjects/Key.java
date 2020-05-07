@@ -13,6 +13,7 @@ public class Key extends Pickup {
         super(gridX, gridY);
         this.doorCode = doorCode;
         setCollidable(false);
+        setyIndex(4);
     }
 
     public int getDoorCode(){
@@ -28,6 +29,4 @@ public class Key extends Pickup {
                     LevelLoader.getInstance().getCurrentLevel().get());
         }
     }
-
-
 }

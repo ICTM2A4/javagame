@@ -4,12 +4,12 @@ import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
 
-public class Pickup extends GameObject {
+public abstract class Pickup extends GameObject {
 
     public boolean active = true;
 
     public Pickup(int gridX, int gridY){
-        super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
+        super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
     }
 
     public void draw(Graphics g) { }

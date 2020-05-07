@@ -15,9 +15,10 @@ public class Lever extends GameObject {
     private int doorCode;
 
     public Lever(int gridX, int gridY, int doorCode) {
-        super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
+        super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
         setCollidable(false);
         this.doorCode = doorCode;
+        setyIndex(4);
     }
 
     @Override

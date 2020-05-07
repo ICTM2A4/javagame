@@ -11,10 +11,11 @@ public class Door extends GameObject {
     public boolean open = false;
 
     public Door(int gridX, int gridY, int doorCode){
-        super(gridX * LevelLoader.gridWidth, gridY * LevelLoader.gridHeight, LevelLoader.gridWidth, LevelLoader.gridHeight);
+        super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
 
         this.doorCode = doorCode;
         setCollidable(!open);
+        setyIndex(4);
     }
 
     public int getDoorCode(){
