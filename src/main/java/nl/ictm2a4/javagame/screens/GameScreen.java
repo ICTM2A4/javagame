@@ -10,9 +10,14 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScreen extends JFrame implements KeyListener {
+public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     public static final String GAMENAME = "JavaGame";
+
+    private Thread thread;
+    private  boolean isRunning;
+    private int fps = 30;
+    private long targetTime = 1000 / fps;
 
     private static GameScreen instance;
     private String title = GAMENAME;
@@ -38,6 +43,8 @@ public class GameScreen extends JFrame implements KeyListener {
         fixed.setBackground(Color.BLACK);
         getContentPane().add(fixed);
 
+        //TODO: paint fps
+
         setPanel(new MainMenu());
         LevelLoader.getInstance().loadLevel(0);
 
@@ -49,8 +56,9 @@ public class GameScreen extends JFrame implements KeyListener {
 
         achievedList = new ArrayList<>();
         achievedList.add(0);
-    }
 
+        this.start();
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -69,14 +77,6 @@ public class GameScreen extends JFrame implements KeyListener {
         if(pressedKeys.contains(e.getKeyCode())){
             pressedKeys.remove(Integer.valueOf(e.getKeyCode()));
         }
-    }
-
-    /**
-     * Append text to the screen title, seperated by an -
-     * @param append Text to append
-     */
-    public void addTitle(String append) {
-        setTitle(title + " - " + append);
     }
 
     /**
@@ -130,5 +130,47 @@ public class GameScreen extends JFrame implements KeyListener {
     public void achieveLevel(int id) {
         if (!this.achievedList.contains(id))
             this.achievedList.add(id);
+    }
+
+    @Override
+    public void run() {
+        long start, elapsed, wait;
+        while(isRunning) {
+            start = System.nanoTime();
+
+            tick();
+
+            elapsed = System.nanoTime() - start;
+            wait = targetTime - elapsed / 1000000;
+
+            if(wait <= 0) {
+                wait = 5;
+            }
+
+            try {
+                Thread.sleep(wait);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setFps(int fps) {
+        this.fps = fps;
+        this.targetTime = 1000 / this.fps;
+    }
+
+    public int getFps() {
+        return fps;
+    }
+
+    public void start() {
+        isRunning = true;
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    private void tick() {
+        LevelLoader.getInstance().tick();
     }
 }

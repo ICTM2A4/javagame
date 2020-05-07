@@ -93,8 +93,6 @@ public class Level extends JPanel {
             drawLights();
             g.drawImage(shadow, 0, 0, null);
         }
-        g.setColor(Color.GREEN);
-        g.drawString("fps: " + LevelLoader.getInstance().getFPS(), 20, 20);
     }
 
     /**
@@ -386,7 +384,7 @@ public class Level extends JPanel {
         score = System.currentTimeMillis() - current;
 
         if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
-            LevelLoader.getInstance().stop();
+            LevelLoader.getInstance().pause();
             GameScreen.getInstance().setPanel(new PauseScreen());
         }
     }

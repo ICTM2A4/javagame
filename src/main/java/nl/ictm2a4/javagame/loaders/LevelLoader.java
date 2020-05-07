@@ -15,27 +15,24 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
-public class LevelLoader implements Runnable {
+public class LevelLoader {
 
     private final Path CUSTOMLEVELSPATH = Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath() + File.separator + GameScreen.GAMENAME).replaceAll("%20", " "));
     public static final int DEFAULTLEVELAMOUNT = 10;
 
     private static LevelLoader instance;
 
-    private Thread thread;
-    private  boolean isRunning;
-    private int FPS = 30;
-    private long targetTime = 1000 / FPS;
-
     public static final int GRIDWIDTH = 32;
     public static final int GRIDHEIGHT = 32;
     public static final int WIDTH = 1184;
     public static final int HEIGHT = 640;
 
+    private boolean paused;
     private Level currentLevel;
 
     public LevelLoader() {
         instance = this;
+        paused = true;
 
         File gameFolder = new File(CUSTOMLEVELSPATH.toUri());
         if (!gameFolder.exists()) {
@@ -71,7 +68,7 @@ public class LevelLoader implements Runnable {
         currentLevel.setRenderShadows(true);
         currentLevel.loadLevel();
         GameScreen.getInstance().setPanel(currentLevel);
-        start();
+        paused = false;
         return true;
     }
 
@@ -80,63 +77,28 @@ public class LevelLoader implements Runnable {
      */
     public void stopLevel() {
         GameScreen.getInstance().setPanel(new MainMenu());
-        stop();
-    }
-
-    @Override
-    public void run() {
-        System.out.println(targetTime);
-        long start, elapsed, wait;
-        while(isRunning) {
-            start = System.nanoTime();
-
-            tick();
-
-            elapsed = System.nanoTime() - start;
-            wait = targetTime - elapsed / 1000000;
-
-            if(wait <= 0) {
-                wait = 5;
-            }
-
-            try {
-                Thread.sleep(wait);
-            }catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
      * Tick the current level
      */
-    private void tick() {
-        currentLevel.tick();
-    }
-
-    /**
-     * Start the game thread
-     */
-    private void start() {
-        isRunning = true;
-        thread = new Thread(this);
-        thread.start();
-    }
-
-    /**
-     * Stop the thread
-     */
-    public void stop() {
-        isRunning = false;
-        thread = null;
+    public void tick() {
+        if(!paused) {
+            currentLevel.tick();
+            System.out.println("tick");
+        }
     }
 
     /**
      * Resume the current level and request focus on the JPanel
      */
     public void resume() {
-        start();
         GameScreen.getInstance().requestFocus();
+        paused = false;
+    }
+
+    public void pause() {
+        paused = true;
     }
 
     /**
@@ -153,15 +115,6 @@ public class LevelLoader implements Runnable {
      */
     public static LevelLoader getInstance() {
         return instance;
-    }
-
-    public void setFPS(int FPS) {
-        this.FPS = FPS;
-        this.targetTime = 1000 / this.FPS;
-    }
-
-    public int getFPS() {
-        return FPS;
     }
 
     private File checkFolders() {

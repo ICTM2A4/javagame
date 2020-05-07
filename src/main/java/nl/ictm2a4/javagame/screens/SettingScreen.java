@@ -40,16 +40,16 @@ public class SettingScreen extends JPanel implements ActionListener {
 
             switch (s) {
                 case "1x" :
-                    LevelLoader.getInstance().setFPS(30);
+                    GameScreen.getInstance().setFps(30);
                     break;
                 case "2x" :
-                    LevelLoader.getInstance().setFPS(60);
+                    GameScreen.getInstance().setFps(60);
                     break;
                 case "4x" :
-                    LevelLoader.getInstance().setFPS(120);
+                    GameScreen.getInstance().setFps(120);
                     break;
                 case "8x" :
-                    LevelLoader.getInstance().setFPS(240);
+                    GameScreen.getInstance().setFps(240);
                     break;
             }
         };
