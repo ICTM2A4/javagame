@@ -64,7 +64,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         achievedList = new ArrayList<>();
         achievedList.add(0);
-      
+
+        registerAchievements();
         this.start();
     }
 
@@ -203,7 +204,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private void tick() {
         LevelLoader.getInstance().tick();
     }
-
 
     private void registerAchievements() {
         new AchievementHandler();
