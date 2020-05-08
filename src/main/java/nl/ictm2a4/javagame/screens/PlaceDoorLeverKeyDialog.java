@@ -9,6 +9,8 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
     private JLabel doorCodeLabel;
     private JTextField doorCodeTextField;
     private JButton okButton, cancelButton;
+    private JComboBox doorCodeComboBox;
+    private String[] colors = { "Yellow", "Red", "Blue", "Green" };
 
     private boolean confirmed;
 
@@ -20,8 +22,8 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
         doorCodeLabel = new JLabel("Code");
         add(doorCodeLabel);
 
-        doorCodeTextField = new JTextField(20);
-        add(doorCodeTextField);
+        doorCodeComboBox = new JComboBox(colors);
+        add(doorCodeComboBox);
 
         okButton = new JButton("Ok");
         okButton.addActionListener(this::onOkClicked);
@@ -38,15 +40,7 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {}
 
     public int getDoorCode(){
-        int doorCode = 0;
-
-        try{
-            doorCode = Integer.parseInt(doorCodeTextField.getText());
-        } catch (Exception ex){
-            // doorCode zo laten
-        }
-
-        return doorCode;
+        return doorCodeComboBox.getSelectedIndex();
     }
 
     public boolean isConfirmed(){
