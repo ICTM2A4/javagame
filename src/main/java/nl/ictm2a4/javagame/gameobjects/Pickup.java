@@ -27,7 +27,7 @@ public abstract class Pickup extends GameObject {
             if(!player.getInventory().contains(this)){
                 // Deur openen
                 player.addToInventory(this);
-                System.out.println("Item opgepakt");
+//                System.out.println("Item opgepakt");
                 active = false;
 
                 EventManager.getInstance().callEvent(new ItemPickupEvent(this));
