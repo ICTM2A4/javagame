@@ -81,6 +81,48 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             }
         }.setRequireWall(true));
 
+        // Door
+        levelEditorItems.add(new LevelEditorItem(Door.class, FileLoader.getInstance().getDoorImage(0)) {
+            @Override
+            public void onPlace(int mouseX, int mouseY) {
+                super.onPlace(mouseX, mouseY);
+                if (!this.allowedToPlace(mouseX, mouseY)) return;
+                var doorDialog = new PlaceDoorLeverKeyDialog(GameScreen.getInstance());
+
+                if(doorDialog.isConfirmed()){
+                    level.addGameObject(new Door(gridX, gridY, doorDialog.getDoorCode()));
+                }
+            }
+        }.setRequireGround(true));
+
+        // Lever
+        levelEditorItems.add(new LevelEditorItem(Door.class, FileLoader.getInstance().getDoorImage(0)) {
+            @Override
+            public void onPlace(int mouseX, int mouseY) {
+                super.onPlace(mouseX, mouseY);
+                if (!this.allowedToPlace(mouseX, mouseY)) return;
+                var leverDialog = new PlaceDoorLeverKeyDialog(GameScreen.getInstance());
+
+                if(leverDialog.isConfirmed()){
+                    level.addGameObject(new Lever(gridX, gridY, leverDialog.getDoorCode()));
+                }
+            }
+        }.setRequireGround(true));
+
+        // Key
+        levelEditorItems.add(new LevelEditorItem(Key.class, FileLoader.getInstance().getKeyImage(0)) {
+            @Override
+            public void onPlace(int mouseX, int mouseY) {
+                super.onPlace(mouseX, mouseY);
+                if (!this.allowedToPlace(mouseX, mouseY)) return;
+                var keyDialog = new PlaceDoorLeverKeyDialog(GameScreen.getInstance());
+
+                if(keyDialog.isConfirmed()){
+                    level.addGameObject(new Key(gridX, gridY, keyDialog.getDoorCode()));
+                }
+            }
+        }.setRequireGround(true));
+
         displayGUI();
     }
 
