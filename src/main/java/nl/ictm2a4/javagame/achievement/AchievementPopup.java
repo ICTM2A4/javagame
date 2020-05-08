@@ -23,6 +23,7 @@ public class AchievementPopup extends JPanel {
 
         add(new Label(tekst));
         System.out.println(tekst);
+
         this.tekst = tekst;
     }
 
