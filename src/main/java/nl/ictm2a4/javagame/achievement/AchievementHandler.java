@@ -1,5 +1,7 @@
 package nl.ictm2a4.javagame.achievement;
 
+import nl.ictm2a4.javagame.event.EventManager;
+
 import java.util.ArrayList;
 
 public class AchievementHandler {
@@ -24,8 +26,10 @@ public class AchievementHandler {
     }
 
     public void addAchievement(Achievement achievement) {
-        if (!achievements.contains(achievement))
+        if (!achievements.contains(achievement)) {
             achievements.add(achievement);
+            EventManager.getInstance().registerEvent(achievement);
+        }
     }
 
     public static AchievementHandler getInstance() {

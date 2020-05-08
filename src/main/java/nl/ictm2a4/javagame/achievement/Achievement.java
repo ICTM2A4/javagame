@@ -6,6 +6,10 @@ public abstract class Achievement implements Listener {
 
     private boolean achieved;
 
+    public Achievement() {
+        AchievementHandler.getInstance().addAchievement(this);
+    }
+
     public boolean isAchieved() {
         return this.achieved;
     }
@@ -15,6 +19,8 @@ public abstract class Achievement implements Listener {
     }
 
     public void achieve(String tekst) {
+        if(isAchieved())
+            return;
         this.achieved = true;
         AchievementHandler.getInstance().achieve(tekst);
     }
