@@ -96,7 +96,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         }.setRequireGround(true));
 
         // Lever
-        levelEditorItems.add(new LevelEditorItem(Door.class, FileLoader.getInstance().getDoorImage(0)) {
+        levelEditorItems.add(new LevelEditorItem(Lever.class, FileLoader.getInstance().getLeverImage(0)) {
             @Override
             public void onPlace(int mouseX, int mouseY) {
                 super.onPlace(mouseX, mouseY);
