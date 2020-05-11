@@ -3,7 +3,6 @@ package nl.ictm2a4.javagame.screens;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
@@ -135,14 +134,18 @@ public class Level extends JPanel {
         }
 
         g2d.setComposite(AlphaComposite.DstOut);
-        float[] dist = { 0.0f, 1.0f };
-        Color[] colors = new Color[] { Color.WHITE, new Color(0, 0, 0, 0) };
-        Point2D pt = new Point2D.Float(center.x, center.y);
 
-        RadialGradientPaint paint = new RadialGradientPaint(pt, radius, dist, colors,
-                MultipleGradientPaint.CycleMethod.NO_CYCLE);
-        g2d.setPaint(paint);
-        g2d.fillOval((int) pt.getX() - radius, (int) pt.getY() - radius, radius * 2, radius * 2);
+
+
+
+//        float[] dist = { 0.0f, 1.0f };
+//        Color[] colors = new Color[] { Color.WHITE, new Color(0, 0, 0, 0) };
+//        Point2D pt = new Point2D.Float(center.x, center.y);
+//
+//        RadialGradientPaint paint = new RadialGradientPaint(pt, radius, dist, colors,
+//                MultipleGradientPaint.CycleMethod.NO_CYCLE);
+//        g2d.setPaint(paint);
+//        g2d.fillOval((int) pt.getX() - radius, (int) pt.getY() - radius, radius * 2, radius * 2);
     }
 
     /**
