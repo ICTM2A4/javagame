@@ -54,7 +54,7 @@ public class SettingScreen extends JPanel implements ActionListener {
             }
         };
         gameSpeed.addActionListener(cbAction);
-        gameSpeed.setBackground(new Color(0, 0, 0, 0));
+        gameSpeed.setBackground(new Color(146, 115, 63));
 
         this.gameSpeed.add(gameSpeed);
 
@@ -64,7 +64,7 @@ public class SettingScreen extends JPanel implements ActionListener {
                 LevelLoader.getInstance().getCurrentLevel().get().setRenderShadows(e.getStateChange() == ItemEvent.SELECTED)
         );
         shadows.add(checkBox);
-        checkBox.setBackground(new Color(0, 0, 0, 0));
+        checkBox.setBackground(new Color(146, 115, 63));
         checkBox.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isRenderShadows());
         add(shadows, gbc);
 
@@ -74,10 +74,9 @@ public class SettingScreen extends JPanel implements ActionListener {
                 LevelLoader.getInstance().getCurrentLevel().get().setAnimateLights(e.getStateChange() == ItemEvent.SELECTED)
         );
         lights.add(checkBox2);
-        checkBox2.setBackground(new Color(0, 0, 0, 0));
+        checkBox2.setBackground(new Color(146, 115, 63));
         checkBox2.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isAnimateLights());
         add(lights, gbc);
-
         buttons = new ArrayList<>();
 
         for(String name : buttonNames) {
@@ -100,7 +99,8 @@ public class SettingScreen extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttons.get(0)) {
-            GameScreen.getInstance().setPanel(new PauseScreen());
+            setVisible(false);
+            GameScreen.getInstance().addOverlay(new PauseScreen());
         }
     }
 }
