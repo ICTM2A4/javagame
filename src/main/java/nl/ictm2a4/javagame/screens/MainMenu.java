@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class MainMenu extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
+    boolean isLoggedIn = true; //TODO: JOCHEM EVEN AANPASSEN
 
     public MainMenu() {
         setLayout(new GridBagLayout());
@@ -26,13 +27,17 @@ public class MainMenu extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(360, 360));
         buttons = new ArrayList<>();
 
-        String[] buttonNames = {"Start","Select level","Level Builder","Exit"};
+        LoginScreen loginScreen = new LoginScreen();
+
+        String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Exit"};
 
         for(String name : buttonNames) {
             CButton button = new CButton(name);
             buttons.add(button);
             button.addActionListener(this);
             button.setMargin(new Insets(0, 0, 0, 0));
+            if (name.equals("Login") && isLoggedIn) {continue;}
+            if (name.equals("Logout") && !isLoggedIn) continue;
             add(button, gbc);
         }
 
@@ -57,8 +62,13 @@ public class MainMenu extends JPanel implements ActionListener {
         if(e.getSource() == buttons.get(2)) { // level builder
             GameScreen.getInstance().setPanel(new preLevelEditorScreen());
         }
-        if(e.getSource() == buttons.get(3)) { // exit
-            RaspberryPIController.getInstance().disconnect();
+        if (e.getSource() == buttons.get(3)) {
+            GameScreen.getInstance().addOverlay(new LoginScreen());
+        }
+        if (e.getSource() == buttons.get(4)) {
+            isLoggedIn = false;//TODO JOCHEM AAN T WERK
+        }
+        if(e.getSource() == buttons.get(5)) { // exit
             System.exit(0);
         }
 

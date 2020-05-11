@@ -46,7 +46,9 @@ public class SettingScreen extends JPanel implements ActionListener {
         lights.add(checkBox2);
         checkBox2.setBackground(new Color(146, 115, 63));
         checkBox2.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isAnimateLights());
-        add(lights, gbc);
+        if (checkBox.isSelected()) {
+            add(lights, gbc);
+        }
         buttons = new ArrayList<>();
 
         for(String name : buttonNames) {
