@@ -56,8 +56,8 @@ public class EndPoint extends GameObject {
 
         if (result && gameObject instanceof Player) {
             EventManager.getInstance().callEvent(new ReachedEndEvent(LevelLoader.getInstance().getCurrentLevel().get().getId())); // call end reached event
-            LevelLoader.getInstance().stopLevel();
-            GameScreen.getInstance().setPanel(new EndScreen());
+            LevelLoader.getInstance().stop();
+            GameScreen.getInstance().addOverlay(new EndScreen());
         }
         return result;
     }

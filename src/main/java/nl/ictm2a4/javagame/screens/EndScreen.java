@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,38 +11,29 @@ import java.awt.event.ActionListener;
 
 public class EndScreen extends JPanel implements ActionListener {
 
-    private JButton nextLevel, backToMainMenu;
+    private CButton nextLevel, backToMainMenu;
     int levelId = LevelLoader.getInstance().getCurrentLevel().get().getId();
     long points = LevelLoader.getInstance().getCurrentLevel().get().getScore();
 
     public EndScreen() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setAlignmentY(Component.LEFT_ALIGNMENT);
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(5,0,5,0);
+        gbc.anchor = GridBagConstraints.WEST;
         this.setPreferredSize(new Dimension(360, 360));
 
-        Box.Filler hFill1 = new Box.Filler(new Dimension(0,5),
-                new Dimension(0, 10),
-                new Dimension(0, 20));
-        Box.Filler hFill2 = new Box.Filler(new Dimension(0,5),
-                new Dimension(0, 10),
-                new Dimension(0, 20));
-        Box.Filler hFill0 = new Box.Filler(new Dimension(0,25),
-                new Dimension(0, 50),
-                new Dimension(0, 75));
-
-        add(hFill0);
         JLabel score = new JLabel("tijd: " + points / 1000);
         score.setForeground(Color.WHITE);
-        add(score);
-        add(hFill1);
-        nextLevel = new JButton("Next Level");
+        add(score, gbc);
+        nextLevel = new CButton("Next Level");
         nextLevel.addActionListener(this);
-        add(nextLevel);
+        add(nextLevel, gbc);
         nextLevel.setVisible(LevelLoader.DEFAULTLEVELAMOUNT > levelId + 1);
-        add(hFill2);
-        backToMainMenu = new JButton("Back to Main menu");
+        backToMainMenu = new CButton("Back to Main menu");
         backToMainMenu.addActionListener(this);
-        add(backToMainMenu);
+        add(backToMainMenu, gbc);
 
         setVisible(true);
     }

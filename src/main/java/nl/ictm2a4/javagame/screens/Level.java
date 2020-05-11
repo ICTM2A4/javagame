@@ -40,7 +40,7 @@ public class Level extends JPanel {
         gameObjects = new ArrayList<>();
         setBackground(Color.black);
 
-        setLayout(new FlowLayout());
+        setLayout(new GridBagLayout());
         this.setPreferredSize(new Dimension(LevelLoader.WIDTH, LevelLoader.HEIGHT));
 
         loadObject();
@@ -48,6 +48,7 @@ public class Level extends JPanel {
         generateWalls();
 
         animateLights = true;
+
 
         shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
@@ -473,7 +474,7 @@ public class Level extends JPanel {
 
         if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
             LevelLoader.getInstance().pause();
-            GameScreen.getInstance().setPanel(new PauseScreen());
+            GameScreen.getInstance().addOverlay(new PauseScreen());
         }
     }
 

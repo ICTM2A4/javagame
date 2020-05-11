@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.screens;
 
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -22,7 +23,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private static GameScreen instance;
     private String title = GAMENAME;
     private List<Integer> pressedKeys;
-    public static JPanel fixed;
+    public static JLayeredPane fixed;
     private List<Integer> achievedList;
 
     public GameScreen() {
@@ -31,21 +32,23 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         instance = this;
 
         new FileLoader();
+        new EventManager();
         new LevelLoader();
         pressedKeys = new ArrayList<>();
-        setBackground(Color.BLACK);
 
         setUndecorated(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        fixed = new JPanel();
-        fixed.setLayout(new GridBagLayout());
-        fixed.setBackground(Color.BLACK);
-        getContentPane().add(fixed);
-
+        fixed = this.getLayeredPane();
+        fixed.setLayout(new OverlayLayout(fixed));
+        setBackground(Color.BLACK);
+      
+        fixed.setBounds(0, 0, LevelLoader.WIDTH, LevelLoader.HEIGHT);
+      
         //TODO: paint fps
-
+  
         setPanel(new MainMenu());
+
         LevelLoader.getInstance().loadLevel(0);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +59,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         achievedList = new ArrayList<>();
         achievedList.add(0);
-
+      
         this.start();
     }
 
@@ -94,13 +97,21 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     @Deprecated
     public void setPanel(JPanel panel, String title) {
         fixed.removeAll();
-        fixed.add(panel);
+        JPanel temp = new JPanel();
+        temp.setLayout(new GridBagLayout());
+        temp.setBackground(new Color(0, 0, 0, 0));
+        temp.setOpaque(false);
+        temp.add(panel);
+        temp.revalidate();
+        temp.setBounds(((LevelLoader.WIDTH / 2) - (panel.getWidth() / 2)), ((LevelLoader.HEIGHT / 2) - (panel.getHeight() / 2)), panel.getWidth(), panel.getHeight());
+        fixed.add(temp, 0);
 
         fixed.revalidate();
 
         requestFocus();
         fixed.repaint();
     }
+
 
     /**
      * Set the panel of the GameScreen and reset the title
@@ -109,6 +120,20 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     public void setPanel(JPanel panel) {
         setPanel(panel, "");
         resetTitle();
+    }
+
+    public void addOverlay(JPanel panel) {
+        JPanel temp = new JPanel();
+        temp.setBackground(new Color(0, 0, 0, 0));
+        temp.setOpaque(false);
+        temp.setLayout(new GridBagLayout());
+        temp.add(panel);
+        temp.revalidate();
+        temp.setBounds(((LevelLoader.WIDTH / 2) - (panel.getWidth() / 2)), ((LevelLoader.HEIGHT / 2) - (panel.getHeight() / 2)), panel.getWidth(), panel.getHeight());
+        fixed.add(temp, JLayeredPane.POPUP_LAYER);
+        System.out.println(fixed.getComponentCount());
+        fixed.revalidate();
+        fixed.repaint();
     }
 
     /**
