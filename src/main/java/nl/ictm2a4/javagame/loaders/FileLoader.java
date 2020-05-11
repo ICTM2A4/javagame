@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FileLoader {
-
-    private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages;
+    private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages, doorImages, leverImages;
     private HashMap<String, ArrayList<Image>> playerImages;
     private static FileLoader instance;
 
@@ -30,6 +29,9 @@ public class FileLoader {
         reloadCoinImages();
         reloadPlayerImages();
         reloadTorchImages();
+        reloadKeyImages();
+        reloadDoorImages();
+        reloadLeverImages();
     }
 
     /**
@@ -50,6 +52,12 @@ public class FileLoader {
             wallTiles.add(loadImage("textures/wall-" + i + ".jpg"));
     }
 
+    public void reloadLeverImages(){
+        leverImages = new ArrayList<>();
+        for(int i = 0; i < 4; i++)
+            leverImages.add(loadImage("textures/lever-" + i + ".png"));
+    }
+
     /**
      * Reload all coin images
      */
@@ -57,6 +65,18 @@ public class FileLoader {
         coinImages = new ArrayList<>();
         for(int i = 0; i < EndPoint.IMAGEAMOUNT; i++)
             coinImages.add(loadImage("textures/coin-" + i + ".png"));
+    }
+
+    public void reloadKeyImages() {
+        keyImages = new ArrayList<>();
+        for(int i = 0; i < 4; i++)
+            keyImages.add(loadImage("textures/key-" + i + ".png"));
+    }
+
+    public void reloadDoorImages() {
+        doorImages = new ArrayList<>();
+        for(int i = 0; i < 4; i++)
+            doorImages.add(loadImage("textures/door-" + i + ".png"));
     }
 
     /**
@@ -106,6 +126,18 @@ public class FileLoader {
      */
     public Image getGroundTile(int index) {
         return this.groundTiles.get(index);
+    }
+
+    public Image getKeyImage(int index) {
+        return this.keyImages.get(index);
+    }
+
+    public Image getLeverImage(int doorCode) {
+        return this.leverImages.get(doorCode);
+    }
+
+    public Image getDoorImage(int index) {
+        return this.doorImages.get(index);
     }
 
     /**

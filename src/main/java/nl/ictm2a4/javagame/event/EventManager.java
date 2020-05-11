@@ -80,6 +80,9 @@ public class EventManager {
     }
 
     public static EventManager getInstance() {
+        if (instance == null) {
+            new EventManager();
+        }
         return instance;
     }
 }

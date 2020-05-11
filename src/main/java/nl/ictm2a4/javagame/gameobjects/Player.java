@@ -7,6 +7,7 @@ import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends GameObject {
@@ -18,6 +19,8 @@ public class Player extends GameObject {
     private PlayerStatus status;
     private PlayerStatus.Direction direction;
 
+    private List<Pickup> inventory;
+
     public Player(int gridX, int gridY) {
         super(((gridX * LevelLoader.GRIDWIDTH) + 4),
             ((gridY * LevelLoader.GRIDHEIGHT) + 2),
@@ -26,6 +29,7 @@ public class Player extends GameObject {
         setyIndex(10);
         status = PlayerStatus.IDLE;
         direction = PlayerStatus.Direction.RIGHT;
+        inventory = new ArrayList<>();
     }
 
     /**
@@ -96,5 +100,21 @@ public class Player extends GameObject {
         if (currentImage >= status.getImageAmount())
             currentImage = 0;
 
+    }
+
+    public void addToInventory(Pickup pickup) {
+        inventory.add(pickup);
+    }
+
+    public void removeFromInventory(Pickup pickup) {
+        inventory.remove(pickup);
+    }
+
+    public List<Pickup> getInventory(){
+        return inventory;
+    }
+
+    public boolean inventoryHasKey(int keycode){
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> ((Key) key).getDoorCode() == keycode).count() > 0;
     }
 }
