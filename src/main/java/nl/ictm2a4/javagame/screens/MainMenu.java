@@ -67,6 +67,7 @@ public class MainMenu extends JPanel implements ActionListener {
         }
         if (e.getSource() == buttons.get(4)) {
             isLoggedIn = false;//TODO JOCHEM AAN T WERK
+
         }
         if(e.getSource() == buttons.get(5)) { // exit
             System.exit(0);

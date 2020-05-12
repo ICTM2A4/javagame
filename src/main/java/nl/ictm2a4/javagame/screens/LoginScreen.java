@@ -7,14 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class LoginScreen extends JPanel implements ActionListener {
 
     private JLabel username, password;
     private JTextField Jusername, Jpassword;
-    private CButton login, register, back;
-    private boolean loggedIn;
-    private String usernametext, passwordtext;
+    private ArrayList<CButton> buttons;
 
     public LoginScreen() {
         setLayout(new GridBagLayout());
@@ -38,17 +37,17 @@ public class LoginScreen extends JPanel implements ActionListener {
         Jpassword.addActionListener(this);
         add(Jpassword, gbc);
 
-        login = new CButton("Login");
-        login.addActionListener(this);
-        add(login, gbc);
+        buttons = new ArrayList<>();
 
-        register = new CButton("register");
-        register.addActionListener(this);
-        add(register, gbc);
+        String[] buttonNames = {"Login","Register", "Back"};
 
-        back = new CButton("back");
-        back.addActionListener(this);
-        add(back, gbc);
+        for(String name : buttonNames) {
+            CButton button = new CButton(name);
+            buttons.add(button);
+            button.addActionListener(this);
+            button.setMargin(new Insets(0, 0, 0, 0));
+            add(button, gbc);
+        }
 
         setVisible(true);
     }
@@ -60,15 +59,16 @@ public class LoginScreen extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == login) {
+
+        if (e.getSource() == buttons.get(0)) {
             GameScreen.getInstance().setPanel(new MainMenu());
-            usernametext = username.getText();
-            passwordtext = password.getText();
+            String usernametext = username.getText();
+            String passwordtext = password.getText();
         }
-        if (e.getSource() == register) {
+        if (e.getSource() == buttons.get(1)) {
             GameScreen.getInstance().setPanel(new RegisterScreen());
         }
-        if (e.getSource() == back) {
+        if (e.getSource() == buttons.get(2)) {
             GameScreen.getInstance().setPanel(new MainMenu());
         }
     }
