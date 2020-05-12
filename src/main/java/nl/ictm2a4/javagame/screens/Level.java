@@ -477,8 +477,6 @@ public class Level extends JPanel {
             LevelLoader.getInstance().pause();
             GameScreen.getInstance().addOverlay(new PauseScreen());
         }
-
-        AchievementHandler.getInstance().tick();
     }
 
     /**
