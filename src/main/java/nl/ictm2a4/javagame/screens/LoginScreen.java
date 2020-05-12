@@ -13,9 +13,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 
     private JLabel username, password;
     private JTextField Jusername, Jpassword;
-    private CButton login, register, back;
-    private boolean loggedIn;
-    private String usernametext, passwordtext;
+    private ArrayList<CButton> buttons;
 
     public LoginScreen() {
         setLayout(new GridBagLayout());
