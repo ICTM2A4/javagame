@@ -1,5 +1,7 @@
 package nl.ictm2a4.javagame.gameobjects;
 
+import nl.ictm2a4.javagame.cevents.LeverSwitchEvent;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.GameScreen;
@@ -42,6 +44,8 @@ public class Lever extends GameObject {
     }
 
     private void activate(){
+        EventManager.getInstance().callEvent(new LeverSwitchEvent(doorCode));
+
         for(Door door : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream()
                 .filter(gameObject -> gameObject instanceof Door)
                 .filter(gameObject -> ((Door)gameObject).getDoorCode() == doorCode)

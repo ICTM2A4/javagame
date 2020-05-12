@@ -1,5 +1,8 @@
 package nl.ictm2a4.javagame.gameobjects;
 
+import nl.ictm2a4.javagame.cevents.ItemPickupEvent;
+import nl.ictm2a4.javagame.event.EventExecutor;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import java.awt.*;
@@ -24,8 +27,10 @@ public abstract class Pickup extends GameObject {
             if(!player.getInventory().contains(this)){
                 // Deur openen
                 player.addToInventory(this);
-                System.out.println("Item opgepakt");
+//                System.out.println("Item opgepakt");
                 active = false;
+
+                EventManager.getInstance().callEvent(new ItemPickupEvent(this));
             }
         }
 

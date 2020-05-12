@@ -85,7 +85,6 @@ public class LevelLoader {
     public void tick() {
         if(!paused) {
             currentLevel.tick();
-            System.out.println("tick");
         }
     }
 

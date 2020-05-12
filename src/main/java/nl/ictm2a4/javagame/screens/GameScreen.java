@@ -1,6 +1,9 @@
 package nl.ictm2a4.javagame.screens;
 
-import nl.ictm2a4.javagame.event.EventManager;
+import nl.ictm2a4.javagame.achievement.AchievementHandler;
+import nl.ictm2a4.javagame.cachievements.FirstDoorOpened;
+import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
+import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -32,7 +35,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         instance = this;
 
         new FileLoader();
-        new EventManager();
         new LevelLoader();
         pressedKeys = new ArrayList<>();
 
@@ -57,9 +59,12 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         addKeyListener(this);
         setVisible(true);
 
+        // start event handlers
+
         achievedList = new ArrayList<>();
         achievedList.add(0);
-      
+
+        registerAchievements();
         this.start();
     }
 
@@ -131,9 +136,12 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         temp.revalidate();
         temp.setBounds(((LevelLoader.WIDTH / 2) - (panel.getWidth() / 2)), ((LevelLoader.HEIGHT / 2) - (panel.getHeight() / 2)), panel.getWidth(), panel.getHeight());
         fixed.add(temp, JLayeredPane.POPUP_LAYER);
-        System.out.println(fixed.getComponentCount());
         fixed.revalidate();
         fixed.repaint();
+    }
+
+    public JLayeredPane getFixed() {
+        return fixed;
     }
 
     /**
@@ -197,5 +205,13 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     private void tick() {
         LevelLoader.getInstance().tick();
+        AchievementHandler.getInstance().tick();
+    }
+
+    private void registerAchievements() {
+        new AchievementHandler();
+        new LevelOneAchieved();
+        new FirstDoorOpened();
+        new LastLevelAchieved();
     }
 }

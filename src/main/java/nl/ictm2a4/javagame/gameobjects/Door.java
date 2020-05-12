@@ -1,5 +1,7 @@
 package nl.ictm2a4.javagame.gameobjects;
 
+import nl.ictm2a4.javagame.cevents.DoorOpenedEvent;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
@@ -39,6 +41,7 @@ public class Door extends GameObject {
             Player player = (Player) gameObject;
             if(player.inventoryHasKey(doorCode)){
                 setOpen();
+                EventManager.getInstance().callEvent(new DoorOpenedEvent(doorCode));
             }
         }
 

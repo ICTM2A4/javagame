@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Stream;
 
+import nl.ictm2a4.javagame.achievement.AchievementHandler;
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
