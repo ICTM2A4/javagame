@@ -2,12 +2,13 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.Level;
+import nl.ictm2a4.javagame.screens.LevelEditor;
 
 import java.awt.*;
 
 public abstract class GameObject {
 
-    private int x, y, width, height;
+    private int x, y, extra, width, height;
     private boolean collidable = true;
     private boolean isEntity;
     private int yIndex;
@@ -205,5 +206,13 @@ public abstract class GameObject {
      */
     public boolean isEntity() {
         return this.isEntity;
+    }
+
+    public int getExtra() {
+        return this.extra;
+    }
+
+    public void setExtra(int extra) {
+        this.extra = extra;
     }
 }

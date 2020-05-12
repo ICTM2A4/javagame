@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -66,7 +67,11 @@ public class LevelLoader {
         if (currentLevel == null) return false;
         loadLevel(currentLevel.getId());
         currentLevel.setRenderShadows(true);
-        currentLevel.loadLevel();
+        try {
+            currentLevel.loadLevel();
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
         GameScreen.getInstance().setPanel(currentLevel);
         paused = false;
         return true;
