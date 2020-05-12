@@ -65,7 +65,12 @@ public class RegisterScreen extends JPanel implements ActionListener {
             GameScreen.getInstance().setPanel(new LoginScreen());
         }
         if (e.getSource() == register) {
-
+            String wachtwoord = password.getText();
+            String wachtwoord2 = password2.getText();
+            String naam = username.getText();
+            if (!wachtwoord.equals(wachtwoord2)) {
+                //STOP
+            }
         }
     }
 }
