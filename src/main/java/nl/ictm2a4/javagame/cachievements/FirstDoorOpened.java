@@ -8,7 +8,7 @@ public class FirstDoorOpened extends Achievement {
 
     @EventHandler
     public void onDoorOpened(DoorOpenedEvent event) {
-        achieve("You opened your first door");
+        achieve("First door opened");
     }
 
 }

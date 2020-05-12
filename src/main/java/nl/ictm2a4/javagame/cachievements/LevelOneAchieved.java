@@ -9,7 +9,7 @@ public class LevelOneAchieved extends Achievement {
     @EventHandler
     public void onReachedEndEvent(ReachedEndEvent event) {
         if (event.getLevelID() == 0) {
-            achieve("You made it through the first level");
+            achieve("First level achieved");
         }
     }
 }

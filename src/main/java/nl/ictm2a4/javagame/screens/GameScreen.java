@@ -35,7 +35,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         instance = this;
 
         new FileLoader();
-        new EventManager();
         new LevelLoader();
         pressedKeys = new ArrayList<>();
 
@@ -61,7 +60,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         setVisible(true);
 
         // start event handlers
-        new EventManager();
 
         achievedList = new ArrayList<>();
         achievedList.add(0);
@@ -138,9 +136,12 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         temp.revalidate();
         temp.setBounds(((LevelLoader.WIDTH / 2) - (panel.getWidth() / 2)), ((LevelLoader.HEIGHT / 2) - (panel.getHeight() / 2)), panel.getWidth(), panel.getHeight());
         fixed.add(temp, JLayeredPane.POPUP_LAYER);
-        System.out.println(fixed.getComponentCount());
         fixed.revalidate();
         fixed.repaint();
+    }
+
+    public JLayeredPane getFixed() {
+        return fixed;
     }
 
     /**

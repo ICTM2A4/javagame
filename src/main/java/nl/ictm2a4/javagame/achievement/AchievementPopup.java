@@ -1,6 +1,8 @@
 package nl.ictm2a4.javagame.achievement;
 
+import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.GameScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,36 +10,44 @@ import java.awt.*;
 public class AchievementPopup extends JPanel {
 
     private String tekst;
+    private int startY = -40;
 
     public AchievementPopup(String tekst) {
         super();
 
         this.tekst = tekst;
 
-        setPreferredSize(new Dimension(100,30));
+        setPreferredSize(new Dimension(140,40));
         setLayout(new FlowLayout());
-
-        setBounds(LevelLoader.WIDTH, 30, 100, 30);
 
         setVisible(true);
 
-        add(new Label(tekst));
-        System.out.println(tekst);
         this.tekst = tekst;
+
+        setBounds(LevelLoader.WIDTH, -40, 140, 40);
+        setOpaque(false);
+        GameScreen.getInstance().getFixed().add(this);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(FileLoader.loadImage("achievement-background.png"), 0, 0, this);
+        g.drawString("Achievement earned!", 12, 20);
+        g.drawString(this.tekst, 12,30);
     }
 
     public boolean render(int frame) {
-
+        System.out.println("test, " + startY + ", " + frame);
         int startX = LevelLoader.WIDTH;
-        int startY = 30;
 
         if (frame < 30)
-            startX -= frame;
-        if (frame > 40)
-            startX = startX - (frame - 30);
+            startY += 2;
+        if (frame > 110)
+            startY -= 2;
 
-        setBounds(startX, startY, 100, 30);
-        return false;
+        setBounds(startX, startY, 140, 40);
+        return (frame > 150);
     }
 
 }

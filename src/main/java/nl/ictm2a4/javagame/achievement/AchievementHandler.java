@@ -14,6 +14,7 @@ public class AchievementHandler {
     private ArrayList<Achievement> achievements;
     private ArrayList<AchievementPopup> popups;
     private int currentFrame = 0;
+    private int frameCount = 0;
 
     public AchievementHandler() {
         instance = this;
@@ -41,9 +42,9 @@ public class AchievementHandler {
     }
 
     public void tick() {
-        currentFrame++;
         if (this.popups.size() > 0) {
-            if(this.popups.get(0).render(currentFrame)) {
+            currentFrame++;
+            if (this.popups.get(0).render(currentFrame)) {
                 this.popups.remove(this.popups.get(0));
                 currentFrame = 0;
             }

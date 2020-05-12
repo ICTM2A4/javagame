@@ -10,7 +10,7 @@ public class LastLevelAchieved extends Achievement {
     @EventHandler
     public void onLevelAchieved(ReachedEndEvent event) {
         if (event.getLevelID() == LevelLoader.DEFAULTLEVELAMOUNT - 1) {
-            achieve("You made it to through the last level");
+            achieve("Last level survived");
         }
     }
 
