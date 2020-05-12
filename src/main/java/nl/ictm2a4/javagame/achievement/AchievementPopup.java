@@ -38,7 +38,6 @@ public class AchievementPopup extends JPanel {
     }
 
     public boolean render(int frame) {
-        System.out.println("test, " + startY + ", " + frame);
         int startX = LevelLoader.WIDTH;
 
         if (frame < 30)
