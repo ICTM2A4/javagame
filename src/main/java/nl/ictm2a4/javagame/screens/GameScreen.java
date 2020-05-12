@@ -29,6 +29,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
 
+    private JLabel fpsCounter;
+
     public GameScreen() {
         setTitle(title);
 
@@ -46,7 +48,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         setBackground(Color.BLACK);
       
         fixed.setBounds(0, 0, LevelLoader.WIDTH, LevelLoader.HEIGHT);
-      
+
         //TODO: paint fps
   
         setPanel(new MainMenu());
@@ -57,6 +59,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         setResizable(false);
 
         addKeyListener(this);
+
         setVisible(true);
 
         // start event handlers
@@ -109,14 +112,19 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         temp.add(panel);
         temp.revalidate();
         temp.setBounds(((LevelLoader.WIDTH / 2) - (panel.getWidth() / 2)), ((LevelLoader.HEIGHT / 2) - (panel.getHeight() / 2)), panel.getWidth(), panel.getHeight());
+
         fixed.add(temp, 0);
+
+        fpsCounter = new JLabel("fps: " + fps);
+        fpsCounter.setForeground(Color.green);
+        fpsCounter.setBounds(0, 0, LevelLoader.WIDTH, LevelLoader.HEIGHT);
+        temp.add(fpsCounter);
 
         fixed.revalidate();
 
         requestFocus();
         fixed.repaint();
     }
-
 
     /**
      * Set the panel of the GameScreen and reset the title
