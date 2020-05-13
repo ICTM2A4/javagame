@@ -3,6 +3,7 @@ package nl.ictm2a4.javagame.gameobjects;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.awt.*;
@@ -39,26 +40,30 @@ public class Player extends GameObject {
         int stepSize = 4;
 
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
+        String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 
-        if (pressedKeys.contains(KeyEvent.VK_W)){
+        if (pressedKeys.contains(KeyEvent.VK_W) || rpiButton.equals("up")) {
             move(getX(), getY()- stepSize);
         }
 
-        if (pressedKeys.contains(KeyEvent.VK_A)){
+        if (pressedKeys.contains(KeyEvent.VK_A) || rpiButton.equals("left")){
             move(getX() - stepSize, getY());
             direction = PlayerStatus.Direction.LEFT;
         }
 
-        if (pressedKeys.contains(KeyEvent.VK_S)){
+        if (pressedKeys.contains(KeyEvent.VK_S) || rpiButton.equals("down")){
             move(getX(), getY() + stepSize);
         }
 
-        if (pressedKeys.contains(KeyEvent.VK_D)){
+        if (pressedKeys.contains(KeyEvent.VK_D) || rpiButton.equals("right")) {
             move(getX() + stepSize, getY());
             direction = PlayerStatus.Direction.RIGHT;
         }
 
-        if (!pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A) && !pressedKeys.contains(KeyEvent.VK_S) && !pressedKeys.contains(KeyEvent.VK_D))
+        if (!(pressedKeys.contains(KeyEvent.VK_W)  || rpiButton.equals("up")) &&
+            !(pressedKeys.contains(KeyEvent.VK_A) || rpiButton.equals("left")) &&
+            !(pressedKeys.contains(KeyEvent.VK_S) || rpiButton.equals("down")) &&
+            !(pressedKeys.contains(KeyEvent.VK_D) || rpiButton.equals("right")))
             status = PlayerStatus.IDLE;
 
     }
