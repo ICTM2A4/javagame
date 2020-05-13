@@ -5,6 +5,7 @@ import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.LevelEditor;
 import nl.ictm2a4.javagame.screens.PlaceDoorLeverKeyDialog;
@@ -60,8 +61,9 @@ public class Lever extends GameObject {
     public void tick() {
         GameObject[] collisions = checkCollideAllGameObjects(getX(), getY());
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
+        String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 
-        if(!active && Arrays.stream(collisions).anyMatch(gameObject -> gameObject instanceof Player) && pressedKeys.contains(KeyEvent.VK_SPACE)){
+        if(!active && Arrays.stream(collisions).anyMatch(gameObject -> gameObject instanceof Player) && (pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle"))){
             activate();
         }
     }

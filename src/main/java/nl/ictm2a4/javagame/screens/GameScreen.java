@@ -6,6 +6,7 @@ import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
 import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +37,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         new FileLoader();
         new LevelLoader();
+        new RaspberryPIController();
+
         pressedKeys = new ArrayList<>();
 
         setUndecorated(true);
