@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class MainMenu extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
-    boolean isLoggedIn = true; //TODO: JOCHEM EVEN AANPASSEN
+    boolean isLoggedIn = false; //TODO: JOCHEM EVEN AANPASSEN
 
     public MainMenu() {
         setLayout(new GridBagLayout());
