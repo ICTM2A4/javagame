@@ -1,7 +1,9 @@
 package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.LevelEditor;
 
 import java.awt.*;
 
@@ -13,7 +15,8 @@ public class Torch extends GameObject {
     private int currentImage = 0;
     private int animateCount = 0;
 
-    public Torch(int gridX, int gridY) {
+    @JSONLoader(JSONString = "torches")
+    public Torch(Integer gridX, Integer gridY) {
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, 32,32);
         setCollidable(false);
         setyIndex(8);
@@ -37,5 +40,16 @@ public class Torch extends GameObject {
             currentImage++;
             if (currentImage == IMAGEAMOUNT) currentImage = 0;
         }
+    }
+
+    public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
+        return new LevelEditor.LevelEditorItem(Torch.class, FileLoader.getInstance().getTorchImage(0)) {
+            @Override
+            public void onPlace(int mouseX, int mouseY) {
+                super.onPlace(mouseX, mouseY);
+                if (!this.allowedToPlace(mouseX, mouseY)) return;
+                LevelEditor.getInstance().getLevel().addGameObject(new Torch(gridX, gridY));
+            }
+        }.setRequireWall(true);
     }
 }

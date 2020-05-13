@@ -2,13 +2,17 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.GameScreen;
+import nl.ictm2a4.javagame.screens.Level;
+import nl.ictm2a4.javagame.screens.LevelEditor;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Player extends GameObject {
 
@@ -21,7 +25,8 @@ public class Player extends GameObject {
 
     private List<Pickup> inventory;
 
-    public Player(int gridX, int gridY) {
+    @JSONLoader(JSONString = "player")
+    public Player(Integer gridX, Integer gridY) {
         super(((gridX * LevelLoader.GRIDWIDTH) + 4),
             ((gridY * LevelLoader.GRIDHEIGHT) + 2),
             16, 20, true);
@@ -115,6 +120,20 @@ public class Player extends GameObject {
     }
 
     public boolean inventoryHasKey(int keycode){
-        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> ((Key) key).getDoorCode() == keycode).count() > 0;
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).count() > 0;
+    }
+
+    public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
+        return new LevelEditor.LevelEditorItem(Player.class, FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0)) {
+            @Override
+            public void onPlace(int mouseX, int mouseY) {
+                super.onPlace(mouseX, mouseY);
+                Level level = LevelEditor.getInstance().getLevel();
+                if (!this.allowedToPlace(mouseX, mouseY)) return;
+                Optional<GameObject> player = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+                player.ifPresent(level::removeGameObject);
+                level.addGameObject(new Player(gridX, gridY));
+            }
+        }.setRequireGround(true);
     }
 }

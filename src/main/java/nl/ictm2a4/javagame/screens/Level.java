@@ -6,12 +6,18 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Stream;
 
 import nl.ictm2a4.javagame.achievement.AchievementHandler;
+import nl.ictm2a4.javagame.event.EventHandler;
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
+import nl.ictm2a4.javagame.loaders.GameObjectsLoader;
+import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -45,7 +51,11 @@ public class Level extends JPanel {
         this.setPreferredSize(new Dimension(LevelLoader.WIDTH, LevelLoader.HEIGHT));
 
         loadObject();
-        loadLevel();
+        try {
+            loadLevel();
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+            e.printStackTrace();
+        }
         generateWalls();
 
         animateLights = true;
@@ -192,15 +202,31 @@ public class Level extends JPanel {
         this.animateLights = animateLights;
     }
 
+    private Constructor getConstructor(Class<? extends GameObject> object) throws NoSuchMethodException {
+        for (Constructor con : object.getConstructors()) {
+            JSONLoader jl = (JSONLoader) con.getAnnotation(JSONLoader.class);
+
+            if (jl != null) {
+                if (jl.withExtra()) {
+                    return object.getConstructor(Integer.class, Integer.class, Integer.class);
+                }
+                else {
+                    return object.getConstructor(Integer.class, Integer.class);
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Load the current level from it's JSON file
      */
-    public void loadLevel() {
+    public void loadLevel() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         clearGameObjects();
         loadObject();
         current = System.currentTimeMillis();
 
-        if (!object.isPresent())
+        if (object.isEmpty())
             return;
 
         JSONObject levelObject = object.get();
@@ -208,161 +234,67 @@ public class Level extends JPanel {
         // Read level name
         name = levelObject.get("name").toString();
 
-        // Read all ground tiles
-        JSONArray groundTiles = (JSONArray) levelObject.get("ground");
-        for (Object ground : groundTiles) {
-            JSONArray coords = (JSONArray) ground;
-            int x = Integer.parseInt(coords.get(0).toString());
-            int y = Integer.parseInt(coords.get(1).toString());
-            addGameObject(new Ground(x, y));
-        }
+        for(Class<? extends GameObject> object : GameObjectsLoader.getInstance().getObjectList()) {
+            Constructor constructor = getConstructor(object);
+            JSONLoader jl = (JSONLoader) constructor.getAnnotation(JSONLoader.class);
 
-        // Read all torch tiles
-        JSONArray torchTiles = (JSONArray) levelObject.get("torches");
-        if (torchTiles != null) {
-            for (Object torch : torchTiles) {
-                JSONArray coords = (JSONArray) torch;
+            if (jl == null || constructor == null || levelObject.get(jl.JSONString()) == null)
+                continue;
+
+            JSONArray array = (JSONArray) levelObject.get(jl.JSONString());
+            if (array == null) continue;
+            for(Object arrayItem : array) {
+                JSONArray coords = (JSONArray) arrayItem;
+
                 int x = Integer.parseInt(coords.get(0).toString());
                 int y = Integer.parseInt(coords.get(1).toString());
-                addGameObject(new Torch(x, y));
+
+                if (jl.withExtra()) {
+                    int type = Integer.parseInt(coords.get(2).toString());
+                    addGameObject((GameObject) constructor.newInstance(new Object[] {x, y, type}));
+                }
+                else {
+                    addGameObject((GameObject) constructor.newInstance(new Object[] {x, y}));
+                }
+
             }
         }
 
-        // Read all keys
-        JSONArray keys = (JSONArray) levelObject.get("keys");
-        if (keys != null) {
-            for (Object key : keys) {
-                JSONArray coords = (JSONArray) key;
-                int x = Integer.parseInt(coords.get(0).toString());
-                int y = Integer.parseInt(coords.get(1).toString());
-                int code = Integer.parseInt(coords.get(2).toString());
-                addGameObject(new Key(x, y, code));
-            }
-        }
+        Optional<GameObject> optionalPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
 
-        // Read all levers
-        JSONArray levers = (JSONArray) levelObject.get("levers");
-        if (levers != null) {
-            for (Object lever : levers) {
-                JSONArray coords = (JSONArray) lever;
-                int x = Integer.parseInt(coords.get(0).toString());
-                int y = Integer.parseInt(coords.get(1).toString());
-                int code = Integer.parseInt(coords.get(2).toString());
-                addGameObject(new Lever(x, y, code));
-            }
-        }
-
-        // Read all doors
-        JSONArray doors = (JSONArray) levelObject.get("doors");
-        if (doors != null) {
-            for (Object door : doors) {
-                JSONArray coords = (JSONArray) door;
-                int x = Integer.parseInt(coords.get(0).toString());
-                int y = Integer.parseInt(coords.get(1).toString());
-                int code = Integer.parseInt(coords.get(2).toString());
-                addGameObject(new Door(x, y, code));
-            }
-        }
-
-        // Read endpoint
-        JSONArray endpoint = (JSONArray) levelObject.get("endpoint");
-        if (endpoint != null) {
-            int endX = Integer.parseInt(endpoint.get(0).toString());
-            int endY = Integer.parseInt(endpoint.get(1).toString());
-            addGameObject(new EndPoint(endX, endY));
-        }
-
-        // Read player startpoint
-        JSONArray playerpoint = (JSONArray) levelObject.get("player");
-        if (playerpoint != null) {
-            int playerX = Integer.parseInt(playerpoint.get(0).toString());
-            int playerY = Integer.parseInt(playerpoint.get(1).toString());
-            player = new Player(playerX, playerY);
-            addGameObject(player);
-        }
+        player = (Player) optionalPlayer.orElse(null);
         regenerateWalls();
     }
 
     /**
      * Covert the level to a .JSON file
      */
-    public void saveLevel() {
-        JSONObject object = new JSONObject();
-        object.put("name", this.getName());
+    public void saveLevel() throws NoSuchMethodException {
+        JSONObject saveObject = new JSONObject();
+        saveObject.put("name", this.getName());
 
-        JSONArray groundTiles = new JSONArray();
-        for (Ground ground : getGameObjects().stream().filter(gameObject -> gameObject instanceof Ground)
-                .toArray(Ground[]::new)) {
-            JSONArray groundArray = new JSONArray();
-            groundArray.add(ground.getX() / LevelLoader.GRIDWIDTH);
-            groundArray.add(ground.getY() / LevelLoader.GRIDHEIGHT);
-            groundTiles.add(groundArray);
-        }
-        object.put("ground", groundTiles);
+        for(Class<? extends GameObject> object : GameObjectsLoader.getInstance().getObjectList()) {
+            Constructor constructor = getConstructor(object);
+            JSONLoader jl = (JSONLoader) constructor.getAnnotation(JSONLoader.class);
 
-        JSONArray torchTiles = new JSONArray();
-        for (Torch torch : getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch)
-                .toArray(Torch[]::new)) {
-            JSONArray torchArray = new JSONArray();
-            torchArray.add(torch.getX() / LevelLoader.GRIDWIDTH);
-            torchArray.add(torch.getY() / LevelLoader.GRIDHEIGHT);
-            torchTiles.add(torchArray);
-        }
-        object.put("torches", torchTiles);
+            if (jl == null || constructor == null)
+                continue;
 
-        // Door
-        JSONArray doors = new JSONArray();
-        for (Door door : getGameObjects().stream().filter(gameObject -> gameObject instanceof Door)
-                .toArray(Door[]::new)) {
-            JSONArray doorArray = new JSONArray();
-            doorArray.add(door.getX() / LevelLoader.GRIDWIDTH);
-            doorArray.add(door.getY() / LevelLoader.GRIDHEIGHT);
-            doorArray.add(door.getDoorCode());
-            doors.add(doorArray);
-        }
-        object.put("doors", doors);
+            Stream<GameObject> stream = getGameObjects().stream().filter(gameObject -> gameObject.getClass().isAssignableFrom(object));
+            JSONArray arrayTiles = new JSONArray();
 
-        // Lever
-        JSONArray levers = new JSONArray();
-        for (Lever lever : getGameObjects().stream().filter(gameObject -> gameObject instanceof Lever)
-                .toArray(Lever[]::new)) {
-            JSONArray leverArray = new JSONArray();
-            leverArray.add(lever.getX() / LevelLoader.GRIDWIDTH);
-            leverArray.add(lever.getY() / LevelLoader.GRIDHEIGHT);
-            leverArray.add(lever.getDoorCode());
+            for(GameObject tile : stream.toArray(GameObject[]::new)) {
+                JSONArray itemArray = new JSONArray();
+                itemArray.add(tile.getX() / LevelLoader.GRIDWIDTH);
+                itemArray.add(tile.getY() / LevelLoader.GRIDHEIGHT);
+                if (jl.withExtra()) {
+                    itemArray.add(tile.getExtra());
+                }
+                arrayTiles.add(itemArray);
+            }
 
-            levers.add(leverArray);
-        }
-        object.put("levers", levers);
-
-        // Key
-        JSONArray keys = new JSONArray();
-        for (Key key : getGameObjects().stream().filter(gameObject -> gameObject instanceof Key)
-                .toArray(Key[]::new)) {
-            JSONArray keyArray = new JSONArray();
-            keyArray.add(key.getX() / LevelLoader.GRIDWIDTH);
-            keyArray.add(key.getY() / LevelLoader.GRIDHEIGHT);
-            keyArray.add(key.getDoorCode());
-            keys.add(keyArray);
-        }
-        object.put("keys", keys);
-
-        JSONArray player = new JSONArray();
-        Optional<GameObject> oPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player)
-                .findFirst();
-        if (oPlayer.isPresent()) {
-            player.add(oPlayer.get().getX() / LevelLoader.GRIDWIDTH);
-            player.add(oPlayer.get().getY() / LevelLoader.GRIDHEIGHT);
-            object.put("player", player);
-        }
-
-        JSONArray endpoint = new JSONArray();
-        Optional<GameObject> end = getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint)
-                .findFirst();
-        if (end.isPresent()) {
-            endpoint.add(end.get().getX() / LevelLoader.GRIDWIDTH);
-            endpoint.add(end.get().getY() / LevelLoader.GRIDHEIGHT);
-            object.put("endpoint", endpoint);
+            if (arrayTiles.size() > 0)
+                saveObject.put(jl.JSONString(), arrayTiles);
         }
 
         File file = null;
@@ -374,7 +306,7 @@ public class Level extends JPanel {
 
         if (file != null) {
             try (FileWriter writer = new FileWriter(file)) {
-                writer.write(object.toJSONString());
+                writer.write(saveObject.toJSONString());
                 writer.flush();
             } catch (IOException e) {
                 e.printStackTrace();
