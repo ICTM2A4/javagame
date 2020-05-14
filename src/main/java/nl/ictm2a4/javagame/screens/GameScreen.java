@@ -6,11 +6,13 @@ import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
 import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.uicomponents.FPSCounter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +20,33 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     public static final String GAMENAME = "JavaGame";
 
+    private final static int MAX_FPS = 30;
+    private final static int MAX_FRAME_SKIPS = 5;
+    private final static int FRAME_PERIOD = 1000 / MAX_FPS;
+
+//    private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
+    private DecimalFormat df = new DecimalFormat("0");  // 2 dp
+    private final static int STAT_INTERVAL = 1000; //ms
+    private final static int FPS_HISTORY_NR = 10;
+    private long lastStatusStore = 0;
+    private long statusIntervalTimer = 0l;
+    private long totalFramesSkipped = 0l;
+    private long framesSkippedPerStatCycle = 0l;
+
+    private int frameCountPerStatCycle = 0;
+    private long totalFrameCount = 0l;
+    private double fpsStore[];
+    private long statsCount = 0;
+    private double averageFps = 0.0;
+
     private Thread thread;
-    private  boolean isRunning;
-    private int fps = 30;
-    private long targetTime = 1000 / fps;
+    private boolean isRunning;
 
     private static GameScreen instance;
     private String title = GAMENAME;
     private List<Integer> pressedKeys;
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
-
-    private JLabel fpsCounter;
 
     public GameScreen() {
         setTitle(title);
@@ -49,8 +66,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
       
         fixed.setBounds(0, 0, LevelLoader.WIDTH, LevelLoader.HEIGHT);
 
-        //TODO: paint fps
-  
         setPanel(new MainMenu());
 
         LevelLoader.getInstance().loadLevel(0);
@@ -115,10 +130,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         fixed.add(temp, 0);
 
-        fpsCounter = new JLabel("fps: " + fps);
-        fpsCounter.setForeground(Color.green);
-        fpsCounter.setBounds(0, 0, LevelLoader.WIDTH, LevelLoader.HEIGHT);
-        temp.add(fpsCounter);
+        FPSCounter.getInstance().redo();
 
         fixed.revalidate();
 
@@ -173,36 +185,13 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
             this.achievedList.add(id);
     }
 
-    @Override
-    public void run() {
-        long start, elapsed, wait;
-        while(isRunning) {
-            start = System.nanoTime();
-
-            tick();
-
-            elapsed = System.nanoTime() - start;
-            wait = targetTime - elapsed / 1000000;
-
-            if(wait <= 0) {
-                wait = 5;
-            }
-
-            try {
-                Thread.sleep(wait);
-            }catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
+    @Deprecated
     public void setFps(int fps) {
-        this.fps = fps;
-        this.targetTime = 1000 / this.fps;
+
     }
 
-    public int getFps() {
-        return fps;
+    public double getFPS() {
+        return FPSCounter.getInstance().getAvgFPS();
     }
 
     public void start() {
@@ -213,6 +202,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     private void tick() {
         LevelLoader.getInstance().tick();
+        AchievementHandler.getInstance().tick();
     }
 
     private void registerAchievements() {
@@ -220,5 +210,87 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new LevelOneAchieved();
         new FirstDoorOpened();
         new LastLevelAchieved();
+    }
+
+    @Override
+    public void run() {
+        initTimingElements();
+
+        long beginTime;     // the time when the cycle begun
+        long timeDiff;      // the time it took for the cycle to execute
+        int sleepTime;      // ms to sleep (<0 if we're behind)
+        int framesSkipped;  // number of frames being skipped
+
+        while (isRunning) {
+            beginTime = System.currentTimeMillis();
+            framesSkipped = 0;
+
+            tick();
+            repaint();
+
+            timeDiff = System.currentTimeMillis() - beginTime;
+            sleepTime = (int) (FRAME_PERIOD - timeDiff);
+
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                }
+            }
+
+            while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
+                // thread is running behind
+                tick();
+                sleepTime += FRAME_PERIOD;
+                framesSkipped++;
+            }
+
+            if (framesSkipped > 0) {
+                System.out.println("Skipped " + framesSkipped + " frames");
+            }
+            framesSkippedPerStatCycle += framesSkipped;
+            storeStats();
+        }
+    }
+
+    private void storeStats() {
+        frameCountPerStatCycle++;
+        totalFrameCount++;
+
+        statusIntervalTimer += (System.currentTimeMillis() - statusIntervalTimer);
+
+        if (statusIntervalTimer >= lastStatusStore + STAT_INTERVAL) {
+            double actualFps = (double)(frameCountPerStatCycle / (STAT_INTERVAL / 1000));
+
+            fpsStore[(int) statsCount % FPS_HISTORY_NR] = actualFps;
+            statsCount++;
+
+            double totalFps = 0.0;
+            for (int i = 0; i < FPS_HISTORY_NR; i++) {
+                totalFps += fpsStore[i];
+            }
+
+            if (statsCount < FPS_HISTORY_NR) {
+                averageFps = totalFps / statsCount;
+            } else {
+                averageFps = totalFps / FPS_HISTORY_NR;
+            }
+            totalFramesSkipped += framesSkippedPerStatCycle;
+            framesSkippedPerStatCycle = 0;
+            statusIntervalTimer = 0;
+            frameCountPerStatCycle = 0;
+
+            statusIntervalTimer = System.currentTimeMillis();
+            lastStatusStore = statusIntervalTimer;
+
+            FPSCounter.getInstance().setAvgFPS(df.format(averageFps));
+        }
+    }
+
+    private void initTimingElements() {
+        fpsStore = new double[FPS_HISTORY_NR];
+        for (int i = 0; i < FPS_HISTORY_NR; i++) {
+            fpsStore[i] = 0.0;
+        }
     }
 }
