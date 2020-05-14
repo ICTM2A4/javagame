@@ -26,7 +26,7 @@ public class AchievementPopup extends JPanel {
 
         setBounds(LevelLoader.WIDTH, -40, 140, 40);
         setOpaque(false);
-        GameScreen.getInstance().getFixed().add(this);
+        GameScreen.getInstance().getFixed().add(this, JLayeredPane.DRAG_LAYER);
     }
 
     @Override
