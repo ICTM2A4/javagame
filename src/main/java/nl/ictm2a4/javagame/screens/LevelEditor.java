@@ -1,18 +1,22 @@
 package nl.ictm2a4.javagame.screens;
 
-import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.loaders.GameObjectsLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class LevelEditor extends JPanel implements ActionListener, MouseMotionListener {
+
+    private static LevelEditor instance;
 
     private GridBagConstraints gbc;
     private JButton save, cancel;
@@ -23,6 +27,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     private Level level;
 
     public LevelEditor() {
+        instance = this;
         gbc = new GridBagConstraints ();
         gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         int hGap = 0;
@@ -31,97 +36,15 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
         levelEditorItems = new ArrayList<>();
 
-        levelEditorItems.add(new LevelEditorItem(Ground.class, FileLoader.getInstance().getGroundTile(15)) {
-            @Override
-            public void onPlace(int mouseX, int mouseY) {
-                super.onPlace(mouseX,mouseY);
-                if (!this.allowedToPlace(mouseX, mouseY)) return;
-                if (this.gridX > 0 &&
-                    (LevelLoader.WIDTH / LevelLoader.GRIDWIDTH) - 1 > gridX &&
-                    gridY > 0 &&
-                    (LevelLoader.HEIGHT / LevelLoader.GRIDHEIGHT) - 1 > gridY)
-                    level.addGameObject(new Ground(gridX, gridY));
+        for(Class<? extends GameObject> gameObjectClass : GameObjectsLoader.getInstance().getObjectList()) {
+            try {
+                Method method = gameObjectClass.getMethod("getLevelEditorSpecs");
+                levelEditorItems.add((LevelEditorItem) method.invoke(null));
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
+        }
 
-            @Override
-            public void onDrag(int mouseX, int mouseY) {
-                super.onDrag(mouseX,mouseY);
-                this.onPlace(mouseX, mouseY);
-            }
-        });
-
-        levelEditorItems.add(new LevelEditorItem(EndPoint.class, FileLoader.getInstance().getCoinImage(0)) {
-            @Override
-            public void onPlace(int mouseX, int mouseY) {
-                super.onPlace(mouseX, mouseY);
-                if (!this.allowedToPlace(mouseX, mouseY)) return;
-                Optional<GameObject> endpoint = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof EndPoint).findFirst();
-                endpoint.ifPresent(level::removeGameObject);
-                level.addGameObject(new EndPoint(gridX,gridY));
-            }
-        }.setRequireGround(true));
-
-        levelEditorItems.add(new LevelEditorItem(Player.class, FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0)) {
-            @Override
-            public void onPlace(int mouseX, int mouseY) {
-                super.onPlace(mouseX, mouseY);
-                if (!this.allowedToPlace(mouseX, mouseY)) return;
-                Optional<GameObject> player = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
-                player.ifPresent(level::removeGameObject);
-                level.addGameObject(new Player(gridX, gridY));
-            }
-        }.setRequireGround(true));
-
-        levelEditorItems.add(new LevelEditorItem(Torch.class, FileLoader.getInstance().getTorchImage(0)) {
-            @Override
-            public void onPlace(int mouseX, int mouseY) {
-                super.onPlace(mouseX, mouseY);
-                if (!this.allowedToPlace(mouseX, mouseY)) return;
-                level.addGameObject(new Torch(gridX, gridY));
-            }
-        }.setRequireWall(true));
-
-        // Door
-        levelEditorItems.add(new LevelEditorItem(Door.class, FileLoader.getInstance().getDoorImage(0)) {
-            @Override
-            public void onPlace(int mouseX, int mouseY) {
-                super.onPlace(mouseX, mouseY);
-                if (!this.allowedToPlace(mouseX, mouseY)) return;
-                var doorDialog = new PlaceDoorLeverKeyDialog(GameScreen.getInstance());
-
-                if(doorDialog.isConfirmed()){
-                    level.addGameObject(new Door(gridX, gridY, doorDialog.getDoorCode()));
-                }
-            }
-        }.setRequireGround(true));
-
-        // Lever
-        levelEditorItems.add(new LevelEditorItem(Lever.class, FileLoader.getInstance().getLeverImage(0)) {
-            @Override
-            public void onPlace(int mouseX, int mouseY) {
-                super.onPlace(mouseX, mouseY);
-                if (!this.allowedToPlace(mouseX, mouseY)) return;
-                var leverDialog = new PlaceDoorLeverKeyDialog(GameScreen.getInstance());
-
-                if(leverDialog.isConfirmed()){
-                    level.addGameObject(new Lever(gridX, gridY, leverDialog.getDoorCode()));
-                }
-            }
-        }.setRequireGround(true));
-
-        // Key
-        levelEditorItems.add(new LevelEditorItem(Key.class, FileLoader.getInstance().getKeyImage(0)) {
-            @Override
-            public void onPlace(int mouseX, int mouseY) {
-                super.onPlace(mouseX, mouseY);
-                if (!this.allowedToPlace(mouseX, mouseY)) return;
-                var keyDialog = new PlaceDoorLeverKeyDialog(GameScreen.getInstance());
-
-                if(keyDialog.isConfirmed()){
-                    level.addGameObject(new Key(gridX, gridY, keyDialog.getDoorCode()));
-                }
-            }
-        }.setRequireGround(true));
 
         displayGUI();
     }
@@ -207,7 +130,11 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             }
 
             level.setName(levelName.getText());
-            level.saveLevel();
+            try {
+                level.saveLevel();
+            } catch (NoSuchMethodException ex) {
+                ex.printStackTrace();
+            }
             JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
         }
         if(e.getSource() == cancel) {
@@ -257,7 +184,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         removeObjects(level);
     }
 
-    public abstract class LevelEditorItem {
+    public abstract static class LevelEditorItem {
 
         private Class<? extends GameObject> gameObject;
         private Image image;
@@ -285,7 +212,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             gridY = Math.round(mouseY / LevelLoader.GRIDHEIGHT);
         }
         public void onRemove(Optional<GameObject> find) {
-            find.ifPresent(level::removeGameObject);
+            find.ifPresent(getInstance().getLevel()::removeGameObject);
         }
         public boolean checkRemove(GameObject gameObject) {
             return !this.allowedToPlace(Math.round(gameObject.getX() / LevelLoader.GRIDWIDTH) * LevelLoader.GRIDWIDTH,
@@ -311,11 +238,11 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         }
 
         private boolean onGround(int mouseX, int mouseY) {
-            return level.fromCoordsToArray(mouseX, mouseY).anyMatch(gameObject -> gameObject instanceof Ground);
+            return getInstance().getLevel().fromCoordsToArray(mouseX, mouseY).anyMatch(gameObject -> gameObject instanceof Ground);
         }
 
         private boolean onWall(int mouseX, int mouseY) {
-            return level.fromCoordsToArray(mouseX, mouseY).anyMatch(gameObject -> gameObject instanceof Wall);
+            return getInstance().getLevel().fromCoordsToArray(mouseX, mouseY).anyMatch(gameObject -> gameObject instanceof Wall);
         }
     }
 
@@ -373,10 +300,10 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
                 }
             );
 
-            itemlist.add(button);
             disableAllButtons();
+            current = levelEditorItems.get(0).getGameObject();
+            itemlist.add(button);
             button.setBackground(Color.DARK_GRAY);
-            current = item.getGameObject();
         }
     }
 
@@ -388,5 +315,16 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         JPanel emptyStrip = getPanel();
         addComp(this, emptyStrip, 0, 0, 1, 3
             , GridBagConstraints.BOTH, 47, LevelLoader.HEIGHT + 80);
+    }
+
+    public static LevelEditor getInstance() {
+        if (instance == null) {
+            new LevelEditor();
+        }
+        return instance;
+    }
+
+    public Level getLevel() {
+        return this.level;
     }
 }

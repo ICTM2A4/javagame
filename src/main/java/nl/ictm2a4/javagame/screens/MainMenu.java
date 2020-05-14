@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -58,6 +59,7 @@ public class MainMenu extends JPanel implements ActionListener {
             GameScreen.getInstance().setPanel(new LevelEditor());
         }
         if(e.getSource() == buttons.get(3)) { // exit
+            RaspberryPIController.getInstance().disconnect();
             System.exit(0);
         }
 

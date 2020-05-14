@@ -2,13 +2,18 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.screens.GameScreen;
+import nl.ictm2a4.javagame.screens.Level;
+import nl.ictm2a4.javagame.screens.LevelEditor;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Player extends GameObject {
 
@@ -21,7 +26,8 @@ public class Player extends GameObject {
 
     private List<Pickup> inventory;
 
-    public Player(int gridX, int gridY) {
+    @JSONLoader(JSONString = "player")
+    public Player(Integer gridX, Integer gridY) {
         super(((gridX * LevelLoader.GRIDWIDTH) + 4),
             ((gridY * LevelLoader.GRIDHEIGHT) + 2),
             16, 20, true);
@@ -39,26 +45,30 @@ public class Player extends GameObject {
         int stepSize = 4;
 
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
+        String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 
-        if (pressedKeys.contains(KeyEvent.VK_W)){
+        if (pressedKeys.contains(KeyEvent.VK_W) || rpiButton.equals("up")) {
             move(getX(), getY()- stepSize);
         }
 
-        if (pressedKeys.contains(KeyEvent.VK_A)){
+        if (pressedKeys.contains(KeyEvent.VK_A) || rpiButton.equals("left")){
             move(getX() - stepSize, getY());
             direction = PlayerStatus.Direction.LEFT;
         }
 
-        if (pressedKeys.contains(KeyEvent.VK_S)){
+        if (pressedKeys.contains(KeyEvent.VK_S) || rpiButton.equals("down")){
             move(getX(), getY() + stepSize);
         }
 
-        if (pressedKeys.contains(KeyEvent.VK_D)){
+        if (pressedKeys.contains(KeyEvent.VK_D) || rpiButton.equals("right")) {
             move(getX() + stepSize, getY());
             direction = PlayerStatus.Direction.RIGHT;
         }
 
-        if (!pressedKeys.contains(KeyEvent.VK_W) && !pressedKeys.contains(KeyEvent.VK_A) && !pressedKeys.contains(KeyEvent.VK_S) && !pressedKeys.contains(KeyEvent.VK_D))
+        if (!(pressedKeys.contains(KeyEvent.VK_W)  || rpiButton.equals("up")) &&
+            !(pressedKeys.contains(KeyEvent.VK_A) || rpiButton.equals("left")) &&
+            !(pressedKeys.contains(KeyEvent.VK_S) || rpiButton.equals("down")) &&
+            !(pressedKeys.contains(KeyEvent.VK_D) || rpiButton.equals("right")))
             status = PlayerStatus.IDLE;
 
     }
@@ -115,6 +125,20 @@ public class Player extends GameObject {
     }
 
     public boolean inventoryHasKey(int keycode){
-        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> ((Key) key).getDoorCode() == keycode).count() > 0;
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).count() > 0;
+    }
+
+    public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
+        return new LevelEditor.LevelEditorItem(Player.class, FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0)) {
+            @Override
+            public void onPlace(int mouseX, int mouseY) {
+                super.onPlace(mouseX, mouseY);
+                Level level = LevelEditor.getInstance().getLevel();
+                if (!this.allowedToPlace(mouseX, mouseY)) return;
+                Optional<GameObject> player = level.getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+                player.ifPresent(level::removeGameObject);
+                level.addGameObject(new Player(gridX, gridY));
+            }
+        }.setRequireGround(true);
     }
 }
