@@ -1,0 +1,70 @@
+package nl.ictm2a4.javagame.services.levels;
+
+import nl.ictm2a4.javagame.services.ApiService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class LevelService extends ApiService {
+
+    private String baseUrl = "https://localhost:44320/api/levels";
+
+    public Level GetLevel(int id){
+        var response = sendRequest(baseUrl + "/" + id, "GET", "");
+
+        if(response == null){
+            return null;
+        }
+
+        var levelJson = (JSONObject) response.body;
+
+        return convertJsonToLevel(levelJson);
+    }
+
+    public List<Level> GetLevels(){
+        var response = sendRequest(baseUrl, "GET", "");
+
+        if(response == null){
+            return null;
+        }
+
+        var levels = convertJsonToLevelsList((JSONArray) response.body.get("Values"));
+
+        return levels;
+    }
+
+    private List<Level> convertJsonToLevelsList(JSONArray levelJson){
+        var levels = new ArrayList<Level>();
+
+        for(var level : levelJson){
+            levels.add(convertJsonToLevel((JSONObject) level));
+        }
+
+        return levels;
+    }
+
+    private Level convertJsonToLevel(JSONObject levelJson){
+        return new Level(
+                ((Long)levelJson.get("id")).intValue(),
+                (String)levelJson.get("name"),
+                (String)levelJson.get("description"),
+                (String)levelJson.get("content"),
+                ((Long)levelJson.get("creatorID")).intValue(),
+                (String)levelJson.get("TEST")
+        );
+    }
+
+    private JSONObject convertLevelToJson(Level level){
+        var levelJson = new JSONObject();
+        levelJson.put("id", level.ID);
+        levelJson.put("name", level.Name);
+        levelJson.put("description", level.Description);
+        levelJson.put("content", level.Content);
+        levelJson.put("creatorID", level.CreatorID);
+        levelJson.put("creatorUserName", level.CreatorUserName);
+
+        return levelJson;
+    }
+}
