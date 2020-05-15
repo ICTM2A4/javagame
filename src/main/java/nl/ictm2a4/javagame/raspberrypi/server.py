@@ -4,7 +4,7 @@ from sense_hat import SenseHat
 
 log = False
 
-host = "192.168.0.136"
+host = "192.168.2.14"
 port = 8001
 
 sense = SenseHat()
@@ -20,8 +20,6 @@ def joystickListener():
 				current_button = event.direction
 			else:
 				current_button = ""
-
-
 
 class ClientThread(Thread):
 	def __init__(self, conn, ip, port):

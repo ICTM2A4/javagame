@@ -26,7 +26,7 @@ public class MainMenu extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(360, 360));
         buttons = new ArrayList<>();
 
-        String[] buttonNames = {"Start","Select level","Level Builder","Exit"};
+        String[] buttonNames = {"Start","Select level","Level Builder", "Achievements", "Exit"};
 
         for(String name : buttonNames) {
             CButton button = new CButton(name);
@@ -58,7 +58,10 @@ public class MainMenu extends JPanel implements ActionListener {
             LevelLoader.getInstance().createCustomLevel();
             GameScreen.getInstance().setPanel(new LevelEditor());
         }
-        if(e.getSource() == buttons.get(3)) { // exit
+        if (e.getSource() == buttons.get(3)) {
+            GameScreen.getInstance().setPanel(new AchievementScreen());
+        }
+        if(e.getSource() == buttons.get(4)) { // exit
             RaspberryPIController.getInstance().disconnect();
             System.exit(0);
         }
