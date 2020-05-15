@@ -72,6 +72,20 @@ public class ScoreService extends ApiService {
         return scores;
     }
 
+    public Score AddScore(Score score){
+
+        var scoreJson = convertScoreToJson(score);
+        var response = sendRequest(baseUrl, "POST", scoreJson.toString());
+
+        if(response == null){
+            return null;
+        }
+
+        var returnScoreJson = (JSONObject) response.body;
+
+        return convertJsonToScore(returnScoreJson);
+    }
+
     // JSON naar Java objecten omzetten
 
     private List<Score> convertJsonToScoresList(JSONArray scoresJson){
@@ -94,5 +108,16 @@ public class ScoreService extends ApiService {
                 ((Long) scoreJson.get("scoredOnID")).intValue(),
                 (String) scoreJson.get("scoredOnName")
         );
+    }
+
+    private JSONObject convertScoreToJson(Score score){
+        var scoreJson = new JSONObject();
+        scoreJson.put("id", score.ID);
+        scoreJson.put("scoreAmount", score.ScoreAmount);
+        scoreJson.put("timestamp", "1996-12-12T12:12:23"); //, score.Timestamp); Formattering gaat niet helemaal goed
+        scoreJson.put("userID", score.UserID);
+        scoreJson.put("scoredOnID", score.ScoredOnID);
+
+        return scoreJson;
     }
 }
