@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -24,6 +23,8 @@ import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Level extends JPanel implements Listener {
 
@@ -54,7 +55,6 @@ public class Level extends JPanel implements Listener {
         setLayout(new GridBagLayout());
         this.setPreferredSize(new Dimension(LevelLoader.WIDTH, LevelLoader.HEIGHT));
 
-        loadObject();
         try {
             loadLevel();
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
@@ -73,13 +73,23 @@ public class Level extends JPanel implements Listener {
      * Load the JSONObject from the level file
      */
     public void loadObject() {
-        if (id >= LevelLoader.DEFAULTLEVELAMOUNT) {
-            try {
-                LevelLoader.getInstance().getCustomLevelFile(id);
-            } catch (IOException e) {
-                e.printStackTrace();
+        // loading custom level
+        if (id > LevelLoader.DEFAULTLEVELAMOUNT) {
+            nl.ictm2a4.javagame.services.levels.Level dbLevel = new LevelService().GetLevel(this.id);
+            JSONParser parser = new JSONParser();
+
+            if (dbLevel == null) {
+                object = Optional.of(new JSONObject());
+            } else {
+                try {
+                    object = Optional.of((JSONObject)parser.parse(dbLevel.Content));
+                    return;
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
         object = LevelLoader.getInstance().getLevelObject(id);
     }
 
@@ -124,7 +134,8 @@ public class Level extends JPanel implements Listener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24),
+        if (player != null)
+            drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24),
                 50);
         getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> drawLight(g,
                 new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
@@ -236,7 +247,7 @@ public class Level extends JPanel implements Listener {
         JSONObject levelObject = object.get();
 
         // Read level name
-        name = levelObject.get("name").toString();
+        name = levelObject.getOrDefault("name", "undefined").toString();
 
         for(Class<? extends GameObject> object : GameObjectsLoader.getInstance().getObjectList()) {
             Constructor constructor = getConstructor(object);
@@ -301,21 +312,20 @@ public class Level extends JPanel implements Listener {
                 saveObject.put(jl.JSONString(), arrayTiles);
         }
 
-        File file = null;
-        try {
-            file = LevelLoader.getInstance().getCustomLevelFile(id);
-        } catch (IOException e) {
-            e.printStackTrace();
+        LevelService levelService = new LevelService();
+
+        nl.ictm2a4.javagame.services.levels.Level dbLevel = levelService.GetLevel(this.id);
+
+        if (dbLevel == null) {
+            dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), 1, "");
+            levelService.AddLevel(dbLevel);
+            return;
         }
 
-        if (file != null) {
-            try (FileWriter writer = new FileWriter(file)) {
-                writer.write(saveObject.toJSONString());
-                writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        dbLevel.Name = name;
+        dbLevel.Content = saveObject.toString();
+
+        levelService.UpdateLevel(dbLevel);
     }
 
     /**

@@ -138,33 +138,37 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         var customLevels = new LevelService().GetLevels();
 
         for(Level level : customLevels){
-            JPanel container = new JPanel();
-            container.setLayout(new GridLayout(2, 0, 5, 5));
-            container.setBackground(new Color(0, 0, 0, 0));
-
-            CButton editLevel = new CButton("Edit level " + level.Name);
-            CButton button = new CButton("Start " + level.Name);
-            container.add(button);
-            container.add(editLevel);
-            jpcustomLevel.add(container);
-
             int loadLevel = level.ID;
-            button.addActionListener(
+
+            if (loadLevel > LevelLoader.DEFAULTLEVELAMOUNT) {
+
+                JPanel container = new JPanel();
+                container.setLayout(new GridLayout(2, 0, 5, 5));
+                container.setBackground(new Color(0, 0, 0, 0));
+
+                CButton editLevel = new CButton("Edit level " + level.Name);
+                CButton button = new CButton("Start " + level.Name);
+                container.add(button);
+                container.add(editLevel);
+                jpcustomLevel.add(container);
+
+                button.addActionListener(
                     e -> {
                         LevelLoader.getInstance().startLevel(loadLevel);
                     });
-            editLevel.addActionListener(
+                editLevel.addActionListener(
                     e -> {
                         LevelLoader.getInstance().loadLevel(loadLevel);
                         GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
                     }
-            );
+                );
+            }
         }
 
         back = new CButton("back");
         back.addActionListener(this);
         center.add(back, gbc);
-        }
+    }
     public void createLeftStrip() {
         JPanel leftStrip =  getPanel();
         addComp ( this, leftStrip , 0, 0, 1, 3

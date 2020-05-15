@@ -75,7 +75,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         setPanel(new MainMenu());
 
-        LevelLoader.getInstance().loadLevel(0);
+        LevelLoader.getInstance().loadLevel(1);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
