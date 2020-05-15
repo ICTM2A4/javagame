@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 public class EndScreen extends JPanel implements ActionListener {
 
-    private CButton nextLevel, backToMainMenu;
+    private CButton nextLevel, backToMainMenu, restart;
     int levelId = LevelLoader.getInstance().getCurrentLevel().get().getId();
     long points = LevelLoader.getInstance().getCurrentLevel().get().getScore();
 
@@ -27,10 +27,16 @@ public class EndScreen extends JPanel implements ActionListener {
         JLabel score = new JLabel("tijd: " + points / 1000);
         score.setForeground(Color.WHITE);
         add(score, gbc);
+
         nextLevel = new CButton("Next Level");
         nextLevel.addActionListener(this);
         add(nextLevel, gbc);
         nextLevel.setVisible(LevelLoader.DEFAULTLEVELAMOUNT > levelId + 1);
+
+        restart = new CButton("Restart");
+        restart.addActionListener(this);
+        add(restart, gbc);
+
         backToMainMenu = new CButton("Back to Main menu");
         backToMainMenu.addActionListener(this);
         add(backToMainMenu, gbc);
@@ -53,6 +59,10 @@ public class EndScreen extends JPanel implements ActionListener {
         }
         if(e.getSource() == backToMainMenu) {
             LevelLoader.getInstance().stopLevel();
+        }
+        if (e.getSource() == restart) {
+            LevelLoader.getInstance().getCurrentLevel().get().restart();
+            GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get());
         }
     }
 }
