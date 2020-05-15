@@ -2,6 +2,8 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.services.levels.Level;
+import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 import org.json.simple.JSONObject;
 
@@ -133,31 +135,30 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         scrollFrame2.setBackground(new Color(0, 0, 0, 0));
         center.add(scrollFrame2);
 
-        for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < LevelLoader.getInstance().getNewLevelId(); i++) {
-            Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
-            if(object.isPresent()) {
-                JPanel container = new JPanel();
-                container.setLayout(new GridLayout(2, 0, 5, 5));
-                container.setBackground(new Color(0, 0, 0, 0));
+        var customLevels = new LevelService().GetLevels();
 
-                CButton editLevel = new CButton("Edit level " + object.get().get("name"));
-                CButton button = new CButton("Start " + object.get().get("name"));
-                container.add(button);
-                container.add(editLevel);
-                jpcustomLevel.add(container);
+        for(Level level : customLevels){
+            JPanel container = new JPanel();
+            container.setLayout(new GridLayout(2, 0, 5, 5));
+            container.setBackground(new Color(0, 0, 0, 0));
 
-                int loadLevel = i;
-                button.addActionListener(
-                        e -> {
-                            LevelLoader.getInstance().startLevel(loadLevel);
-                        });
-                editLevel.addActionListener(
-                        e -> {
-                            LevelLoader.getInstance().loadLevel(loadLevel);
-                            GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
-                        }
-                );
-            }
+            CButton editLevel = new CButton("Edit level " + level.Name);
+            CButton button = new CButton("Start " + level.Name);
+            container.add(button);
+            container.add(editLevel);
+            jpcustomLevel.add(container);
+
+            int loadLevel = level.ID;
+            button.addActionListener(
+                    e -> {
+                        LevelLoader.getInstance().startLevel(loadLevel);
+                    });
+            editLevel.addActionListener(
+                    e -> {
+                        LevelLoader.getInstance().loadLevel(loadLevel);
+                        GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
+                    }
+            );
         }
 
         back = new CButton("back");
