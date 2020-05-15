@@ -35,6 +35,23 @@ public class LevelService extends ApiService {
         return levels;
     }
 
+    public Level AddLevel(Level level){
+        var levelJson = convertLevelToJson(level);
+        var response = sendRequest(baseUrl, "POST", levelJson.toString());
+
+        if(response == null){
+            return null;
+        }
+
+        var returnLevelJson = (JSONObject) response.body;
+
+        return convertJsonToLevel(returnLevelJson);
+    }
+
+    public Boolean UpdateLevel(Level level){
+        return false;
+    }
+
     private List<Level> convertJsonToLevelsList(JSONArray levelJson){
         var levels = new ArrayList<Level>();
 
@@ -52,7 +69,7 @@ public class LevelService extends ApiService {
                 (String)levelJson.get("description"),
                 (String)levelJson.get("content"),
                 ((Long)levelJson.get("creatorID")).intValue(),
-                (String)levelJson.get("TEST")
+                (String)levelJson.get("creatorUserName")
         );
     }
 
