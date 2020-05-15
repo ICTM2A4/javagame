@@ -15,7 +15,7 @@ public class ScoreService extends ApiService {
     public Score GetScore(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET","");
 
-        if(response == null){
+        if(response == null || response.responseCode != 200){
             return null;
         }
 
@@ -27,7 +27,7 @@ public class ScoreService extends ApiService {
     public List<Score> GetScores(){
         var response = sendRequest(baseUrl, "GET","");
 
-        if(response == null){
+        if(response == null || response.responseCode != 200){
             return null;
         }
 
@@ -39,7 +39,7 @@ public class ScoreService extends ApiService {
     public List<Score> GetScores(int limit){
         var response = sendRequest(baseUrl, "GET","");
 
-        if(response == null){
+        if(response == null || response.responseCode != 200){
             return null;
         }
 
@@ -51,7 +51,7 @@ public class ScoreService extends ApiService {
     public List<Score> GetScores(int limit, String sort){
         var response = sendRequest(baseUrl + "?limit=" + limit + "&sort=" + sort, "GET","");
 
-        if(response == null){
+        if(response == null || response.responseCode != 200){
             return null;
         }
 
@@ -63,7 +63,7 @@ public class ScoreService extends ApiService {
     public List<Score> GetScoresPerLevel(int lid){
         var response = sendRequest(baseUrl + "?lid=" + lid, "GET","");
 
-        if(response == null){
+        if(response == null || response.responseCode != 200){
             return null;
         }
 
@@ -77,7 +77,7 @@ public class ScoreService extends ApiService {
         var scoreJson = convertScoreToJson(score);
         var response = sendRequest(baseUrl, "POST", scoreJson.toString());
 
-        if(response == null){
+        if(response == null || response.responseCode != 201){
             return null;
         }
 
@@ -86,7 +86,7 @@ public class ScoreService extends ApiService {
         return convertJsonToScore(returnScoreJson);
     }
 
-    // JSON naar Java objecten omzetten
+    // JSON conversie
 
     private List<Score> convertJsonToScoresList(JSONArray scoresJson){
         var scores = new ArrayList<Score>();

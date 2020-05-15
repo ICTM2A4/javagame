@@ -14,7 +14,7 @@ public class LevelService extends ApiService {
     public Level GetLevel(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");
 
-        if(response == null){
+        if(response == null || response.responseCode != 200){
             return null;
         }
 
@@ -26,7 +26,7 @@ public class LevelService extends ApiService {
     public List<Level> GetLevels(){
         var response = sendRequest(baseUrl, "GET", "");
 
-        if(response == null){
+        if(response == null || response.responseCode != 200){
             return null;
         }
 
@@ -39,7 +39,9 @@ public class LevelService extends ApiService {
         var levelJson = convertLevelToJson(level);
         var response = sendRequest(baseUrl, "POST", levelJson.toString());
 
-        if(response == null){
+        // TODO: Afdwingen dat content in JSON formaat is
+
+        if(response == null || response.responseCode != 201) {
             return null;
         }
 
@@ -52,12 +54,16 @@ public class LevelService extends ApiService {
         var levelJson = convertLevelToJson(level);
         var response = sendRequest(baseUrl + "/" + level.ID, "PUT", levelJson.toString());
 
-        if(response.responseCode == 204){
+        // TODO: Afdwingen dat content in JSON formaat is
+
+        if(response != null && response.responseCode == 204){
             return true;
         }
 
         return false;
     }
+
+    // JSON conversie
 
     private List<Level> convertJsonToLevelsList(JSONArray levelJson){
         var levels = new ArrayList<Level>();

@@ -18,7 +18,7 @@ public class ApiService {
     }
 
     public Response sendRequest(String uri, String method, String body){
-        int responseCode;
+        int responseCode = -1;
 
         try {
             // Verbinding opbouwen
@@ -68,13 +68,15 @@ public class ApiService {
 
             return new Response(responseCode, responseBody);
         } catch (IOException e) {
-            System.out.println("Request failed");
-            return null;
+            System.out.println("Request failed: " + e.toString());
         } catch (ParseException e) {
-            e.printStackTrace();
+            System.out.println("Request failed: " + e.toString());
         }
 
-        // Als de request faalt, return null
+        if(responseCode != -1){
+            return new Response(responseCode, null);
+        }
+
         return null;
     }
 }
