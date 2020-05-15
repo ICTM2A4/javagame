@@ -49,6 +49,13 @@ public class LevelService extends ApiService {
     }
 
     public Boolean UpdateLevel(Level level){
+        var levelJson = convertLevelToJson(level);
+        var response = sendRequest(baseUrl + "/" + level.ID, "PUT", levelJson.toString());
+
+        if(response.responseCode == 204){
+            return true;
+        }
+
         return false;
     }
 
