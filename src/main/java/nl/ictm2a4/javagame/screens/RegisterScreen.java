@@ -71,6 +71,7 @@ public class RegisterScreen extends JPanel implements ActionListener {
             if (!wachtwoord.equals(wachtwoord2)) {
                 //STOP
             }
+
         }
     }
 }

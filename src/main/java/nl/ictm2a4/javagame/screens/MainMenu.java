@@ -70,6 +70,7 @@ public class MainMenu extends JPanel implements ActionListener {
 
         }
         if(e.getSource() == buttons.get(5)) { // exit
+            //RaspberryPIController.getInstance().disconnect();
             System.exit(0);
         }
 
