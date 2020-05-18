@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.gameobjects;
 
+import nl.ictm2a4.javagame.cevents.DoorOpenedEvent;
 import nl.ictm2a4.javagame.cevents.LeverSwitchEvent;
 import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
@@ -52,6 +53,7 @@ public class Lever extends GameObject {
                 .filter(gameObject -> gameObject.getExtra() == getExtra())
                 .toArray(Door[]::new)){
             door.setOpen();
+            EventManager.getInstance().callEvent(new DoorOpenedEvent(getExtra()));
         }
 
         active = true;

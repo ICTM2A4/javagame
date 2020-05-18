@@ -121,7 +121,7 @@ public class Level extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
 
         drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24),
-                50);
+                70);
         getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> drawLight(g,
                 new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
 
