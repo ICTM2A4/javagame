@@ -124,8 +124,8 @@ public class Player extends GameObject {
         return inventory;
     }
 
-    public boolean inventoryHasKey(int keycode){
-        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).count() > 0;
+    public Optional<Pickup> getFromInventory(int keycode){
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).findFirst();
     }
 
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {

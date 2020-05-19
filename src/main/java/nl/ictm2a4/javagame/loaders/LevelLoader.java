@@ -4,6 +4,7 @@ import nl.ictm2a4.javagame.screens.MainMenu;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
 import org.json.simple.JSONArray;
+import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -47,6 +48,7 @@ public class LevelLoader {
      */
     public void loadLevel(int id) {
         currentLevel = new Level(id);
+        HUD.getInstance().reset();
     }
 
     /**
@@ -73,6 +75,7 @@ public class LevelLoader {
             e.printStackTrace();
         }
         GameScreen.getInstance().setPanel(currentLevel);
+        GameScreen.getInstance().addOverlay(HUD.getInstance());
         paused = false;
         return true;
     }

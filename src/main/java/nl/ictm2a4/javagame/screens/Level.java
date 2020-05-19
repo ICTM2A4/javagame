@@ -8,17 +8,15 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Stream;
 
-import nl.ictm2a4.javagame.achievement.AchievementHandler;
-import nl.ictm2a4.javagame.event.EventHandler;
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.GameObjectsLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -403,6 +401,7 @@ public class Level extends JPanel {
     public void tick() {
         repaint();
         getGameObjects().forEach(GameObject::tick);
+        HUD.getInstance().tick();
         score = System.currentTimeMillis() - current;
 
         if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
@@ -416,6 +415,10 @@ public class Level extends JPanel {
      */
     public void restart() {
         LevelLoader.getInstance().startLevel();
+    }
+
+    public Player getPlayer() {
+        return this.player;
     }
 
 }

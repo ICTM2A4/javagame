@@ -1,6 +1,7 @@
 package nl.ictm2a4.javagame.raspberrypi;
 
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,17 +16,21 @@ public class RaspberryPIController {
 
     public RaspberryPIController() {
         instance = this;
-        this.client = new Client("192.168.0.136", 8001);
 
-        executor =
-            Executors.newSingleThreadScheduledExecutor();
+        if (GameScreen.USE_RPI) {
 
-        Runnable periodicTask = () -> {
-            if (client.isConnected() && LevelLoader.getInstance().getCurrentLevel().isPresent()) //TODO: only if not paused
-                currentButton = client.getButtonStatus();
-        };
+            this.client = new Client("192.168.0.136", 8001);
 
-        executor.scheduleAtFixedRate(periodicTask, 0, 2, TimeUnit.MILLISECONDS);
+            executor =
+                Executors.newSingleThreadScheduledExecutor();
+
+            Runnable periodicTask = () -> {
+                if (client.isConnected() && LevelLoader.getInstance().getCurrentLevel().isPresent()) //TODO: only if not paused
+                    currentButton = client.getButtonStatus();
+            };
+
+            executor.scheduleAtFixedRate(periodicTask, 0, 2, TimeUnit.MILLISECONDS);
+        }
     }
 
     public String getPressedButton() {
@@ -40,17 +45,19 @@ public class RaspberryPIController {
     }
 
     public void disconnect() {
-        this.executor.shutdown();
+        if (GameScreen.USE_RPI) {
+            this.executor.shutdown();
 
-        new java.util.Timer().schedule(
-            new java.util.TimerTask() {
-                @Override
-                public void run() {
-                    client.disconnect();
-                }
-            },
-            1000
-        );
+            new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        client.disconnect();
+                    }
+                },
+                1000
+            );
+        }
 
     }
 

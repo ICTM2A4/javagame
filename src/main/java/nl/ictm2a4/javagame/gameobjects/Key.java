@@ -15,7 +15,7 @@ public class Key extends Pickup {
 
     @JSONLoader(JSONString = "keys", withExtra = true)
     public Key(Integer gridX, Integer gridY, Integer doorCode){
-        super(gridX, gridY);
+        super(gridX, gridY, FileLoader.getInstance().getKeyImage(doorCode));
 
         // set extra as doorCode
         setExtra(doorCode);
