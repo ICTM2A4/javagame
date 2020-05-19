@@ -21,7 +21,8 @@ public class GameObjectsLoader {
             Door.class,
             Lever.class,
             Key.class,
-            FakeWall.class
+            FakeWall.class,
+            Orc.class
         );
     }
 

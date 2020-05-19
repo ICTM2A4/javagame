@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class FileLoader {
     private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages, doorImages, leverImages;
-    private HashMap<String, ArrayList<Image>> playerImages;
+    private HashMap<String, ArrayList<Image>> playerImages, orcImages;
     private Image fakeWallOverlay;
     private static FileLoader instance;
 
@@ -34,6 +34,7 @@ public class FileLoader {
         reloadDoorImages();
         reloadLeverImages();
         reloadFakeWallImages();
+        reloadOrcImages();
     }
 
     /**
@@ -92,6 +93,19 @@ public class FileLoader {
                 playerImages.put(s, new ArrayList<>());
                 for (int i = 0; i < status.getImageAmount(); i++) {
                     playerImages.get(s).add(loadImage("textures/player-" + status.toString().toLowerCase() + direction.toString().toLowerCase() + "-" + i + ".png"));
+                }
+            }
+        }
+    }
+
+    public void reloadOrcImages() {
+        orcImages = new HashMap<>();
+        for(PlayerStatus status : PlayerStatus.values()) {
+            for (PlayerStatus.Direction direction : PlayerStatus.Direction.values()) {
+                String s = status.toString().toLowerCase() + direction.toString().toLowerCase();
+                orcImages.put(s, new ArrayList<>());
+                for (int i = 0; i < status.getImageAmount(); i++) {
+                    orcImages.get(s).add(loadImage("textures/player-" + status.toString().toLowerCase() + direction.toString().toLowerCase() + "-" + i + ".png"));
                 }
             }
         }
@@ -173,6 +187,10 @@ public class FileLoader {
      */
     public Image getPlayerImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
         return this.playerImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
+    }
+
+    public Image getOrcImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
+        return this.orcImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
     }
 
     public Image getTorchImage(int index) {

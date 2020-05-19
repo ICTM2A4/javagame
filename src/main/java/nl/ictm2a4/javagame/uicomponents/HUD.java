@@ -1,6 +1,7 @@
 package nl.ictm2a4.javagame.uicomponents;
 
 import nl.ictm2a4.javagame.gameobjects.Pickup;
+import nl.ictm2a4.javagame.gameobjects.Player;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import javax.swing.*;
@@ -11,8 +12,9 @@ public class HUD extends JPanel {
 
     private static HUD instance;
     private int maxHealth = 100;
-    private int health = 100;
     private int prevHealth = 100;
+
+    private Player player;
 
     public HUD() {
         super();
@@ -34,8 +36,8 @@ public class HUD extends JPanel {
     }
 
     public void tick() {
-        if (prevHealth != health) {
-            health -= 1;
+        if (prevHealth != player.getHealth()) {
+            player.setHealth(player.getHealth() - 1);
             repaint();
         }
     }
@@ -50,7 +52,7 @@ public class HUD extends JPanel {
         g.fillRect(startX + 164, startY + 4, 4, 16);
         g.fillRect(startX + 4, startY + 20, 160, 4);
 
-        int healthWidth = (int) Math.round(160 * ((double)health / (double)maxHealth));
+        int healthWidth = (int) Math.round(160 * ((double)player.getHealth() / (double)maxHealth));
 
         g.setColor(new Color(17, 194, 96));
         g.fillRect(startX + 4, startY + 4, healthWidth, 16);
@@ -80,12 +82,16 @@ public class HUD extends JPanel {
     }
 
     public void reset() {
-        this.health = 100;
         this.prevHealth = 100;
+        player = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
     }
 
     public void setHealth(int health) {
         this.prevHealth = health;
+    }
+
+    public void removeHealth(int healthRemoval) {
+        this.prevHealth -= healthRemoval;
     }
 
     public static HUD getInstance() {

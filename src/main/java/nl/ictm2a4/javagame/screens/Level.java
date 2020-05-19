@@ -410,6 +410,10 @@ public class Level extends JPanel {
         }
     }
 
+    public void die() {
+        LevelLoader.getInstance().pause();
+    }
+
     /**
      * Restart the current level
      */

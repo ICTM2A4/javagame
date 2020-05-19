@@ -8,6 +8,7 @@ import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.uicomponents.FPSCounter;
 import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
+import nl.ictm2a4.javagame.uicomponents.HUD;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,6 +142,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         requestFocus();
         fixed.repaint();
+        if (panel instanceof Level)
+            GameScreen.getInstance().addOverlay(HUD.getInstance());
     }
 
     /**
