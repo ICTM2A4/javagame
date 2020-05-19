@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class FileLoader {
     private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages, doorImages, leverImages;
     private HashMap<String, ArrayList<Image>> playerImages;
+    private Image fakeWallOverlay;
     private static FileLoader instance;
 
     public FileLoader() {
@@ -32,6 +33,7 @@ public class FileLoader {
         reloadKeyImages();
         reloadDoorImages();
         reloadLeverImages();
+        reloadFakeWallImages();
     }
 
     /**
@@ -104,6 +106,10 @@ public class FileLoader {
             torchImages.add(loadImage("textures/torch-" + i + ".png"));
     }
 
+    public void reloadFakeWallImages() {
+        fakeWallOverlay = loadImage("textures/fakewalloverlay.png");
+    }
+
     /**
      * Load an image from the resource folder using a path
      * @param path Path to file in the src/resources folder
@@ -171,6 +177,10 @@ public class FileLoader {
 
     public Image getTorchImage(int index) {
         return this.torchImages.get(index);
+    }
+
+    public Image getFakeWallOverlay() {
+        return fakeWallOverlay;
     }
 
     /**
