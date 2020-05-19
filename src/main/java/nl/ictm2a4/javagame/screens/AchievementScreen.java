@@ -1,6 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.achievement.Achievement;
+import nl.ictm2a4.javagame.achievement.AchievementHandler;
 import nl.ictm2a4.javagame.cachievements.FirstDoorOpened;
 import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
 import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
@@ -15,8 +16,7 @@ import java.awt.event.ActionListener;
 
 public class AchievementScreen extends JPanel implements ActionListener {
 
-    private CButton a1, a2, a3, back;
-    private boolean FirstLevelAchieved, LastLevelAchieved, FirstDoorOpened;
+    private CButton a1, back;
 
     public AchievementScreen() {
         setLayout(new GridBagLayout());
@@ -28,49 +28,19 @@ public class AchievementScreen extends JPanel implements ActionListener {
 
         this.setPreferredSize(new Dimension(360, 360));
 
-        LevelOneAchieved achievement1 = new LevelOneAchieved();
-        LastLevelAchieved achievement2 = new LastLevelAchieved();
-        FirstDoorOpened achievement3 = new FirstDoorOpened();
-
-        if (achievement1.isAchieved()) {
-            FirstLevelAchieved = true;
+        for (Achievement achievement: AchievementHandler.getInstance().getAchievements()) {
+            a1 = new CButton("");
+            JCheckBox checkBox = new JCheckBox(achievement.getClass().getSimpleName());
+            checkBox.setEnabled(false);
+            checkBox.setForeground(Color.BLACK);
+            a1.add(checkBox);
+            checkBox.setBackground(new Color(146, 115, 63));
+            checkBox.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isRenderShadows());
+            if (achievement.isAchieved()) {
+                checkBox.isSelected();
+            }
+            add(a1, gbc);
         }
-        if (achievement2.isAchieved()) {
-            LastLevelAchieved = true;
-        }
-        if (achievement3.isAchieved()) {
-            FirstDoorOpened = true;
-        }
-
-        a1 = new CButton("");
-        JCheckBox checkBox = new JCheckBox("First level achieved");
-        a1.add(checkBox);
-        checkBox.setBackground(new Color(146, 115, 63));
-        checkBox.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isRenderShadows());
-        if (FirstLevelAchieved) {
-            checkBox.isSelected();
-        }
-        add(a1, gbc);
-
-        a2 = new CButton("");
-        JCheckBox checkBox2 = new JCheckBox("Last level achieved");
-        a2.add(checkBox2);
-        checkBox2.setBackground(new Color(146, 115, 63));
-        checkBox2.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isRenderShadows());
-        if (LastLevelAchieved) {
-            checkBox2.isSelected();
-        }
-        add(a2, gbc);
-
-        a3 = new CButton("");
-        JCheckBox checkBox3 = new JCheckBox("First door opened");
-        a3.add(checkBox3);
-        checkBox3.setBackground(new Color(146, 115, 63));
-        checkBox3.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isRenderShadows());
-        if (FirstDoorOpened) {
-            checkBox3.isSelected();
-        }
-        add(a3, gbc);
 
         back = new CButton("Back");
         back.addActionListener(this);
