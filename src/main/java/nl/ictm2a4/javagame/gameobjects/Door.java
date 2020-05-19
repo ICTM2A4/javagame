@@ -10,6 +10,7 @@ import nl.ictm2a4.javagame.screens.LevelEditor;
 import nl.ictm2a4.javagame.screens.PlaceDoorLeverKeyDialog;
 
 import java.awt.*;
+import java.util.Optional;
 
 public class Door extends GameObject {
 
@@ -40,8 +41,10 @@ public class Door extends GameObject {
 
         if (result && gameObject instanceof Player && !open){
             Player player = (Player) gameObject;
-            if(player.inventoryHasKey(getExtra())){
+            Optional<Pickup> key = player.getFromInventory(getExtra());
+            if(key.isPresent()) {
                 setOpen();
+                player.removeFromInventory(key.get());
                 EventManager.getInstance().callEvent(new DoorOpenedEvent(getExtra()));
             }
         }

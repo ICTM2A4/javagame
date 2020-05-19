@@ -10,9 +10,11 @@ import java.awt.*;
 public abstract class Pickup extends GameObject {
 
     public boolean active = true;
+    private Image image;
 
-    public Pickup(int gridX, int gridY){
+    public Pickup(int gridX, int gridY, Image image){
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
+        this.image = image;
     }
 
     public void draw(Graphics g) { }
@@ -35,5 +37,9 @@ public abstract class Pickup extends GameObject {
         }
 
         return false;
+    }
+
+    public Image getImage() {
+        return this.image;
     }
 }

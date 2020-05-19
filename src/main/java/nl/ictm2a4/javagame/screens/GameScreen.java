@@ -21,6 +21,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     public static final String GAMENAME = "JavaGame";
 
+    public static final boolean USE_RPI = false; // True for RPI connection
+
     private final static int MAX_FPS = 30;
     private final static int MAX_FRAME_SKIPS = 5;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
