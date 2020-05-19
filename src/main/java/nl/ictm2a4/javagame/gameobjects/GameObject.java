@@ -5,6 +5,8 @@ import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.screens.LevelEditor;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class GameObject {
 
@@ -176,14 +178,22 @@ public abstract class GameObject {
      *
      * @return Boolean array true if connected faces is found, false if no connected face is found
      */
-    public boolean[] hasConnectedFaces() {
-        String s = this.getClass().getCanonicalName();
+    public boolean[] hasConnectedFaces(Class<? extends GameObject> match) {
+        ArrayList<Class<? extends GameObject>> list = new ArrayList<>();
+        list.add(match);
+        return hasConnectedFaces(list);
+    }
+
+    public boolean[] hasConnectedFaces(ArrayList<Class<? extends GameObject>> objectMatch) {
+        ArrayList<String> matches = new ArrayList<>();
+        for(Class object : objectMatch)
+            matches.add(object.getCanonicalName());
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
         return new boolean[] {
-            level.fromCoordsToArray(getX(), getY() - LevelLoader.GRIDHEIGHT).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
-            level.fromCoordsToArray(getX() + LevelLoader.GRIDWIDTH, getY()).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
-            level.fromCoordsToArray(getX(), getY() + LevelLoader.GRIDHEIGHT).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
-            level.fromCoordsToArray(getX() - LevelLoader.GRIDWIDTH, getY()).anyMatch(o -> s.equals(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX(), getY() - LevelLoader.GRIDHEIGHT).anyMatch(o -> matches.contains(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX() + LevelLoader.GRIDWIDTH, getY()).anyMatch(o -> matches.contains(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX(), getY() + LevelLoader.GRIDHEIGHT).anyMatch(o -> matches.contains(o.getClass().getCanonicalName())),
+            level.fromCoordsToArray(getX() - LevelLoader.GRIDWIDTH, getY()).anyMatch(o -> matches.contains(o.getClass().getCanonicalName())),
         };
     }
 

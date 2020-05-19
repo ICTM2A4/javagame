@@ -20,7 +20,8 @@ public class GameObjectsLoader {
             Torch.class,
             Door.class,
             Lever.class,
-            Key.class
+            Key.class,
+            FakeWall.class
         );
     }
 
