@@ -55,8 +55,7 @@ public class MainMenu extends JPanel implements ActionListener {
             GameScreen.getInstance().setPanel(new LevelSelectScreen());
         }
         if(e.getSource() == buttons.get(2)) { // level builder
-            LevelLoader.getInstance().createCustomLevel();
-            GameScreen.getInstance().setPanel(new LevelEditor());
+            GameScreen.getInstance().setPanel(new preLevelEditorScreen());
         }
         if(e.getSource() == buttons.get(3)) { // exit
             RaspberryPIController.getInstance().disconnect();

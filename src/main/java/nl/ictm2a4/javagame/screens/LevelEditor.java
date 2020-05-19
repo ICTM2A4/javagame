@@ -141,7 +141,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             if (LevelLoader.getInstance().getLevelObject(level.getId()).get().get("player") == null)
                 LevelLoader.getInstance().removeCustomLevelFile(level.getId());
                 LevelLoader.getInstance().loadLevel(0);
-            GameScreen.getInstance().setPanel(new MainMenu());
+            GameScreen.getInstance().setPanel(new preLevelEditorScreen());
         }
     }
 
