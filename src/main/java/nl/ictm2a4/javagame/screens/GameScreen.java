@@ -208,6 +208,10 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private void tick() {
         LevelLoader.getInstance().tick();
         AchievementHandler.getInstance().tick();
+
+        if (PauseScreen.getInstance() != null) {
+            PauseScreen.getInstance().tick();
+        }
     }
 
     private void registerAchievements() {

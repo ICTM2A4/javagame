@@ -102,6 +102,7 @@ public class LevelLoader {
     public void resume() {
         GameScreen.getInstance().requestFocus();
         paused = false;
+        getCurrentLevel().get().resetStart();
     }
 
     public void pause() {
@@ -222,6 +223,10 @@ public class LevelLoader {
     public int getNewLevelId() {
         File customLevelFolder = checkFolders();
         return DEFAULTLEVELAMOUNT + Objects.requireNonNull(customLevelFolder.listFiles()).length;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     /**
