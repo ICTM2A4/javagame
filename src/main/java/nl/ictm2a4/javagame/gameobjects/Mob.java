@@ -15,8 +15,11 @@ public abstract class Mob extends GameObject {
     private PlayerStatus status;
     private PlayerStatus.Direction direction;
 
-    private int range, damage, health;
+    private long prevMove;
+
+    private int range, damage, health, prevDirection;
     private boolean alive = true;
+    private int stepSize = 4;
 
     public Mob(int gridX, int gridY, int width, int height, int range, int damage, int health) {
         super(gridX, gridY, width, height, true);
@@ -63,23 +66,43 @@ public abstract class Mob extends GameObject {
 
     private void nextMove() {
         // 0: nothing, 1: up, 2: right, 3: down, 4: left
-        int nextDirection = new Random().nextInt(5);
-        int stepSize = 4;
 
-        if (nextDirection == 1) {
+        double random = new Random().nextInt(400) + 200;
+
+        int x = getX();
+        int y = getY();
+        if (prevDirection == 2)
+            x += stepSize;
+        if (prevDirection == 4)
+            x -= stepSize;
+        if (prevDirection == 1)
+            y -= stepSize;
+        if (prevDirection == 3)
+            y += stepSize;
+
+        if (prevMove + random <= System.currentTimeMillis() || checkCollide(x,y)) {
+            prevMove = System.currentTimeMillis();
+
+            prevDirection = new Random().nextInt(5);
+        }
+        checkMove();
+    }
+
+    private void checkMove() {
+        if (prevDirection == 1) {
             move(getX(), getY()- stepSize);
         }
 
-        if (nextDirection == 2){
+        if (prevDirection == 2){
             move(getX() - stepSize, getY());
             direction = PlayerStatus.Direction.RIGHT;
         }
 
-        if (nextDirection == 3){
+        if (prevDirection == 3){
             move(getX(), getY() + stepSize);
         }
 
-        if (nextDirection == 4){
+        if (prevDirection == 4){
             move(getX() + stepSize, getY());
             direction = PlayerStatus.Direction.RIGHT;
         }
@@ -113,6 +136,10 @@ public abstract class Mob extends GameObject {
 
     public PlayerStatus getStatus() {
         return this.status;
+    }
+
+    public void setStatus(PlayerStatus status) {
+        this.status = status;
     }
 
     public int getCurrentImage() {

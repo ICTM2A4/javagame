@@ -19,7 +19,7 @@ public class Orc extends Mob {
     public Orc(Integer gridX, Integer gridY) {
         super(((gridX * LevelLoader.GRIDWIDTH) + 4),
             ((gridY * LevelLoader.GRIDHEIGHT) + 2),
-            16, 20, 64, 5, 50);
+            16, 20, 48, 5, 50);
     }
 
     @Override
@@ -46,6 +46,7 @@ public class Orc extends Mob {
             if (prev + (hitInterval * 10) < System.currentTimeMillis()) {
                 prev = System.currentTimeMillis();
                 HUD.getInstance().removeHealth(getDamage());
+                setStatus(PlayerStatus.ATTACKING);
             }
         }
         return result;

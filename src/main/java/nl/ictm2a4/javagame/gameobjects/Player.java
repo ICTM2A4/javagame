@@ -129,6 +129,7 @@ public class Player extends GameObject {
 
                 if (mob.checkCollideSingle(this, getX(), getY())) {
                     mob.removeHealth(getDamage());
+                    status = PlayerStatus.ATTACKING;
                 }
             }
         }
