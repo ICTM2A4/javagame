@@ -8,13 +8,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class PauseScreen extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
+    private static PauseScreen instance;
+    private long start;
 
     public PauseScreen() {
+        instance = this;
+        start = System.currentTimeMillis();
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -48,7 +54,7 @@ public class PauseScreen extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == buttons.get(0)) { // resume
             LevelLoader.getInstance().resume();
-            GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get());
+            setVisible(false);
         }
         if(e.getSource() == buttons.get(1)) { // restart
             LevelLoader.getInstance().getCurrentLevel().get().restart();
@@ -62,4 +68,16 @@ public class PauseScreen extends JPanel implements ActionListener {
             GameScreen.getInstance().addOverlay(new SettingScreen());
         }
     }
+
+    public void tick() {
+        if (start + 1000 <= System.currentTimeMillis() && GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
+            LevelLoader.getInstance().resume();
+            setVisible(false);
+        }
+    }
+
+    public static PauseScreen getInstance() {
+        return instance;
+    }
+
 }

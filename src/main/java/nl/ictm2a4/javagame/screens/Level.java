@@ -31,6 +31,7 @@ public class Level extends JPanel {
     private Optional<JSONObject> object;
     private long score;
     private long current = System.currentTimeMillis();
+    private long start;
 
     public int getId() {
         return id;
@@ -404,7 +405,7 @@ public class Level extends JPanel {
         HUD.getInstance().tick();
         score = System.currentTimeMillis() - current;
 
-        if(GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
+        if(start + 1500 <= System.currentTimeMillis() && GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
             LevelLoader.getInstance().pause();
             GameScreen.getInstance().addOverlay(new PauseScreen());
         }
@@ -419,6 +420,10 @@ public class Level extends JPanel {
 
     public Player getPlayer() {
         return this.player;
+    }
+
+    public void resetStart() {
+        start = System.currentTimeMillis();
     }
 
 }
