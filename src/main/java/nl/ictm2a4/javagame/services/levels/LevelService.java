@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LevelService extends ApiService {
 
-    private String baseUrl = "https://localhost:44320/api/levels";
+    private String baseUrl = "https://javagameapi.rillprogramming.com/api/levels";
 
     public Level GetLevel(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");

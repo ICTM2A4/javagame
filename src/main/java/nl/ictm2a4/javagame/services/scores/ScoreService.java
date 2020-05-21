@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ScoreService extends ApiService {
 
-    private String baseUrl = "https://localhost:44320/api/scores";
+    private String baseUrl = "https://javagameapi.rillprogramming.com/api/scores";
 
     public Score GetScore(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET","");
