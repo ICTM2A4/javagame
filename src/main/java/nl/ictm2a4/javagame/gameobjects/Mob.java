@@ -4,6 +4,7 @@ import nl.ictm2a4.javagame.cevents.MobKilledEvent;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
 import nl.ictm2a4.javagame.event.EventManager;
 
+import java.awt.*;
 import java.util.Random;
 
 public abstract class Mob extends GameObject {
@@ -17,7 +18,7 @@ public abstract class Mob extends GameObject {
 
     private long prevMove;
 
-    private int range, damage, health, prevDirection;
+    private int range, damage, maxHealth, health, prevDirection;
     private boolean alive = true;
     private int stepSize = 4;
 
@@ -25,6 +26,7 @@ public abstract class Mob extends GameObject {
         super(gridX, gridY, width, height, true);
         this.range = range;
         this.damage = damage;
+        this.maxHealth = health;
         this.health = health;
         status = PlayerStatus.IDLE;
         direction = PlayerStatus.Direction.RIGHT;
@@ -58,6 +60,25 @@ public abstract class Mob extends GameObject {
             if (currentImage >= status.getImageAmount())
                 currentImage = 0;
         }
+    }
+
+    @Override
+    public void draw(Graphics g) {
+
+        if (isAlive())
+            paintHealthBar(g, getX() - 6, getY() - 46);
+
+    }
+
+    private void paintHealthBar(Graphics g, int x, int y) {
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setColor(Color.DARK_GRAY);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRect(x, y, 24, 8);
+        g2.setColor(Color.GREEN);
+        int width = (int)Math.round(20 * ((double)getHealth() / (double)maxHealth));
+
+        g2.fillRect(x + 2, y + 2, width, 4);
     }
 
     public boolean isAlive() {
@@ -140,6 +161,7 @@ public abstract class Mob extends GameObject {
 
     public void setStatus(PlayerStatus status) {
         this.status = status;
+        currentImage = 0;
     }
 
     public int getCurrentImage() {

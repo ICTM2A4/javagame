@@ -24,6 +24,7 @@ public class Orc extends Mob {
 
     @Override
     public void draw(Graphics g) {
+        super.draw(g);
         if (this.isAlive()) {
             g.drawImage(FileLoader.getInstance().getOrcImage(getStatus(), getDirection(), getCurrentImage()),
                 getX() - 8, getY() - 30,
@@ -46,7 +47,7 @@ public class Orc extends Mob {
             if (prev + (hitInterval * 10) < System.currentTimeMillis()) {
                 prev = System.currentTimeMillis();
                 HUD.getInstance().removeHealth(getDamage());
-                setStatus(PlayerStatus.ATTACKING);
+                setStatus(PlayerStatus.FIGHTING);
             }
         }
         return result;

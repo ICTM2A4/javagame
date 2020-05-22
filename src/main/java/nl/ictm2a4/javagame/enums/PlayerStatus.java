@@ -3,7 +3,7 @@ package nl.ictm2a4.javagame.enums;
 public enum PlayerStatus {
     MOVING(4),
     IDLE(2),
-    ATTACKING(0);
+    FIGHTING(3);
 
     private int imageAmount;
 

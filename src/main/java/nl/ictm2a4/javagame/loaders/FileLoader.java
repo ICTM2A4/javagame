@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 public class FileLoader {
     private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages, doorImages, leverImages;
-    private HashMap<String, ArrayList<Image>> playerImages, orcImages;
-    private Image fakeWallOverlay;
+    private HashMap<String, ArrayList<Image>> playerImages, orcImages, swordImages;
+    private Image fakeWallOverlay, swordImage;
     private static FileLoader instance;
 
     public FileLoader() {
@@ -35,6 +35,7 @@ public class FileLoader {
         reloadLeverImages();
         reloadFakeWallImages();
         reloadOrcImages();
+        reloadSwordImages();
     }
 
     /**
@@ -124,6 +125,20 @@ public class FileLoader {
         fakeWallOverlay = loadImage("textures/fakewalloverlay.png");
     }
 
+    public void reloadSwordImages() {
+        swordImage = FileLoader.loadImage("textures/sword-0.png");
+        swordImages = new HashMap<>();
+        for(PlayerStatus status : PlayerStatus.values()) {
+            for (PlayerStatus.Direction direction : PlayerStatus.Direction.values()) {
+                String s = status.toString().toLowerCase() + direction.toString().toLowerCase();
+                swordImages.put(s, new ArrayList<>());
+                for (int i = 0; i < status.getImageAmount(); i++) {
+                    swordImages.get(s).add(loadImage("textures/sword-" + status.toString().toLowerCase() + direction.toString().toLowerCase() + "-" + i + ".png"));
+                }
+            }
+        }
+    }
+
     /**
      * Load an image from the resource folder using a path
      * @param path Path to file in the src/resources folder
@@ -191,6 +206,14 @@ public class FileLoader {
 
     public Image getOrcImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
         return this.orcImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
+    }
+
+    public Image getSwordImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
+        return this.swordImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
+    }
+
+    public Image getSwordImageSingle() {
+        return this.swordImage;
     }
 
     public Image getTorchImage(int index) {

@@ -11,6 +11,7 @@ public abstract class Pickup extends GameObject {
 
     public boolean active = true;
     private Image image;
+    private boolean displayInInventory = true;
 
     public Pickup(int gridX, int gridY, Image image){
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
@@ -18,6 +19,10 @@ public abstract class Pickup extends GameObject {
     }
 
     public void draw(Graphics g) { }
+
+    public void setDisplayInInventory(boolean displayInInventory) {
+        this.displayInInventory = displayInInventory;
+    }
 
     @Override
     public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
@@ -37,6 +42,10 @@ public abstract class Pickup extends GameObject {
         }
 
         return false;
+    }
+
+    public boolean isDisplayInInventory() {
+        return displayInInventory;
     }
 
     public Image getImage() {

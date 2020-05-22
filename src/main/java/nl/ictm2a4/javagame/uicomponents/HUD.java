@@ -66,7 +66,8 @@ public class HUD extends JPanel {
 
         int inventorySlots = 5;
 
-        List<Pickup> inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().getInventory();
+        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().
+            getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
 
         Graphics2D g2 = (Graphics2D)g;
 
@@ -75,8 +76,8 @@ public class HUD extends JPanel {
 
         for(int i = 0; i < inventorySlots; i++) {
             g2.drawRect(startX + (i * 34), startY, 28, 28);
-            if (i < inventory.size()) {
-                g2.drawImage(inventory.get(i).getImage(), startX + (i * 34) + 2, startY + 2, 20, 20, new Color(0,0,0,0), this);
+            if (i < inventory.length) {
+                g2.drawImage(inventory[i].getImage(), startX + (i * 34) + 2, startY + 2, 20, 20, new Color(0,0,0,0), this);
             }
         }
     }

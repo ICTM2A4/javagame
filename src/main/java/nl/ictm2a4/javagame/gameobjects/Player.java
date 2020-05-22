@@ -76,7 +76,8 @@ public class Player extends GameObject {
             !(pressedKeys.contains(KeyEvent.VK_A) || rpiButton.equals("left")) &&
             !(pressedKeys.contains(KeyEvent.VK_S) || rpiButton.equals("down")) &&
             !(pressedKeys.contains(KeyEvent.VK_D) || rpiButton.equals("right")))
-            status = PlayerStatus.IDLE;
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.IDLE;
     }
 
     /**
@@ -88,9 +89,11 @@ public class Player extends GameObject {
         if(!checkCollide(x, y)) {
             setX(x);
             setY(y);
-            status = PlayerStatus.MOVING;
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.MOVING;
         } else {
-            status = PlayerStatus.IDLE;
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.IDLE;
         }
     }
 
@@ -99,6 +102,10 @@ public class Player extends GameObject {
         g.drawImage(FileLoader.getInstance().getPlayerImage(status,direction,currentImage),
             getX() - 8, getY() - 30,
             LevelLoader.getInstance().getCurrentLevel().get());
+        if (getInventory().stream().filter(object -> object instanceof Sword).findFirst().isPresent())
+            g.drawImage(FileLoader.getInstance().getSwordImage(status,direction,currentImage),
+                getX() - 8, getY() - 30,
+                LevelLoader.getInstance().getCurrentLevel().get());
     }
 
     /**
@@ -108,13 +115,20 @@ public class Player extends GameObject {
     public void tick() {
         checkMove();
 
+
+
         animateCount++;
         if (animateCount % ANIMATEDELAY == 0) {
             animateCount = 0;
             currentImage++;
         }
+
+        if (status == PlayerStatus.FIGHTING && currentImage >= PlayerStatus.FIGHTING.getImageAmount())
+            status = PlayerStatus.IDLE;
+
         if (currentImage >= status.getImageAmount())
             currentImage = 0;
+
 
         tryHitting();
     }
@@ -129,7 +143,8 @@ public class Player extends GameObject {
 
                 if (mob.checkCollideSingle(this, getX(), getY())) {
                     mob.removeHealth(getDamage());
-                    status = PlayerStatus.ATTACKING;
+                    status = PlayerStatus.FIGHTING;
+                    currentImage = 0;
                 }
             }
         }
