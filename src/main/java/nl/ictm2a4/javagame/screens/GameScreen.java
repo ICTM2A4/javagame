@@ -52,6 +52,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private List<Integer> pressedKeys;
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
+    private String apiToken;
 
     public GameScreen() {
         setTitle(title);
