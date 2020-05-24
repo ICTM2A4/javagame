@@ -1,6 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.services.users.UserService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -62,8 +63,16 @@ public class LoginScreen extends JPanel implements ActionListener {
 
         if (e.getSource() == buttons.get(0)) {
             GameScreen.getInstance().setPanel(new MainMenu());
-            String usernametext = username.getText();
-            String passwordtext = password.getText();
+            String usernametext = Jusername.getText();
+            String passwordtext = Jpassword.getText();
+
+            var login = new UserService().authenticate(usernametext, passwordtext);
+
+            if(login != null && login.token != null && login.token != ""){
+                GameScreen.getInstance().setApiToken(login.token);
+            } else {
+                // Login gefaald
+            }
         }
         if (e.getSource() == buttons.get(1)) {
             GameScreen.getInstance().setPanel(new RegisterScreen());

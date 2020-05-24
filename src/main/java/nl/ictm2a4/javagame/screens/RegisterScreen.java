@@ -1,6 +1,8 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.services.users.User;
+import nl.ictm2a4.javagame.services.users.UserService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -65,11 +67,21 @@ public class RegisterScreen extends JPanel implements ActionListener {
             GameScreen.getInstance().setPanel(new LoginScreen());
         }
         if (e.getSource() == register) {
-            String wachtwoord = password.getText();
-            String wachtwoord2 = password2.getText();
-            String naam = username.getText();
-            if (!wachtwoord.equals(wachtwoord2)) {
-                //STOP
+            String wachtwoord = Jpassword.getText();
+            String wachtwoord2 = Jpassword2.getText();
+            String naam = Jusername.getText();
+            if (wachtwoord != "" && wachtwoord.equals(wachtwoord2) && naam != "") {
+                var user = new User(0, naam, wachtwoord, "");
+
+                var registeredUser = new UserService().register(user);
+
+                if(registeredUser != null && registeredUser.token != null && registeredUser.token != ""){
+                    GameScreen.getInstance().setApiToken(registeredUser.token); // Automatische login na registratie
+                } else{
+                    // Registratie gefaald
+                }
+            } else {
+                // Naam en wachtwoord voldoen niet
             }
 
         }
