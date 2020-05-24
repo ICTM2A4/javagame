@@ -4,7 +4,7 @@ import nl.ictm2a4.javagame.services.ApiService;
 import org.json.simple.JSONObject;
 
 public class UserService extends ApiService {
-    private String baseUrl = "https://localhost:44320/api/users";
+    private String baseUrl = super.baseUrl + "/api/users";
 
     public User authenticate(String username, String password){
         var userJson = convertUserToJson(new User(0, username, password, ""));

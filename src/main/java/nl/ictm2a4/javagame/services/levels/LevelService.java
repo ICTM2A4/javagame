@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelService extends ApiService {
-
-    private String baseUrl = "https://javagameapi.rillprogramming.com/api/levels";
+    private String baseUrl = super.baseUrl + "/api/levels";
 
     public Level GetLevel(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");

@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScoreService extends ApiService {
-
-    private String baseUrl = "https://javagameapi.rillprogramming.com/api/scores";
+    private String baseUrl = super.baseUrl + "/api/scores";
 
     public Score GetScore(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET","");

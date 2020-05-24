@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.services;
 
+import nl.ictm2a4.javagame.screens.GameScreen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,6 +14,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class ApiService {
+    protected String baseUrl = "https://localhost:44320";
+
     public Response sendRequest(String uri){
         return sendRequest(uri, "GET", "");
     }

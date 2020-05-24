@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AchievementsService extends ApiService {
-    String baseUrl = "https://localhost:44320/api/achievements";
+    private String baseUrl = super.baseUrl + "/api/achievements";
 
     public Achievement getAchievement(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");
@@ -25,6 +25,16 @@ public class AchievementsService extends ApiService {
 
     public List<Achievement> getAchievements(){
         var response = sendRequest(baseUrl, "GET", "");
+
+        if(response == null || response.responseCode != 200){
+            return null;
+        }
+
+        return convertJsonToAchievementsList((JSONArray) response.body.get("Values"));
+    }
+
+    public List<Achievement> getAchievements(int uid){
+        var response = sendRequest(baseUrl + "?uid=" + uid, "GET", "");
 
         if(response == null || response.responseCode != 200){
             return null;
@@ -53,6 +63,34 @@ public class AchievementsService extends ApiService {
         // TODO: Afdwingen dat content in JSON formaat is
 
         if(response != null && response.responseCode == 204){
+            return true;
+        }
+
+        return false;
+    }
+
+    public Boolean addAchievementToUser(int achievementID, int userID) {
+        var userAchievementJson = new JSONObject();
+        userAchievementJson.put("userID", userID);
+        userAchievementJson.put("achievementID", achievementID);
+
+        var response = sendRequest(baseUrl + "/user", "POST", userAchievementJson.toString());
+
+        if(response != null && response.responseCode == 200){
+            return true;
+        }
+
+        return false;
+    }
+
+    public Boolean removeAchievementFromUser(int achievementID, int userID) {
+        var userAchievementJson = new JSONObject();
+        userAchievementJson.put("userID", userID);
+        userAchievementJson.put("achievementID", achievementID);
+
+        var response = sendRequest(baseUrl + "/user", "DELETE", userAchievementJson.toString());
+
+        if(response != null && response.responseCode == 200){
             return true;
         }
 
