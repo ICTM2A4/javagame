@@ -29,6 +29,12 @@ public class ApiService {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);
 
+            String apiToken = GameScreen.getInstance().getApiToken();
+
+            if(apiToken != null && apiToken != ""){
+                connection.setRequestProperty("Authorization", "Bearer " + apiToken);
+            }
+
             if(method == "POST" || method == "PUT"){
 
                 int length = body.getBytes(("UTF-8")).length;
