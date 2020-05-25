@@ -148,7 +148,7 @@ public abstract class Mob extends GameObject {
     public void removeHealth(int healthRemoval) {
         this.health -= healthRemoval;
         if (this.health <= 0) {
-            EventManager.getInstance().callEvent(new MobKilledEvent());
+            EventManager.getInstance().callEvent(new MobKilledEvent(this));
             this.alive = false;
         }
     }

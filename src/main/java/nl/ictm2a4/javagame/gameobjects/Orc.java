@@ -64,7 +64,7 @@ public class Orc extends Mob {
     }
 
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
-        return new LevelEditor.LevelEditorItem(Orc.class, FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0)) {
+        return new LevelEditor.LevelEditorItem(Orc.class, FileLoader.getInstance().getOrcImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0)) {
             @Override
             public void onPlace(int mouseX, int mouseY) {
                 super.onPlace(mouseX, mouseY);
