@@ -53,8 +53,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
 
-    private String apiToken;
-    private int currentUserId;
+    private User currentUser;
 
     public GameScreen() {
         setTitle(title);
@@ -310,11 +309,23 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         }
     }
 
-    public void setCurrentUserId(int id){
-        currentUserId = id;
+    public void setCurrentUser(User user){
+        currentUser = user;
+    }
+
+    public String getApiToken(){
+        if(currentUser != null){
+            return currentUser.token;
+        } else {
+            return null;
+        }
     }
 
     public int getCurrentUserId(){
-        return currentUserId;
+        if(currentUser != null){
+            return currentUser.id;
+        } else{
+            return 0;
+        }
     }
 }

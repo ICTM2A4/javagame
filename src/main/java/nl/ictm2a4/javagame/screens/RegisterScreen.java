@@ -76,7 +76,7 @@ public class RegisterScreen extends JPanel implements ActionListener {
                 var registeredUser = new UserService().register(user);
 
                 if(registeredUser != null && registeredUser.token != null && registeredUser.token != ""){
-                    GameScreen.getInstance().setApiToken(registeredUser.token); // Automatische login na registratie
+                    GameScreen.getInstance().setCurrentUser(registeredUser); // Automatische login na registratie
                 } else{
                     // Registratie gefaald
                 }
