@@ -106,7 +106,7 @@ public class FileLoader {
                 String s = status.toString().toLowerCase() + direction.toString().toLowerCase();
                 orcImages.put(s, new ArrayList<>());
                 for (int i = 0; i < status.getImageAmount(); i++) {
-                    orcImages.get(s).add(loadImage("textures/player-" + status.toString().toLowerCase() + direction.toString().toLowerCase() + "-" + i + ".png"));
+                    orcImages.get(s).add(loadImage("textures/mob-" + status.toString().toLowerCase() + direction.toString().toLowerCase() + "-" + i + ".png"));
                 }
             }
         }

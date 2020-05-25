@@ -1,18 +1,22 @@
 package nl.ictm2a4.javagame.uicomponents;
 
+import nl.ictm2a4.javagame.cevents.PlayerHealthLossEvent;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.gameobjects.Pickup;
 import nl.ictm2a4.javagame.gameobjects.Player;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class HUD extends JPanel {
 
+    private final int HEALINTERVAL = 100; //ms
+    private final int REGENINTERVAL = 2000; //ms
     private static HUD instance;
     private int maxHealth = 100;
     private int prevHealth = 100;
+    private long prevHeal, prevHitTime;
 
     private Player player;
 
@@ -36,9 +40,21 @@ public class HUD extends JPanel {
     }
 
     public void tick() {
-        if (prevHealth != player.getHealth()) {
-            player.setHealth(player.getHealth() - 1);
+        if (prevHealth < player.getHealth()) {
+            player.setHealth(player.getHealth() - 4);
             repaint();
+        }
+        if (prevHealth > player.getHealth()) {
+            player.setHealth(player.getHealth() + 1);
+            repaint();
+        }
+
+        if (player.getHealth() < 100 &&
+            prevHeal + HEALINTERVAL <= System.currentTimeMillis() && player.getHealth() > 0 &&
+            prevHitTime + REGENINTERVAL <= System.currentTimeMillis()
+        ) {
+            prevHealth++;
+            prevHeal = System.currentTimeMillis();
         }
     }
 
@@ -87,12 +103,10 @@ public class HUD extends JPanel {
         player = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
     }
 
-    public void setHealth(int health) {
-        this.prevHealth = health;
-    }
-
     public void removeHealth(int healthRemoval) {
         this.prevHealth -= healthRemoval;
+        EventManager.getInstance().callEvent(new PlayerHealthLossEvent(healthRemoval, player.getHealth()));
+        prevHitTime = System.currentTimeMillis();
     }
 
     public static HUD getInstance() {

@@ -9,7 +9,7 @@ import java.util.Random;
 
 public abstract class Mob extends GameObject {
 
-    private final int ANIMATEDELAY = 4;
+    private final int ANIMATEDELAY = 6;
     private int currentImage = 0;
     private int animateCount = 0;
 
@@ -20,7 +20,7 @@ public abstract class Mob extends GameObject {
 
     private int range, damage, maxHealth, health, prevDirection;
     private boolean alive = true;
-    private int stepSize = 4;
+    private int stepSize = 2;
 
     public Mob(int gridX, int gridY, int width, int height, int range, int damage, int health) {
         super(gridX, gridY, width, height, true);
@@ -57,6 +57,10 @@ public abstract class Mob extends GameObject {
                 animateCount = 0;
                 currentImage++;
             }
+
+            if (status == PlayerStatus.FIGHTING && currentImage >= PlayerStatus.FIGHTING.getImageAmount())
+                status = PlayerStatus.IDLE;
+
             if (currentImage >= status.getImageAmount())
                 currentImage = 0;
         }
@@ -116,7 +120,7 @@ public abstract class Mob extends GameObject {
 
         if (prevDirection == 2){
             move(getX() - stepSize, getY());
-            direction = PlayerStatus.Direction.RIGHT;
+            direction = PlayerStatus.Direction.LEFT;
         }
 
         if (prevDirection == 3){
@@ -133,9 +137,11 @@ public abstract class Mob extends GameObject {
         if(!checkCollide(x, y)) {
             setX(x);
             setY(y);
-            status = PlayerStatus.MOVING;
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.MOVING;
         } else {
-            status = PlayerStatus.IDLE;
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.IDLE;
         }
     }
 

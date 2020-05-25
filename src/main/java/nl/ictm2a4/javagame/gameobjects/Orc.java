@@ -12,14 +12,15 @@ import java.awt.*;
 
 public class Orc extends Mob {
 
-    private int hitInterval = 30; // ms
-    private long prev;
+    private int hitInterval = 200; // ms
+    private long prev, startHitTime;
+    private boolean startHit;
 
     @JSONLoader(JSONString = "orcs")
     public Orc(Integer gridX, Integer gridY) {
         super(((gridX * LevelLoader.GRIDWIDTH) + 4),
             ((gridY * LevelLoader.GRIDHEIGHT) + 2),
-            16, 20, 48, 5, 50);
+            16, 20, 48, 45, 80);
     }
 
     @Override
@@ -46,10 +47,19 @@ public class Orc extends Mob {
         if (result) {
             if (prev + (hitInterval * 10) < System.currentTimeMillis()) {
                 prev = System.currentTimeMillis();
-                HUD.getInstance().removeHealth(getDamage());
-                setStatus(PlayerStatus.FIGHTING);
+                startHitTime = prev + 300;
+                startHit = true;
             }
         }
+
+        if (result) {
+            if (startHitTime < System.currentTimeMillis() && startHit) {
+                HUD.getInstance().removeHealth(getDamage());
+                setStatus(PlayerStatus.FIGHTING);
+                startHit = false;
+            }
+        }
+
         return result;
     }
 

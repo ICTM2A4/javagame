@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Stream;
 
+import nl.ictm2a4.javagame.cevents.ItemPickupEvent;
 import nl.ictm2a4.javagame.cevents.PlayerDiedEvent;
 import nl.ictm2a4.javagame.event.EventHandler;
 import nl.ictm2a4.javagame.event.EventManager;
@@ -417,6 +418,12 @@ public class Level extends JPanel implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDiedEvent event) {
         GameScreen.getInstance().addOverlay(new GameOverScreen());
+    }
+
+    @EventHandler
+    public void onItemPickup(ItemPickupEvent event) {
+        if (event.getPickup() instanceof Sword)
+            getPlayer().setDamage(20);
     }
 
     /**

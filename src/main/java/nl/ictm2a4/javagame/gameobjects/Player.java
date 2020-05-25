@@ -28,6 +28,7 @@ public class Player extends GameObject {
     private PlayerStatus status;
     private PlayerStatus.Direction direction;
     private int health, damage;
+    private long prevHit;
 
     private List<Pickup> inventory;
 
@@ -42,7 +43,7 @@ public class Player extends GameObject {
         direction = PlayerStatus.Direction.RIGHT;
         inventory = new ArrayList<>();
         health = 100;
-        damage = 15;
+        damage = 4;
     }
 
     /**
@@ -113,9 +114,8 @@ public class Player extends GameObject {
      */
     @Override
     public void tick() {
+        checkCollide(getX(), getY());
         checkMove();
-
-
 
         animateCount++;
         if (animateCount % ANIMATEDELAY == 0) {
@@ -137,7 +137,7 @@ public class Player extends GameObject {
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
         String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 
-        if (pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle")) {
+        if ((pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle")) && prevHit + 200 <= System.currentTimeMillis()) {
             for(Mob mob : LevelLoader.getInstance().getCurrentLevel().get().
                 getGameObjects().stream().filter(gameObject -> gameObject instanceof Mob).toArray(Mob[]::new)) {
 
@@ -145,6 +145,7 @@ public class Player extends GameObject {
                     mob.removeHealth(getDamage());
                     status = PlayerStatus.FIGHTING;
                     currentImage = 0;
+                    prevHit = System.currentTimeMillis();
                 }
             }
         }
@@ -193,5 +194,9 @@ public class Player extends GameObject {
 
     public int getHealth() {
         return this.health;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }
