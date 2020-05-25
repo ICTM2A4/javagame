@@ -52,7 +52,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private List<Integer> pressedKeys;
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
+
     private String apiToken;
+    private int currentUserId;
 
     public GameScreen() {
         setTitle(title);
@@ -306,5 +308,13 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         for (int i = 0; i < FPS_HISTORY_NR; i++) {
             fpsStore[i] = 0.0;
         }
+    }
+
+    public void setCurrentUserId(int id){
+        currentUserId = id;
+    }
+
+    public int getCurrentUserId(){
+        return currentUserId;
     }
 }

@@ -317,7 +317,9 @@ public class Level extends JPanel implements Listener {
         nl.ictm2a4.javagame.services.levels.Level dbLevel = levelService.GetLevel(this.id);
 
         if (dbLevel == null) {
-            dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), 1, "");
+            var uid = GameScreen.getInstance().getCurrentUserId();
+
+            dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), uid, "");
             levelService.AddLevel(dbLevel);
             return;
         }

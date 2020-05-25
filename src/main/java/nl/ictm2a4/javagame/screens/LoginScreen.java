@@ -69,7 +69,9 @@ public class LoginScreen extends JPanel implements ActionListener {
             var login = new UserService().authenticate(usernametext, passwordtext);
 
             if(login != null && login.token != null && login.token != ""){
-                GameScreen.getInstance().setApiToken(login.token);
+                var gameScreen = GameScreen.getInstance();
+                gameScreen.setApiToken(login.token);
+                gameScreen.setCurrentUserId(login.id);
             } else {
                 // Login gefaald
             }
