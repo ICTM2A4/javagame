@@ -1,18 +1,24 @@
 package nl.ictm2a4.javagame.uicomponents;
 
+import nl.ictm2a4.javagame.cevents.PlayerHealthLossEvent;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.gameobjects.Pickup;
+import nl.ictm2a4.javagame.gameobjects.Player;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class HUD extends JPanel {
 
+    private final int HEALINTERVAL = 100; //ms
+    private final int REGENINTERVAL = 2000; //ms
     private static HUD instance;
     private int maxHealth = 100;
-    private int health = 100;
     private int prevHealth = 100;
+    private long prevHeal, prevHitTime;
+
+    private Player player;
 
     public HUD() {
         super();
@@ -34,9 +40,21 @@ public class HUD extends JPanel {
     }
 
     public void tick() {
-        if (prevHealth != health) {
-            health -= 1;
+        if (prevHealth < player.getHealth()) {
+            player.setHealth(player.getHealth() - 4);
             repaint();
+        }
+        if (prevHealth > player.getHealth()) {
+            player.setHealth(player.getHealth() + 1);
+            repaint();
+        }
+
+        if (player.getHealth() < 100 &&
+            prevHeal + HEALINTERVAL <= System.currentTimeMillis() && player.getHealth() > 0 &&
+            prevHitTime + REGENINTERVAL <= System.currentTimeMillis()
+        ) {
+            prevHealth++;
+            prevHeal = System.currentTimeMillis();
         }
     }
 
@@ -50,7 +68,7 @@ public class HUD extends JPanel {
         g.fillRect(startX + 164, startY + 4, 4, 16);
         g.fillRect(startX + 4, startY + 20, 160, 4);
 
-        int healthWidth = (int) Math.round(160 * ((double)health / (double)maxHealth));
+        int healthWidth = (int) Math.round(160 * ((double)player.getHealth() / (double)maxHealth));
 
         g.setColor(new Color(17, 194, 96));
         g.fillRect(startX + 4, startY + 4, healthWidth, 16);
@@ -64,7 +82,8 @@ public class HUD extends JPanel {
 
         int inventorySlots = 5;
 
-        List<Pickup> inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().getInventory();
+        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().
+            getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
 
         Graphics2D g2 = (Graphics2D)g;
 
@@ -73,19 +92,21 @@ public class HUD extends JPanel {
 
         for(int i = 0; i < inventorySlots; i++) {
             g2.drawRect(startX + (i * 34), startY, 28, 28);
-            if (i < inventory.size()) {
-                g2.drawImage(inventory.get(i).getImage(), startX + (i * 34) + 2, startY + 2, 20, 20, new Color(0,0,0,0), this);
+            if (i < inventory.length) {
+                g2.drawImage(inventory[i].getImage(), startX + (i * 34) + 2, startY + 2, 20, 20, new Color(0,0,0,0), this);
             }
         }
     }
 
     public void reset() {
-        this.health = 100;
         this.prevHealth = 100;
+        player = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
     }
 
-    public void setHealth(int health) {
-        this.prevHealth = health;
+    public void removeHealth(int healthRemoval) {
+        this.prevHealth -= healthRemoval;
+        EventManager.getInstance().callEvent(new PlayerHealthLossEvent(healthRemoval, player.getHealth()));
+        prevHitTime = System.currentTimeMillis();
     }
 
     public static HUD getInstance() {

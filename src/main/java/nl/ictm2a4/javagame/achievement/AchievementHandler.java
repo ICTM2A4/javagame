@@ -13,8 +13,7 @@ public class AchievementHandler {
 
     private ArrayList<Achievement> achievements;
     private ArrayList<AchievementPopup> popups;
-    private int currentFrame = 0;
-    private int frameCount = 0;
+    private int currentFrame;
 
     public AchievementHandler() {
         instance = this;

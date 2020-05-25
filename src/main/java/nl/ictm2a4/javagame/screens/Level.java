@@ -11,6 +11,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Stream;
 
+import nl.ictm2a4.javagame.cevents.ItemPickupEvent;
+import nl.ictm2a4.javagame.cevents.PlayerDiedEvent;
+import nl.ictm2a4.javagame.event.EventHandler;
+import nl.ictm2a4.javagame.event.EventManager;
+import nl.ictm2a4.javagame.event.Listener;
 import nl.ictm2a4.javagame.gameobjects.GameObject;
 import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.GameObjectsLoader;
@@ -20,7 +25,7 @@ import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class Level extends JPanel {
+public class Level extends JPanel implements Listener {
 
     private int id;
     private ArrayList<GameObject> gameObjects;
@@ -59,7 +64,7 @@ public class Level extends JPanel {
 
         animateLights = true;
 
-
+        EventManager.getInstance().registerEvent(this);
         shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
     }
@@ -409,6 +414,17 @@ public class Level extends JPanel {
             LevelLoader.getInstance().pause();
             GameScreen.getInstance().addOverlay(new PauseScreen());
         }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDiedEvent event) {
+        GameScreen.getInstance().addOverlay(new GameOverScreen());
+    }
+
+    @EventHandler
+    public void onItemPickup(ItemPickupEvent event) {
+        if (event.getPickup() instanceof Sword)
+            getPlayer().setDamage(20);
     }
 
     /**

@@ -75,7 +75,6 @@ public class LevelLoader {
             e.printStackTrace();
         }
         GameScreen.getInstance().setPanel(currentLevel);
-        GameScreen.getInstance().addOverlay(HUD.getInstance());
         paused = false;
         return true;
     }
