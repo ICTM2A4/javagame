@@ -312,13 +312,13 @@ public class Level extends JPanel implements Listener {
                 saveObject.put(jl.JSONString(), arrayTiles);
         }
 
-        LevelService levelService = new LevelService();
 
-        nl.ictm2a4.javagame.services.levels.Level dbLevel = levelService.GetLevel(this.id);
+
+        var levelService = new LevelService();
+        var dbLevel = levelService.GetLevel(this.id);
 
         if (dbLevel == null) {
-            var uid = GameScreen.getInstance().getCurrentUserId();
-
+            int uid = GameScreen.getInstance().getCurrentUserId();
             dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), uid, "");
             levelService.AddLevel(dbLevel);
             return;
