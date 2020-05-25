@@ -45,7 +45,6 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             }
         }
 
-
         displayGUI();
     }
 
