@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class RegisterScreen extends JPanel implements ActionListener {
 
-    private JLabel username, password, password2;
+    private JLabel username, password, password2, message;
     private JTextField Jusername, Jpassword, Jpassword2;
     private CButton register, back;
 
@@ -43,6 +43,9 @@ public class RegisterScreen extends JPanel implements ActionListener {
         Jpassword2 = new JTextField(10);
         Jpassword2.addActionListener(this);
         add(Jpassword2, gbc);
+
+        message = new JLabel();
+        add(message, gbc);
 
         register = new CButton("register");
         register.addActionListener(this);
@@ -77,13 +80,13 @@ public class RegisterScreen extends JPanel implements ActionListener {
 
                 if(registeredUser != null && registeredUser.token != null && registeredUser.token != ""){
                     GameScreen.getInstance().setCurrentUser(registeredUser); // Automatische login na registratie
+                    GameScreen.getInstance().setPanel(new MainMenu());
                 } else{
-                    // Registratie gefaald
+                    message.setText("Registration failed");
                 }
             } else {
-                // Naam en wachtwoord voldoen niet
+                message.setText("Please check your username and password");
             }
-
         }
     }
 }

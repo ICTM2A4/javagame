@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class LoginScreen extends JPanel implements ActionListener {
 
-    private JLabel username, password;
+    private JLabel username, password, message;
     private JTextField Jusername, Jpassword;
     private ArrayList<CButton> buttons;
 
@@ -38,6 +38,9 @@ public class LoginScreen extends JPanel implements ActionListener {
         Jpassword.addActionListener(this);
         add(Jpassword, gbc);
 
+        message = new JLabel();
+        add(message, gbc);
+
         buttons = new ArrayList<>();
 
         String[] buttonNames = {"Login","Register", "Back"};
@@ -62,17 +65,16 @@ public class LoginScreen extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == buttons.get(0)) {
-            GameScreen.getInstance().setPanel(new MainMenu());
             String usernametext = Jusername.getText();
             String passwordtext = Jpassword.getText();
 
             var login = new UserService().authenticate(usernametext, passwordtext);
-            
+
             if(login != null && login.token != null && login.token != ""){
-                var gameScreen = GameScreen.getInstance();
-                gameScreen.setCurrentUser(login);
+                GameScreen.getInstance().setCurrentUser(login);
+                GameScreen.getInstance().setPanel(new MainMenu());
             } else {
-                // Login gefaald
+                message.setText("Login incorrect");
             }
         }
         if (e.getSource() == buttons.get(1)) {
