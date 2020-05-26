@@ -49,7 +49,7 @@ public class LevelService extends ApiService {
         return convertJsonToLevel(returnLevelJson);
     }
 
-    public Boolean UpdateLevel(Level level){
+    public Boolean updateLevel(Level level){
         var levelJson = convertLevelToJson(level);
         var response = sendRequest(baseUrl + "/" + level.id, "PUT", levelJson.toString());
 

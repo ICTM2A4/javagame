@@ -130,11 +130,15 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
             level.setName(levelName.getText());
             try {
-                level.saveLevel();
+                if (level.saveLevel()){
+                    JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Het Level is niet opgeslagen");
+                }
             } catch (NoSuchMethodException ex) {
                 ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Het Level is niet opgeslagen");
             }
-            JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
         }
         if(e.getSource() == cancel) {
             if (LevelLoader.getInstance().getLevelObject(level.getId()).isEmpty())

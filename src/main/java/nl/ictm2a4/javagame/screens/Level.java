@@ -285,7 +285,7 @@ public class Level extends JPanel implements Listener {
     /**
      * Covert the level to a .JSON file
      */
-    public void saveLevel() throws NoSuchMethodException {
+    public boolean saveLevel() throws NoSuchMethodException {
         JSONObject saveObject = new JSONObject();
         saveObject.put("name", this.getName());
 
@@ -320,16 +320,19 @@ public class Level extends JPanel implements Listener {
         if (dbLevel == null) {
             if(currentUser != null){
                 dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.id, "");
-
             }
-            levelService.addLevel(dbLevel);
-            return;
+
+            if(levelService.addLevel(dbLevel) != null){
+                return true; // succes
+            } else{
+                return false; // fail
+            }
         }
 
         dbLevel.name = name;
         dbLevel.content = saveObject.toString();
 
-        levelService.UpdateLevel(dbLevel);
+        return levelService.updateLevel(dbLevel);
     }
 
     /**
