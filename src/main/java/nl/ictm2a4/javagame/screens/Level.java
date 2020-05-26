@@ -442,7 +442,7 @@ public class Level extends JPanel implements Listener {
     @EventHandler
     public void onItemPickup(ItemPickupEvent event) {
         if (event.getPickup() instanceof Sword)
-            getPlayer().setDamage(20);
+            getPlayer().get().setDamage(20);
     }
 
     /**

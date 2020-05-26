@@ -85,8 +85,8 @@ public class HUD extends JPanel {
 
         int inventorySlots = 5;
       
-        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().
-            getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
+        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().get()
+            .getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
 
         Graphics2D g2 = (Graphics2D)g;
 
@@ -103,7 +103,7 @@ public class HUD extends JPanel {
 
     public void reset() {
         this.prevHealth = 100;
-        player = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
+        player = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().get();
     }
 
     public void removeHealth(int healthRemoval) {

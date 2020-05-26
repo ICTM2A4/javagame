@@ -7,6 +7,9 @@ import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 
 public class LevelOneAchieved extends Achievement {
+    public LevelOneAchieved(){
+        super(1);
+    }
 
     @EventHandler
     public void onReachedEndEvent(ReachedEndEvent event) {
@@ -15,7 +18,7 @@ public class LevelOneAchieved extends Achievement {
 
             var currentUser = GameScreen.getInstance().getCurrentUser();
             if(currentUser != null) {
-                new AchievementsService().addAchievementToUser(1, currentUser.id);
+                new AchievementsService().addAchievementToUser(id, currentUser.id);
             }
         }
     }

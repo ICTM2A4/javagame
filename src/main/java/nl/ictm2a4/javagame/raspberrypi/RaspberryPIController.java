@@ -16,8 +16,6 @@ public class RaspberryPIController {
 
     public RaspberryPIController() {
         instance = this;
-        this.client = new Client("192.168.2.14", 8001);
-
         if (GameScreen.USE_RPI) {
 
             this.client = new Client("192.168.0.136", 8001);
