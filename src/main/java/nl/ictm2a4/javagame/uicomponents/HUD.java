@@ -2,9 +2,11 @@ package nl.ictm2a4.javagame.uicomponents;
 
 import nl.ictm2a4.javagame.gameobjects.Pickup;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.Level;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HUD extends JPanel {
@@ -64,7 +66,10 @@ public class HUD extends JPanel {
 
         int inventorySlots = 5;
 
-        List<Pickup> inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().getInventory();
+        Level level = LevelLoader.getInstance().getCurrentLevel().get();
+        List<Pickup> inventory = new ArrayList<>();
+        if (level.getPlayer().isPresent())
+            inventory = level.getPlayer().get().getInventory();
 
         Graphics2D g2 = (Graphics2D)g;
 

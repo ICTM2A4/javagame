@@ -44,6 +44,8 @@ public class Player extends GameObject {
     public void checkMove() {
         int stepSize = 4;
 
+
+
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
         String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 

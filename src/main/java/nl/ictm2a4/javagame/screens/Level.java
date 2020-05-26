@@ -59,7 +59,6 @@ public class Level extends JPanel {
 
         animateLights = true;
 
-
         shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
     }
@@ -100,6 +99,7 @@ public class Level extends JPanel {
         super.paintComponent(g);
         getGameObjects().stream().sorted(Comparator.comparingInt(GameObject::getyIndex))
                 .forEach(object -> object.draw(g));
+
 
         if (this.renderShadows) {
             g.setColor(new Color(255, 153, 51, 40));
@@ -418,8 +418,8 @@ public class Level extends JPanel {
         LevelLoader.getInstance().startLevel();
     }
 
-    public Player getPlayer() {
-        return this.player;
+    public Optional<Player> getPlayer() {
+        return getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).map(p -> (Player)p).findFirst();
     }
 
     public void resetStart() {

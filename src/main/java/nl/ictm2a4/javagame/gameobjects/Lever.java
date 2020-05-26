@@ -59,13 +59,13 @@ public class Lever extends GameObject {
 
     @Override
     public void tick() {
-        GameObject[] collisions = checkCollideAllGameObjects(getX(), getY());
-        List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
-        String rpiButton = RaspberryPIController.getInstance().getPressedButton();
+            GameObject[] collisions = checkCollideAllGameObjects(getX(), getY());
+            List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
+            String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 
-        if(!active && Arrays.stream(collisions).anyMatch(gameObject -> gameObject instanceof Player) && (pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle"))){
-            activate();
-        }
+            if(!active && Arrays.stream(collisions).anyMatch(gameObject -> gameObject instanceof Player) && (pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle"))){
+                activate();
+            }
     }
 
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
