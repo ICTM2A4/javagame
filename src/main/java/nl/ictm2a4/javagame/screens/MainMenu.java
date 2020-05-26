@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class MainMenu extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
-    boolean isLoggedIn = false; //TODO: JOCHEM EVEN AANPASSEN
+    boolean isLoggedIn = false;
 
     public MainMenu() {
         setLayout(new GridBagLayout());
@@ -57,15 +57,24 @@ public class MainMenu extends JPanel implements ActionListener {
             LevelLoader.getInstance().startLevel();
         }
         if(e.getSource() == buttons.get(1)) { // select level
-            GameScreen.getInstance().setPanel(new LevelSelectScreen());
+            if(GameScreen.getInstance().getCurrentUserId() == 0) {
+                GameScreen.getInstance().addOverlay(new LoginScreen());
+            } else {
+                GameScreen.getInstance().setPanel(new LevelSelectScreen());
+            }
         }
         if(e.getSource() == buttons.get(2)) { // level builder
-            GameScreen.getInstance().setPanel(new preLevelEditorScreen());
+            if(GameScreen.getInstance().getCurrentUserId() == 0){
+                GameScreen.getInstance().addOverlay(new LoginScreen());
+            } else{
+                LevelLoader.getInstance().createCustomLevel();
+                GameScreen.getInstance().setPanel(new LevelEditor());
+            }
         }
-        if (e.getSource() == buttons.get(3)) {
+        if(e.getSource() == buttons.get(3)) { // Login
             GameScreen.getInstance().addOverlay(new LoginScreen());
         }
-        if (e.getSource() == buttons.get(4)) {
+        if (e.getSource() == buttons.get(4)) { // Logout
             isLoggedIn = false;//TODO JOCHEM AAN T WERK
 
         }
