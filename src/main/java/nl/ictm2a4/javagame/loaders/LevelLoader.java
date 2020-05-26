@@ -130,19 +130,19 @@ public class LevelLoader {
      */
     public Optional<JSONObject> getLevelObject(int id) {
         JSONParser parser = new JSONParser();
-        Optional<JSONObject> levelOjbect = Optional.empty();
+        Optional<JSONObject> levelObject = Optional.empty();
 
         if (id <= LevelLoader.DEFAULTLEVELAMOUNT) {
             try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
                 Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
                 Object object = parser.parse(rd);
-                levelOjbect = Optional.of((JSONObject) object);
+                levelObject = Optional.of((JSONObject) object);
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
         }
 
-        return levelOjbect;
+        return levelObject;
     }
 
     public boolean isPaused() {

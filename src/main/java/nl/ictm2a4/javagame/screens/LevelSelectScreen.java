@@ -99,7 +99,7 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         scrollFrame1.setBackground(new Color(0, 0, 0, 0));
         center.add(scrollFrame1, gbc);
 
-        for(int i = 0; i < LevelLoader.DEFAULTLEVELAMOUNT; i++) {
+        for(int i = 1; i <= LevelLoader.DEFAULTLEVELAMOUNT; i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if (object.isPresent()) {
                 CButton button = new CButton("" + object.get().get("name"));

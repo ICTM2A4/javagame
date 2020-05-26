@@ -14,8 +14,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class ApiService {
-    protected String baseUrl = "https://localhost:44320";
-
+    protected String baseUrl = "https://javagameapi.rillprogramming.com"; // prod
+    //protected String baseUrl = "https://localhost:44320"; // local
     public Response sendRequest(String uri){
         return sendRequest(uri, "GET", "");
     }
