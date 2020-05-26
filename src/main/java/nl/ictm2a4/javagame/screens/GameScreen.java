@@ -6,7 +6,9 @@ import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
 import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.loaders.Settings;
 import nl.ictm2a4.javagame.services.users.User;
+import nl.ictm2a4.javagame.services.users.UserService;
 import nl.ictm2a4.javagame.uicomponents.FPSCounter;
 import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.uicomponents.HUD;
@@ -18,7 +20,6 @@ import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class GameScreen extends JFrame implements KeyListener, Runnable {
 
@@ -64,6 +65,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new FileLoader();
         new LevelLoader();
         new RaspberryPIController();
+
+        tryLogin();
 
         pressedKeys = new ArrayList<>();
 
@@ -324,5 +327,15 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         } else {
             return null;
         }
+    }
+
+    private void tryLogin() {
+        String username = Settings.getInstance().getUsername();
+
+        var login = new UserService().authenticate(Settings.getInstance().getUsername(),
+            Settings.getInstance().getPassword());
+
+        if(login != null && login.token != null && login.token != "")
+            GameScreen.getInstance().setCurrentUser(login);
     }
 }
