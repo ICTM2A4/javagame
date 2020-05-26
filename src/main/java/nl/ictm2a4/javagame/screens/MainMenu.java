@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class MainMenu extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
-    boolean isLoggedIn = false;
 
     public MainMenu() {
         setLayout(new GridBagLayout());
@@ -30,6 +29,8 @@ public class MainMenu extends JPanel implements ActionListener {
         LoginScreen loginScreen = new LoginScreen();
 
         String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Exit"};
+
+        boolean isLoggedIn = GameScreen.getInstance().getCurrentUserId() == 0;
 
         for(String name : buttonNames) {
             CButton button = new CButton(name);
@@ -75,8 +76,7 @@ public class MainMenu extends JPanel implements ActionListener {
             GameScreen.getInstance().addOverlay(new LoginScreen());
         }
         if (e.getSource() == buttons.get(4)) { // Logout
-            isLoggedIn = false;//TODO JOCHEM AAN T WERK
-
+            GameScreen.getInstance().setCurrentUser(null);
         }
         if(e.getSource() == buttons.get(5)) { // exit
             //RaspberryPIController.getInstance().disconnect();
