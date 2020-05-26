@@ -12,9 +12,9 @@ public class FirstDoorOpened extends Achievement {
     public void onDoorOpened(DoorOpenedEvent event) {
         achieve("First door opened");
 
-        int currentUser = GameScreen.getInstance().getCurrentUserId();
-        if(currentUser != 0) {
-            new AchievementsService().addAchievementToUser(1, currentUser);
+        var currentUser = GameScreen.getInstance().getCurrentUser();
+        if(currentUser != null) {
+            new AchievementsService().addAchievementToUser(3, currentUser.id);
         }
     }
 }

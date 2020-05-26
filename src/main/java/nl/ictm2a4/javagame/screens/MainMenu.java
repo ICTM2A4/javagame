@@ -30,7 +30,7 @@ public class MainMenu extends JPanel implements ActionListener {
 
         String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Exit"};
 
-        boolean isLoggedIn = GameScreen.getInstance().getCurrentUserId() == 0;
+        boolean isLoggedIn = GameScreen.getInstance().getCurrentUser() != null;
 
         for(String name : buttonNames) {
             CButton button = new CButton(name);
@@ -58,14 +58,14 @@ public class MainMenu extends JPanel implements ActionListener {
             LevelLoader.getInstance().startLevel();
         }
         if(e.getSource() == buttons.get(1)) { // select level
-            if(GameScreen.getInstance().getCurrentUserId() == 0) {
+            if(GameScreen.getInstance().getCurrentUser() == null) {
                 GameScreen.getInstance().addOverlay(new LoginScreen());
             } else {
                 GameScreen.getInstance().setPanel(new LevelSelectScreen());
             }
         }
         if(e.getSource() == buttons.get(2)) { // level builder
-            if(GameScreen.getInstance().getCurrentUserId() == 0){
+            if(GameScreen.getInstance().getCurrentUser() == null){
                 GameScreen.getInstance().addOverlay(new LoginScreen());
             } else{
                 LevelLoader.getInstance().createCustomLevel();

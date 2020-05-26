@@ -20,6 +20,7 @@ import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.GameObjectsLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -312,14 +313,15 @@ public class Level extends JPanel implements Listener {
                 saveObject.put(jl.JSONString(), arrayTiles);
         }
 
-
-
         var levelService = new LevelService();
         var dbLevel = levelService.GetLevel(this.id);
+        var currentUser = GameScreen.getInstance().getCurrentUser();
 
         if (dbLevel == null) {
-            int uid = GameScreen.getInstance().getCurrentUserId();
-            dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), uid, "");
+            if(currentUser != null){
+                dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.id, "");
+
+            }
             levelService.AddLevel(dbLevel);
             return;
         }

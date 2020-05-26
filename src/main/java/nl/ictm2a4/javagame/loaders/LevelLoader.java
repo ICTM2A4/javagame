@@ -3,6 +3,7 @@ package nl.ictm2a4.javagame.loaders;
 import nl.ictm2a4.javagame.screens.MainMenu;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
+import nl.ictm2a4.javagame.services.levels.LevelService;
 import org.json.simple.JSONArray;
 import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONObject;
@@ -143,15 +144,6 @@ public class LevelLoader {
         }
 
         return levelOjbect;
-    }
-
-    /**
-     * Get a new level id
-     * @return Integer of new level id
-     */
-    public int getNewLevelId() {
-        File customLevelFolder = checkFolders();
-        return DEFAULTLEVELAMOUNT + Objects.requireNonNull(customLevelFolder.listFiles()).length;
     }
 
     public boolean isPaused() {

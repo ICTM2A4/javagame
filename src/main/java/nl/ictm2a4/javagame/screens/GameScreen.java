@@ -6,6 +6,7 @@ import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
 import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.services.users.User;
 import nl.ictm2a4.javagame.uicomponents.FPSCounter;
 import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.uicomponents.HUD;
@@ -313,19 +314,15 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         currentUser = user;
     }
 
+    public User getCurrentUser(){
+        return currentUser;
+    }
+
     public String getApiToken(){
         if(currentUser != null){
             return currentUser.token;
         } else {
             return null;
-        }
-    }
-
-    public int getCurrentUserId(){
-        if(currentUser != null){
-            return currentUser.id;
-        } else{
-            return 0;
         }
     }
 }

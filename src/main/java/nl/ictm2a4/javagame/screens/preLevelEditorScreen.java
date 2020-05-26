@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 import org.json.simple.JSONObject;
 
@@ -95,7 +96,9 @@ public class preLevelEditorScreen extends JPanel implements ActionListener {
         scrollFrame2.setBackground(new Color(0, 0, 0, 0));
         center.add(scrollFrame2);
 
-        for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < LevelLoader.getInstance().getNewLevelId(); i++) {
+        var levelService = new LevelService();
+
+        for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < levelService.GetLevels().size()+1; i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if(object.isPresent()) {
                 JPanel container = new JPanel();

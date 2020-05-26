@@ -13,9 +13,9 @@ public class LevelOneAchieved extends Achievement {
         if (event.getLevelID() == 0) {
             achieve("First level achieved");
 
-            int currentUser = GameScreen.getInstance().getCurrentUserId();
-            if(currentUser != 0) {
-                new AchievementsService().addAchievementToUser(3, currentUser);
+            var currentUser = GameScreen.getInstance().getCurrentUser();
+            if(currentUser != null) {
+                new AchievementsService().addAchievementToUser(1, currentUser.id);
             }
         }
     }
