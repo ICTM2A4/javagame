@@ -51,7 +51,7 @@ public class LevelService extends ApiService {
 
     public Boolean UpdateLevel(Level level){
         var levelJson = convertLevelToJson(level);
-        var response = sendRequest(baseUrl + "/" + level.ID, "PUT", levelJson.toString());
+        var response = sendRequest(baseUrl + "/" + level.id, "PUT", levelJson.toString());
 
         // TODO: Afdwingen dat content in JSON formaat is
 
@@ -87,12 +87,12 @@ public class LevelService extends ApiService {
 
     private JSONObject convertLevelToJson(Level level){
         var levelJson = new JSONObject();
-        levelJson.put("id", level.ID);
-        levelJson.put("name", level.Name);
-        levelJson.put("description", level.Description);
-        levelJson.put("content", level.Content);
-        levelJson.put("creatorID", level.CreatorID);
-        levelJson.put("creatorUserName", level.CreatorUserName);
+        levelJson.put("id", level.id);
+        levelJson.put("name", level.name);
+        levelJson.put("description", level.description);
+        levelJson.put("content", level.content);
+        levelJson.put("creatorID", level.creatorID);
+        levelJson.put("creatorUserName", level.creatorUserName);
 
         return levelJson;
     }

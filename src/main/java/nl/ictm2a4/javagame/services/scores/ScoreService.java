@@ -111,11 +111,11 @@ public class ScoreService extends ApiService {
 
     private JSONObject convertScoreToJson(Score score){
         var scoreJson = new JSONObject();
-        scoreJson.put("id", score.ID);
-        scoreJson.put("scoreAmount", score.ScoreAmount);
+        scoreJson.put("id", score.id);
+        scoreJson.put("scoreAmount", score.scoreAmount);
         scoreJson.put("timestamp", "1996-12-12T12:12:23"); //, score.Timestamp); Formattering gaat niet helemaal goed
-        scoreJson.put("userID", score.UserID);
-        scoreJson.put("scoredOnID", score.ScoredOnID);
+        scoreJson.put("userID", score.userID);
+        scoreJson.put("scoredOnID", score.scoredOnID);
 
         return scoreJson;
     }

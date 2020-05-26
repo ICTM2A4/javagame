@@ -83,7 +83,7 @@ public class Level extends JPanel implements Listener {
                 object = Optional.of(new JSONObject());
             } else {
                 try {
-                    object = Optional.of((JSONObject)parser.parse(dbLevel.Content));
+                    object = Optional.of((JSONObject)parser.parse(dbLevel.content));
                     return;
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -326,8 +326,8 @@ public class Level extends JPanel implements Listener {
             return;
         }
 
-        dbLevel.Name = name;
-        dbLevel.Content = saveObject.toString();
+        dbLevel.name = name;
+        dbLevel.content = saveObject.toString();
 
         levelService.UpdateLevel(dbLevel);
     }

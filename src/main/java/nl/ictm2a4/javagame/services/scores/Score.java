@@ -4,20 +4,20 @@ import java.time.LocalDateTime;
 
 public class Score {
     public Score(int id, long sa, LocalDateTime ts, int uid, String un, int soi, String son){
-        ID = id;
-        ScoreAmount = sa;
-        Timestamp = ts;
-        UserID = uid;
-        UserName = un;
-        ScoredOnID = soi;
-        ScoredOnName = son;
+        this.id = id;
+        scoreAmount = sa;
+        timestamp = ts;
+        userID = uid;
+        userName = un;
+        scoredOnID = soi;
+        scoredOnName = son;
     }
 
-    public int ID;
-    public long ScoreAmount;
-    public LocalDateTime Timestamp;
-    public int UserID;
-    public String UserName;
-    public int ScoredOnID;
-    public String ScoredOnName;
+    public int id;
+    public long scoreAmount;
+    public LocalDateTime timestamp;
+    public int userID;
+    public String userName;
+    public int scoredOnID;
+    public String scoredOnName;
 }
