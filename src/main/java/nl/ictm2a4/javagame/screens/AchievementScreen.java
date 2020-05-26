@@ -51,21 +51,6 @@ public class AchievementScreen extends JPanel implements ActionListener {
             add(achievementButton, gbc);
         }
 
-        /*
-        for (Achievement achievement: AchievementHandler.getInstance().getAchievements()) {
-            a1 = new CButton("");
-            JCheckBox checkBox = new JCheckBox(achievement.getClass().getSimpleName());
-            checkBox.setEnabled(false);
-            checkBox.setForeground(Color.BLACK);
-            a1.add(checkBox);
-            checkBox.setBackground(new Color(146, 115, 63));
-            checkBox.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isRenderShadows());
-            if (achievement.isAchieved()) {
-                checkBox.isSelected();
-            }
-            add(a1, gbc);
-        }*/
-
         back = new CButton("Back");
         back.addActionListener(this);
         add(back, gbc);

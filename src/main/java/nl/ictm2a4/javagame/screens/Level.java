@@ -426,7 +426,7 @@ public class Level extends JPanel implements Listener {
         repaint();
         getGameObjects().forEach(GameObject::tick);
         HUD.getInstance().tick();
-        score = System.currentTimeMillis() - current;
+        score++; //= System.currentTimeMillis() - current;
 
         if(start + 1500 <= System.currentTimeMillis() && GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
             LevelLoader.getInstance().pause();

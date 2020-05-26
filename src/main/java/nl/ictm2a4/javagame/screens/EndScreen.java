@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.screens;
 
+import nl.ictm2a4.javagame.listeners.ScoreListener;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.uicomponents.CButton;
@@ -13,7 +14,7 @@ public class EndScreen extends JPanel implements ActionListener {
 
     private CButton nextLevel, backToMainMenu, restart;
     int levelId = LevelLoader.getInstance().getCurrentLevel().get().getId();
-    long points = LevelLoader.getInstance().getCurrentLevel().get().getScore();
+    //long points = LevelLoader.getInstance().getCurrentLevel().get().getScore();
 
     public EndScreen() {
         setLayout(new GridBagLayout());
@@ -23,8 +24,9 @@ public class EndScreen extends JPanel implements ActionListener {
         gbc.insets = new Insets(5,0,5,0);
         gbc.anchor = GridBagConstraints.WEST;
         this.setPreferredSize(new Dimension(360, 360));
+        var points = ScoreListener.getInstance().scoreAmount;
 
-        JLabel score = new JLabel("tijd: " + points / 1000);
+        JLabel score = new JLabel("Score: " + points);
         score.setForeground(Color.WHITE);
         add(score, gbc);
 

@@ -4,6 +4,8 @@ import nl.ictm2a4.javagame.achievement.AchievementHandler;
 import nl.ictm2a4.javagame.cachievements.FirstDoorOpened;
 import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
 import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
+import nl.ictm2a4.javagame.event.EventManager;
+import nl.ictm2a4.javagame.listeners.ScoreListener;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.services.users.User;
@@ -93,6 +95,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         achievedList.add(0);
 
         registerAchievements();
+        registerListeners();
         this.start();
     }
 
@@ -226,6 +229,10 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new LevelOneAchieved();
         new FirstDoorOpened();
         new LastLevelAchieved();
+    }
+
+    private void registerListeners(){
+        EventManager.getInstance().registerEvent(new ScoreListener());
     }
 
     @Override
