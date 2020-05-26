@@ -1,6 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
+import nl.ictm2a4.javagame.loaders.Settings;
 import nl.ictm2a4.javagame.services.users.UserService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
@@ -34,7 +35,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 
         password = new JLabel("Password:");
         add(password, gbc);
-        Jpassword = new JTextField(10);
+        Jpassword = new JPasswordField(10);
         Jpassword.addActionListener(this);
         add(Jpassword, gbc);
 
@@ -72,6 +73,7 @@ public class LoginScreen extends JPanel implements ActionListener {
 
             if(login != null && login.token != null && login.token != ""){
                 GameScreen.getInstance().setCurrentUser(login);
+                Settings.getInstance().updateUser(usernametext, passwordtext);
                 GameScreen.getInstance().setPanel(new MainMenu());
             } else {
                 message.setText("Login incorrect");

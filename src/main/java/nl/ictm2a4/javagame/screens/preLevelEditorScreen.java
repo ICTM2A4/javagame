@@ -97,7 +97,7 @@ public class preLevelEditorScreen extends JPanel implements ActionListener {
 
         var levelService = new LevelService();
 
-        for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < levelService.getLevels().size()+1; i++) {
+        for(int i = LevelLoader.DEFAULTLEVELAMOUNT + 1; i < levelService.getLevels().size()+1; i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if(object.isPresent()) {
                 JPanel container = new JPanel();

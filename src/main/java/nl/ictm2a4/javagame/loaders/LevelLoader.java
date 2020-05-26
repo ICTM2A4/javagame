@@ -67,7 +67,8 @@ public class LevelLoader {
     public boolean startLevel() {
         if (currentLevel == null) return false;
         loadLevel(currentLevel.getId());
-        currentLevel.setRenderShadows(true);
+        currentLevel.setRenderShadows(Settings.getInstance().isShowShadows());
+        currentLevel.setAnimateLights(Settings.getInstance().isAnimatedLights());
         try {
             currentLevel.loadLevel();
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {

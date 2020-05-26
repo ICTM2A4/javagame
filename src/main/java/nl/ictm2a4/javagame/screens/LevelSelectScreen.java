@@ -146,20 +146,13 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
                 container.setLayout(new GridLayout(2, 0, 5, 5));
                 container.setBackground(new Color(0, 0, 0, 0));
 
-                CButton editLevel = new CButton("Edit level " + level.name);
                 CButton button = new CButton("Start " + level.name);
                 container.add(button);
-                container.add(editLevel);
                 jpcustomLevel.add(container);
 
                 button.addActionListener(
                     e -> {
                         LevelLoader.getInstance().startLevel(loadLevel);
-                    });
-                editLevel.addActionListener(
-                    e -> {
-                        LevelLoader.getInstance().loadLevel(loadLevel);
-                        GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
                     }
                 );
             }

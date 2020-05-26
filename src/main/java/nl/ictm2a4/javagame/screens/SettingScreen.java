@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.loaders.Settings;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -30,22 +31,26 @@ public class SettingScreen extends JPanel implements ActionListener {
 
         shadows = new CButton("");
         JCheckBox checkBox = new JCheckBox("shadows");
-        checkBox.addItemListener(e ->
-                LevelLoader.getInstance().getCurrentLevel().get().setRenderShadows(e.getStateChange() == ItemEvent.SELECTED)
+        checkBox.addItemListener(e -> {
+                Settings.getInstance().setShowShadows(e.getStateChange() == ItemEvent.SELECTED);
+                LevelLoader.getInstance().getCurrentLevel().get().setRenderShadows(e.getStateChange() == ItemEvent.SELECTED);
+            }
         );
         shadows.add(checkBox);
         checkBox.setBackground(new Color(146, 115, 63));
-        checkBox.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isRenderShadows());
+        checkBox.setSelected(Settings.getInstance().isShowShadows());
         add(shadows, gbc);
 
         lights = new CButton("");
         JCheckBox checkBox2 = new JCheckBox("Animated Lights");
-        checkBox2.addItemListener(e ->
-                LevelLoader.getInstance().getCurrentLevel().get().setAnimateLights(e.getStateChange() == ItemEvent.SELECTED)
+        checkBox2.addItemListener(e -> {
+                Settings.getInstance().setAnimatedLights(e.getStateChange() == ItemEvent.SELECTED);
+                LevelLoader.getInstance().getCurrentLevel().get().setAnimateLights(e.getStateChange() == ItemEvent.SELECTED);
+            }
         );
         lights.add(checkBox2);
         checkBox2.setBackground(new Color(146, 115, 63));
-        checkBox2.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isAnimateLights());
+        checkBox2.setSelected(Settings.getInstance().isAnimatedLights());
         if (checkBox.isSelected()) {
             add(lights, gbc);
         }

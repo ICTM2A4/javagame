@@ -2,7 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
-import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
+import nl.ictm2a4.javagame.loaders.Settings;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -69,7 +69,7 @@ public class MainMenu extends JPanel implements ActionListener {
                 GameScreen.getInstance().addOverlay(new LoginScreen());
             } else{
                 LevelLoader.getInstance().createCustomLevel();
-                GameScreen.getInstance().setPanel(new LevelEditor());
+                GameScreen.getInstance().setPanel(new preLevelEditorScreen());
             }
         }
         if(e.getSource() == buttons.get(3)) { // Login
@@ -77,6 +77,8 @@ public class MainMenu extends JPanel implements ActionListener {
         }
         if (e.getSource() == buttons.get(4)) { // Logout
             GameScreen.getInstance().setCurrentUser(null);
+            Settings.getInstance().updateUser("", "");
+            GameScreen.getInstance().setPanel(new MainMenu());
         }
         if (e.getSource() == buttons.get(5)) {
             GameScreen.getInstance().setPanel(new AchievementScreen());
