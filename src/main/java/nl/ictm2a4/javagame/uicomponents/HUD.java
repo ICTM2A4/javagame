@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HUD extends JPanel {
 
@@ -21,7 +22,7 @@ public class HUD extends JPanel {
     private int prevHealth = 100;
     private long prevHeal, prevHitTime;
 
-    private Player player;
+    private Optional<Player> optPlayer;
 
     public HUD() {
         super();
@@ -38,27 +39,35 @@ public class HUD extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponents(g);
 
-        paintHealth(g);
-        paintInventory(g);
+        if (optPlayer.isPresent()) {
+            paintHealth(g);
+            paintInventory(g);
+        }
     }
 
     public void tick() {
-        if (prevHealth < player.getHealth()) {
-            player.setHealth(player.getHealth() - 4);
-            repaint();
-        }
-        if (prevHealth > player.getHealth()) {
-            player.setHealth(player.getHealth() + 1);
-            repaint();
+        Optional<Player> optPlayer = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
+
+        if (optPlayer.isPresent()) {
+            Player player = optPlayer.get();
+            if (prevHealth < player.getHealth()) {
+                player.setHealth(player.getHealth() - 4);
+                repaint();
+            }
+            if (prevHealth > player.getHealth()) {
+                player.setHealth(player.getHealth() + 1);
+                repaint();
+            }
+
+            if (player.getHealth() < 100 &&
+                prevHeal + HEALINTERVAL <= System.currentTimeMillis() && player.getHealth() > 0 &&
+                prevHitTime + REGENINTERVAL <= System.currentTimeMillis()) {
+                prevHealth++;
+                prevHeal = System.currentTimeMillis();
+            }
         }
 
-        if (player.getHealth() < 100 &&
-            prevHeal + HEALINTERVAL <= System.currentTimeMillis() && player.getHealth() > 0 &&
-            prevHitTime + REGENINTERVAL <= System.currentTimeMillis()
-        ) {
-            prevHealth++;
-            prevHeal = System.currentTimeMillis();
-        }
+
     }
 
     private void paintHealth(Graphics g) {
@@ -71,7 +80,7 @@ public class HUD extends JPanel {
         g.fillRect(startX + 164, startY + 4, 4, 16);
         g.fillRect(startX + 4, startY + 20, 160, 4);
 
-        int healthWidth = (int) Math.round(160 * ((double)player.getHealth() / (double)maxHealth));
+        int healthWidth = (int) Math.round(160 * ((double)optPlayer.get().getHealth() / (double)maxHealth));
 
         g.setColor(new Color(17, 194, 96));
         g.fillRect(startX + 4, startY + 4, healthWidth, 16);
@@ -85,8 +94,8 @@ public class HUD extends JPanel {
 
         int inventorySlots = 5;
       
-        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().
-            getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
+        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().get()
+            .getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
 
         Graphics2D g2 = (Graphics2D)g;
 
@@ -103,12 +112,12 @@ public class HUD extends JPanel {
 
     public void reset() {
         this.prevHealth = 100;
-        player = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
+        optPlayer = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
     }
 
     public void removeHealth(int healthRemoval) {
         this.prevHealth -= healthRemoval;
-        EventManager.getInstance().callEvent(new PlayerHealthLossEvent(healthRemoval, player.getHealth()));
+        EventManager.getInstance().callEvent(new PlayerHealthLossEvent(healthRemoval, optPlayer.get().getHealth()));
         prevHitTime = System.currentTimeMillis();
     }
 

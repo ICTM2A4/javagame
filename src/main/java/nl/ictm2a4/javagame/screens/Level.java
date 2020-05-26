@@ -428,7 +428,7 @@ public class Level extends JPanel implements Listener {
         HUD.getInstance().tick();
         score = System.currentTimeMillis() - current;
 
-        if(start + 1500 <= System.currentTimeMillis() && GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
+        if(start + 500 <= System.currentTimeMillis() && GameScreen.getInstance().getPressedKeys().contains(KeyEvent.VK_ESCAPE)) {
             LevelLoader.getInstance().pause();
             GameScreen.getInstance().addOverlay(new PauseScreen());
         }
@@ -442,7 +442,7 @@ public class Level extends JPanel implements Listener {
     @EventHandler
     public void onItemPickup(ItemPickupEvent event) {
         if (event.getPickup() instanceof Sword)
-            getPlayer().setDamage(20);
+            getPlayer().get().setDamage(20);
     }
 
     /**
