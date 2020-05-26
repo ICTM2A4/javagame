@@ -13,7 +13,8 @@ import java.util.HashMap;
 public class FileLoader {
     private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages, doorImages, leverImages;
     private HashMap<String, ArrayList<Image>> playerImages, orcImages, swordImages;
-    private Image fakeWallOverlay, swordImage;
+    private Image fakeWallOverlay, swordImage, teleportationStoneImage;
+  
     private static FileLoader instance;
 
     public FileLoader() {
@@ -34,6 +35,7 @@ public class FileLoader {
         reloadDoorImages();
         reloadLeverImages();
         reloadFakeWallImages();
+        reloadTelportationStoneImage();
         reloadOrcImages();
         reloadSwordImages();
     }
@@ -125,6 +127,10 @@ public class FileLoader {
         fakeWallOverlay = loadImage("textures/fakewalloverlay.png");
     }
 
+    public void reloadTelportationStoneImage() {
+      teleportationStoneImage = loadImage("textures/teleportation_stone-0.png");
+    }
+  
     public void reloadSwordImages() {
         swordImage = FileLoader.loadImage("textures/sword-0.png");
         swordImages = new HashMap<>();
@@ -223,6 +229,8 @@ public class FileLoader {
     public Image getFakeWallOverlay() {
         return fakeWallOverlay;
     }
+
+    public Image getTeleportationStoneImage() {return teleportationStoneImage;}
 
     /**
      * Get the instance of the FileLoader

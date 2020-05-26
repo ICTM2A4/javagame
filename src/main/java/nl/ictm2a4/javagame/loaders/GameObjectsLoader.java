@@ -23,6 +23,7 @@ public class GameObjectsLoader {
             Lever.class,
             Key.class,
             FakeWall.class,
+            TeleportationStone.class,
             Orc.class
         );
     }

@@ -5,9 +5,12 @@ import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.gameobjects.Pickup;
 import nl.ictm2a4.javagame.gameobjects.Player;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.screens.Level;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HUD extends JPanel {
 
@@ -81,7 +84,7 @@ public class HUD extends JPanel {
         int startY = LevelLoader.HEIGHT - 30;
 
         int inventorySlots = 5;
-
+      
         Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().
             getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
 

@@ -117,6 +117,7 @@ public class Level extends JPanel implements Listener {
         getGameObjects().stream().sorted(Comparator.comparingInt(GameObject::getyIndex))
                 .forEach(object -> object.draw(g));
 
+
         if (this.renderShadows) {
             g.setColor(new Color(255, 153, 51, 40));
             g.fillRect(0, 0, getWidth(), getHeight());
@@ -451,8 +452,8 @@ public class Level extends JPanel implements Listener {
         LevelLoader.getInstance().startLevel();
     }
 
-    public Player getPlayer() {
-        return this.player;
+    public Optional<Player> getPlayer() {
+        return getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).map(p -> (Player)p).findFirst();
     }
 
     public void resetStart() {
