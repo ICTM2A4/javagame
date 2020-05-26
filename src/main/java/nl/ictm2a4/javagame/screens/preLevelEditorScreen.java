@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.services.levels.Level;
 import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 import org.json.simple.JSONObject;
@@ -10,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class preLevelEditorScreen extends JPanel implements ActionListener {
@@ -97,29 +99,29 @@ public class preLevelEditorScreen extends JPanel implements ActionListener {
 
         var levelService = new LevelService();
 
-        for(int i = LevelLoader.DEFAULTLEVELAMOUNT + 1; i < levelService.getLevels().size()+1; i++) {
-            Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
-            if(object.isPresent()) {
-                JPanel container = new JPanel();
-                container.setLayout(new GridLayout(2, 0, 0, 5));
-                container.setBackground(new Color(0, 0, 0, 0));
+        Level[] levelList = levelService.getLevels().stream()
+            .filter(level -> level.creatorID == GameScreen.getInstance().getCurrentUser().get().id).toArray(Level[]::new);
 
-                CButton editLevel = new CButton("Edit level " + object.get().get("name"));
-                editLevel.setPreferredSize(new Dimension(140, 30));
-                container.add(editLevel);
-                jpcustomLevel.add(container);
+        for(Level level : levelList) {
+            JPanel container = new JPanel();
+            container.setLayout(new GridLayout(2, 0, 0, 5));
+            container.setBackground(new Color(0, 0, 0, 0));
 
-                int loadLevel = i;
-                editLevel.addActionListener(
-                        e -> {
-                            LevelLoader.getInstance().loadLevel(loadLevel);
-                            GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
-                        }
-                );
-            }
+            CButton editLevel = new CButton("Edit level " + level.name);
+            editLevel.setPreferredSize(new Dimension(140, 30));
+            container.add(editLevel);
+            jpcustomLevel.add(container);
+
+            int loadLevel = level.id;
+            editLevel.addActionListener(
+                e -> {
+                    LevelLoader.getInstance().loadLevel(loadLevel);
+                    GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
+                }
+            );
         }
-
     }
+
     public void createLeftStrip() {
         JPanel leftStrip =  getPanel();
         addComp ( this, leftStrip , 0, 0, 1, 3

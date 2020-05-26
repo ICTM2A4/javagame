@@ -13,12 +13,12 @@ public class LevelOneAchieved extends Achievement {
 
     @EventHandler
     public void onReachedEndEvent(ReachedEndEvent event) {
-        if (event.getLevelID() == 0) {
+        if (event.getLevelID() == 1) {
             achieve("First level achieved");
 
             var currentUser = GameScreen.getInstance().getCurrentUser();
-            if(currentUser != null) {
-                new AchievementsService().addAchievementToUser(id, currentUser.id);
+            if(currentUser.isPresent()) {
+                new AchievementsService().addAchievementToUser(id, currentUser.get().id);
             }
         }
     }

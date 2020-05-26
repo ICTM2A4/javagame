@@ -34,8 +34,8 @@ public class AchievementScreen extends JPanel implements ActionListener {
 
         ArrayList<Achievement> achieved_achievements = new ArrayList<Achievement>();
 
-        if(currentUser != null){
-            achieved_achievements = (ArrayList<Achievement>) new AchievementsService().getAchievements(currentUser.id);
+        if(currentUser.isPresent()){
+            achieved_achievements = (ArrayList<Achievement>) new AchievementsService().getAchievements(currentUser.get().id);
         }
 
         var achievements = new AchievementsService().getAchievements();

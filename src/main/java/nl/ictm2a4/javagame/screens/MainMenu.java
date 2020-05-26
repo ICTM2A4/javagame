@@ -3,6 +3,7 @@ package nl.ictm2a4.javagame.screens;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.loaders.Settings;
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ public class MainMenu extends JPanel implements ActionListener {
 
         LoginScreen loginScreen = new LoginScreen();
 
-        String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Achievements" ,"Exit"};
+        String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Achievements", "Settings", "Exit"};
 
         boolean isLoggedIn = GameScreen.getInstance().getCurrentUser() != null;
 
@@ -55,14 +56,15 @@ public class MainMenu extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if(e.getSource() == buttons.get(0)) { // start
-            LevelLoader.getInstance().startLevel();
+            if(GameScreen.getInstance().getCurrentUser() == null && LevelLoader.getInstance().getCurrentLevel().isPresent()
+                && LevelLoader.getInstance().getCurrentLevel().get().getId() > LevelLoader.DEFAULTLEVELAMOUNT){
+                GameScreen.getInstance().addOverlay(new LoginScreen());
+            } else{
+                LevelLoader.getInstance().startLevel();
+            }
         }
         if(e.getSource() == buttons.get(1)) { // select level
-            if(GameScreen.getInstance().getCurrentUser() == null) {
-                GameScreen.getInstance().addOverlay(new LoginScreen());
-            } else {
-                GameScreen.getInstance().setPanel(new LevelSelectScreen());
-            }
+            GameScreen.getInstance().setPanel(new LevelSelectScreen());
         }
         if(e.getSource() == buttons.get(2)) { // level builder
             if(GameScreen.getInstance().getCurrentUser() == null){
@@ -80,10 +82,13 @@ public class MainMenu extends JPanel implements ActionListener {
             Settings.getInstance().updateUser("", "");
             GameScreen.getInstance().setPanel(new MainMenu());
         }
-        if (e.getSource() == buttons.get(5)) {
+        if (e.getSource() == buttons.get(5)) { // achievements
             GameScreen.getInstance().setPanel(new AchievementScreen());
         }
-        if(e.getSource() == buttons.get(6)) { // exit
+        if (e.getSource() == buttons.get(6)) { // settings
+            GameScreen.getInstance().setPanel(new SettingScreen(this));
+        }
+        if(e.getSource() == buttons.get(7)) { // exit
             RaspberryPIController.getInstance().disconnect();
             System.exit(0);
         }

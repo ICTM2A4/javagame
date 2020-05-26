@@ -32,7 +32,7 @@ public class Level extends JPanel implements Listener {
     private int id;
     private ArrayList<GameObject> gameObjects;
     private String name;
-    private Player player;
+    private Optional<Player> player;
     private BufferedImage shadow;
     private boolean renderShadows, animateLights;
     private Optional<JSONObject> object;
@@ -136,9 +136,9 @@ public class Level extends JPanel implements Listener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        if (player != null)
-            drawLight(g, new Point(player.getX() + (player.getWidth() / 2), player.getY() + (player.getHeight() / 2) - 24),
-                50);
+        player.ifPresent(value -> drawLight(g, new Point(value.getX() + (value.getWidth() / 2), value.getY() + (value.getHeight() / 2) - 24),
+            50));
+
         getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> drawLight(g,
                 new Point(torch.getX() + (torch.getWidth() / 2), torch.getY() + (torch.getHeight() / 2)), 50));
 
@@ -277,9 +277,8 @@ public class Level extends JPanel implements Listener {
             }
         }
 
-        Optional<GameObject> optionalPlayer = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).findFirst();
+        player = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).map(p -> (Player)p).findFirst();
 
-        player = (Player) optionalPlayer.orElse(null);
         regenerateWalls();
     }
 
@@ -319,8 +318,8 @@ public class Level extends JPanel implements Listener {
         var currentUser = GameScreen.getInstance().getCurrentUser();
 
         if (dbLevel == null) {
-            if(currentUser != null){
-                dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.id, "");
+            if(currentUser.isPresent()){
+                dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.get().id, "");
             }
 
             if(levelService.addLevel(dbLevel) != null){

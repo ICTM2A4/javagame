@@ -35,13 +35,13 @@ public class ScoreListener implements Listener {
 
         var user = GameScreen.getInstance().getCurrentUser();
 
-        if(user == null){
+        if(user.isEmpty()){
             return;
         }
 
-        var score = new Score(0, scoreAmount, LocalDateTime.now(), user.id, "", event.getLevelID(), "");
+        var score = new Score(0, scoreAmount, LocalDateTime.now(), user.get().id, "", event.getLevelID(), "");
 
-ssssss   new ScoreService().addScore(score);
+        new ScoreService().addScore(score);
     }
 
     public static ScoreListener getInstance(){
