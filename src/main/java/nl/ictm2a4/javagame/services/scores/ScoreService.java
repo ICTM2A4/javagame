@@ -11,7 +11,7 @@ import java.util.List;
 public class ScoreService extends ApiService {
     private String baseUrl = super.baseUrl + "/api/scores";
 
-    public Score GetScore(int id){
+    public Score getScore(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET","");
 
         if(response == null || response.responseCode != 200){
@@ -23,7 +23,7 @@ public class ScoreService extends ApiService {
         return convertJsonToScore(scoreJson);
     }
 
-    public List<Score> GetScores(){
+    public List<Score> getScores(){
         var response = sendRequest(baseUrl, "GET","");
 
         if(response == null || response.responseCode != 200){
@@ -35,7 +35,7 @@ public class ScoreService extends ApiService {
         return scores;
     }
 
-    public List<Score> GetScores(int limit){
+    public List<Score> getScores(int limit){
         var response = sendRequest(baseUrl, "GET","");
 
         if(response == null || response.responseCode != 200){
@@ -47,7 +47,7 @@ public class ScoreService extends ApiService {
         return scores;
     }
 
-    public List<Score> GetScores(int limit, String sort){
+    public List<Score> getScores(int limit, String sort){
         var response = sendRequest(baseUrl + "?limit=" + limit + "&sort=" + sort, "GET","");
 
         if(response == null || response.responseCode != 200){
@@ -59,7 +59,7 @@ public class ScoreService extends ApiService {
         return scores;
     }
 
-    public List<Score> GetScoresPerLevel(int lid){
+    public List<Score> getScoresPerLevel(int lid){
         var response = sendRequest(baseUrl + "?lid=" + lid, "GET","");
 
         if(response == null || response.responseCode != 200){
@@ -71,7 +71,7 @@ public class ScoreService extends ApiService {
         return scores;
     }
 
-    public Score AddScore(Score score){
+    public Score addScore(Score score){
 
         var scoreJson = convertScoreToJson(score);
         var response = sendRequest(baseUrl, "POST", scoreJson.toString());

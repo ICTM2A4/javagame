@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
-import java.util.concurrent.Flow;
 
 public class preLevelEditorScreen extends JPanel implements ActionListener {
 
@@ -98,7 +97,7 @@ public class preLevelEditorScreen extends JPanel implements ActionListener {
 
         var levelService = new LevelService();
 
-        for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < levelService.GetLevels().size()+1; i++) {
+        for(int i = LevelLoader.DEFAULTLEVELAMOUNT; i < levelService.getLevels().size()+1; i++) {
             Optional<JSONObject> object = LevelLoader.getInstance().getLevelObject(i);
             if(object.isPresent()) {
                 JPanel container = new JPanel();

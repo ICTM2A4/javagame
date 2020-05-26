@@ -4,7 +4,6 @@ import nl.ictm2a4.javagame.screens.MainMenu;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.services.levels.LevelService;
-import org.json.simple.JSONArray;
 import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -155,7 +154,7 @@ public class LevelLoader {
      */
     public void createCustomLevel() {
         LevelService service = new LevelService();
-        Level level = new Level(service.GetLevels().size() + 1);
+        Level level = new Level(service.getLevels().size() + 1);
         LevelLoader.getInstance().loadLevel(level.getId());
     }
 }

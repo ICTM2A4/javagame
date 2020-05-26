@@ -135,7 +135,7 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         scrollFrame2.setBackground(new Color(0, 0, 0, 0));
         center.add(scrollFrame2);
 
-        var customLevels = new LevelService().GetLevels();
+        var customLevels = new LevelService().getLevels();
 
         for(Level level : customLevels){
             int loadLevel = level.ID;

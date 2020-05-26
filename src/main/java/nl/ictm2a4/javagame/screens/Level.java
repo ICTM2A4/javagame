@@ -76,7 +76,7 @@ public class Level extends JPanel implements Listener {
     public void loadObject() {
         // loading custom level
         if (id > LevelLoader.DEFAULTLEVELAMOUNT) {
-            nl.ictm2a4.javagame.services.levels.Level dbLevel = new LevelService().GetLevel(this.id);
+            nl.ictm2a4.javagame.services.levels.Level dbLevel = new LevelService().getLevel(this.id);
             JSONParser parser = new JSONParser();
 
             if (dbLevel == null) {
@@ -314,7 +314,7 @@ public class Level extends JPanel implements Listener {
         }
 
         var levelService = new LevelService();
-        var dbLevel = levelService.GetLevel(this.id);
+        var dbLevel = levelService.getLevel(this.id);
         var currentUser = GameScreen.getInstance().getCurrentUser();
 
         if (dbLevel == null) {
@@ -322,7 +322,7 @@ public class Level extends JPanel implements Listener {
                 dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.id, "");
 
             }
-            levelService.AddLevel(dbLevel);
+            levelService.addLevel(dbLevel);
             return;
         }
 

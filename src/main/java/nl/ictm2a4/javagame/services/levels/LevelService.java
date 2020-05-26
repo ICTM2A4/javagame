@@ -10,7 +10,7 @@ import java.util.List;
 public class LevelService extends ApiService {
     private String baseUrl = super.baseUrl + "/api/levels";
 
-    public Level GetLevel(int id){
+    public Level getLevel(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");
 
         if(response == null || response.responseCode != 200){
@@ -22,7 +22,7 @@ public class LevelService extends ApiService {
         return convertJsonToLevel(levelJson);
     }
 
-    public List<Level> GetLevels(){
+    public List<Level> getLevels(){
         var response = sendRequest(baseUrl, "GET", "");
 
         if(response == null || response.responseCode != 200){
@@ -34,7 +34,7 @@ public class LevelService extends ApiService {
         return levels;
     }
 
-    public Level AddLevel(Level level){
+    public Level addLevel(Level level){
         var levelJson = convertLevelToJson(level);
         var response = sendRequest(baseUrl, "POST", levelJson.toString());
 
