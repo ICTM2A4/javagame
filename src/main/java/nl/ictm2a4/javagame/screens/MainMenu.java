@@ -28,7 +28,7 @@ public class MainMenu extends JPanel implements ActionListener {
 
         LoginScreen loginScreen = new LoginScreen();
 
-        String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Exit"};
+        String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Achievements" ,"Exit"};
 
         boolean isLoggedIn = GameScreen.getInstance().getCurrentUser() != null;
 
@@ -80,8 +80,11 @@ public class MainMenu extends JPanel implements ActionListener {
             Settings.getInstance().updateUser("", "");
             GameScreen.getInstance().setPanel(new MainMenu());
         }
-        if(e.getSource() == buttons.get(5)) { // exit
-            //RaspberryPIController.getInstance().disconnect();
+        if (e.getSource() == buttons.get(5)) {
+            GameScreen.getInstance().setPanel(new AchievementScreen());
+        }
+        if(e.getSource() == buttons.get(6)) { // exit
+            RaspberryPIController.getInstance().disconnect();
             System.exit(0);
         }
 
