@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
     private JLabel doorCodeLabel;
-    private JTextField doorCodeTextField;
     private JButton okButton, cancelButton;
     private JComboBox doorCodeComboBox;
     private String[] colors = { "Yellow", "Red", "Blue", "Green" };
