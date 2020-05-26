@@ -16,8 +16,10 @@ public class SettingScreen extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
     private CButton shadows, lights;
+    private JPanel origin;
 
-    public SettingScreen() {
+    public SettingScreen(JPanel origin) {
+        this.origin = origin;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -34,6 +36,7 @@ public class SettingScreen extends JPanel implements ActionListener {
         checkBox.addItemListener(e -> {
                 Settings.getInstance().setShowShadows(e.getStateChange() == ItemEvent.SELECTED);
                 LevelLoader.getInstance().getCurrentLevel().get().setRenderShadows(e.getStateChange() == ItemEvent.SELECTED);
+                repaint();
             }
         );
         shadows.add(checkBox);
@@ -46,6 +49,7 @@ public class SettingScreen extends JPanel implements ActionListener {
         checkBox2.addItemListener(e -> {
                 Settings.getInstance().setAnimatedLights(e.getStateChange() == ItemEvent.SELECTED);
                 LevelLoader.getInstance().getCurrentLevel().get().setAnimateLights(e.getStateChange() == ItemEvent.SELECTED);
+                repaint();
             }
         );
         lights.add(checkBox2);
@@ -76,8 +80,12 @@ public class SettingScreen extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttons.get(0)) {
-            setVisible(false);
-            PauseScreen.getInstance().setVisible(true);
+            if (origin instanceof MainMenu) {
+                GameScreen.getInstance().setPanel(new MainMenu());
+            } else {
+                setVisible(false);
+                PauseScreen.getInstance().setVisible(true);
+            }
         }
     }
 }

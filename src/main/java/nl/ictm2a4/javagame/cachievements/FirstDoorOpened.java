@@ -17,8 +17,8 @@ public class FirstDoorOpened extends Achievement {
         achieve("First door opened");
 
         var currentUser = GameScreen.getInstance().getCurrentUser();
-        if(currentUser != null) {
-            new AchievementsService().addAchievementToUser(id, currentUser.id);
+        if(currentUser.isPresent()) {
+            new AchievementsService().addAchievementToUser(id, currentUser.get().id);
         }
     }
 }

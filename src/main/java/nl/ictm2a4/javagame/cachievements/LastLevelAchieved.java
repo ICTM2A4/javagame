@@ -14,12 +14,12 @@ public class LastLevelAchieved extends Achievement {
 
     @EventHandler
     public void onLevelAchieved(ReachedEndEvent event) {
-        if (event.getLevelID() == LevelLoader.DEFAULTLEVELAMOUNT - 1) {
+        if (event.getLevelID() == LevelLoader.DEFAULTLEVELAMOUNT) {
             achieve("Last level survived");
 
             var currentUser = GameScreen.getInstance().getCurrentUser();
-            if(currentUser != null) {
-                new AchievementsService().addAchievementToUser(id, currentUser.id);
+            if(currentUser.isPresent()) {
+                new AchievementsService().addAchievementToUser(id, currentUser.get().id);
             }
         }
     }

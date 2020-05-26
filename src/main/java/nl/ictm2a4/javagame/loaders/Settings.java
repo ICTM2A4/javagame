@@ -59,8 +59,8 @@ public class Settings {
             object.put("animatedLights", animatedLights);
 
             JSONObject userObject = new JSONObject();
-            if (GameScreen.getInstance().getCurrentUser() != null) {
-                User user = GameScreen.getInstance().getCurrentUser();
+            if (GameScreen.getInstance().getCurrentUser().isPresent()) {
+                User user = GameScreen.getInstance().getCurrentUser().get();
                 userObject.put("username", username);
                 userObject.put("password", password);
             }

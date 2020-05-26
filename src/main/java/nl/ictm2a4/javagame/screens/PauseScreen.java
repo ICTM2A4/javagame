@@ -65,7 +65,7 @@ public class PauseScreen extends JPanel implements ActionListener {
         }
         if (e.getSource() == buttons.get(2)) { //Settings
             setVisible(false);
-            GameScreen.getInstance().addOverlay(new SettingScreen());
+            GameScreen.getInstance().addOverlay(new SettingScreen(this));
         }
     }
 

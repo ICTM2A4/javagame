@@ -22,8 +22,8 @@ public abstract class Achievement implements Listener {
 
         ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement> achieved_achievements = new ArrayList<>();
 
-        if(currentUser != null){
-            achieved_achievements = (ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement>) new AchievementsService().getAchievements(currentUser.id);
+        if(currentUser.isPresent()){
+            achieved_achievements = (ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement>) new AchievementsService().getAchievements(currentUser.get().id);
         } else{
             return false;
         }

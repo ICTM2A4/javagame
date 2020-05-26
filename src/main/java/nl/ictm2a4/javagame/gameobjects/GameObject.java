@@ -188,7 +188,9 @@ public abstract class GameObject {
         ArrayList<String> matches = new ArrayList<>();
         for(Class object : objectMatch)
             matches.add(object.getCanonicalName());
+
         Level level = LevelLoader.getInstance().getCurrentLevel().get();
+
         return new boolean[] {
             level.fromCoordsToArray(getX(), getY() - LevelLoader.GRIDHEIGHT).anyMatch(o -> matches.contains(o.getClass().getCanonicalName())),
             level.fromCoordsToArray(getX() + LevelLoader.GRIDWIDTH, getY()).anyMatch(o -> matches.contains(o.getClass().getCanonicalName())),

@@ -9,6 +9,8 @@ import nl.ictm2a4.javagame.listeners.ScoreListener;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.loaders.Settings;
+import nl.ictm2a4.javagame.services.scores.Score;
+import nl.ictm2a4.javagame.services.scores.ScoreService;
 import nl.ictm2a4.javagame.services.users.User;
 import nl.ictm2a4.javagame.services.users.UserService;
 import nl.ictm2a4.javagame.uicomponents.FPSCounter;
@@ -22,6 +24,7 @@ import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GameScreen extends JFrame implements KeyListener, Runnable {
 
@@ -95,7 +98,19 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         // start event handlers
 
         achievedList = new ArrayList<>();
-        achievedList.add(0);
+        achievedList.add(1);
+
+
+
+        if (getCurrentUser().isPresent()) {
+            ScoreService service = new ScoreService();
+
+            for (int i = 1; i <= LevelLoader.DEFAULTLEVELAMOUNT; i++) {
+                int finalI = i;
+                if (service.getScores().stream().anyMatch(score -> score.userID == getCurrentUser().get().id && score.scoredOnID == finalI))
+                    achievedList.add(i + 1);
+            }
+        }
 
         registerAchievements();
         registerListeners();
@@ -324,8 +339,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         currentUser = user;
     }
 
-    public User getCurrentUser(){
-        return currentUser;
+    public Optional<User> getCurrentUser(){
+        return Optional.of(currentUser);
     }
 
     public String getApiToken(){

@@ -21,6 +21,7 @@ public class HUD extends JPanel {
     private int maxHealth = 100;
     private int prevHealth = 100;
     private long prevHeal, prevHitTime;
+    private int health;
 
     private Optional<Player> optPlayer;
 
@@ -46,16 +47,18 @@ public class HUD extends JPanel {
     }
 
     public void tick() {
-        Optional<Player> optPlayer = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
+        optPlayer = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
 
         if (optPlayer.isPresent()) {
             Player player = optPlayer.get();
             if (prevHealth < player.getHealth()) {
                 player.setHealth(player.getHealth() - 4);
+                health = player.getHealth();
                 repaint();
             }
             if (prevHealth > player.getHealth()) {
                 player.setHealth(player.getHealth() + 1);
+                health = player.getHealth();
                 repaint();
             }
 
@@ -80,7 +83,7 @@ public class HUD extends JPanel {
         g.fillRect(startX + 164, startY + 4, 4, 16);
         g.fillRect(startX + 4, startY + 20, 160, 4);
 
-        int healthWidth = (int) Math.round(160 * ((double)optPlayer.get().getHealth() / (double)maxHealth));
+        int healthWidth = (int) Math.round(160 * ((double)health / (double)maxHealth));
 
         g.setColor(new Color(17, 194, 96));
         g.fillRect(startX + 4, startY + 4, healthWidth, 16);
@@ -112,7 +115,7 @@ public class HUD extends JPanel {
 
     public void reset() {
         this.prevHealth = 100;
-        optPlayer = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
+        this.health = 100;
     }
 
     public void removeHealth(int healthRemoval) {
