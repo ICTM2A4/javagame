@@ -45,7 +45,6 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             }
         }
 
-
         displayGUI();
     }
 
@@ -131,16 +130,19 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
 
             level.setName(levelName.getText());
             try {
-                level.saveLevel();
+                if (level.saveLevel()){
+                    JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Het Level is niet opgeslagen");
+                }
             } catch (NoSuchMethodException ex) {
                 ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Het Level is niet opgeslagen");
             }
-            JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
         }
         if(e.getSource() == cancel) {
-            if (LevelLoader.getInstance().getLevelObject(level.getId()).get().get("player") == null)
-                LevelLoader.getInstance().removeCustomLevelFile(level.getId());
-                LevelLoader.getInstance().loadLevel(0);
+            if (LevelLoader.getInstance().getLevelObject(level.getId()).isEmpty())
+                LevelLoader.getInstance().loadLevel(1);
             GameScreen.getInstance().setPanel(new preLevelEditorScreen());
         }
     }

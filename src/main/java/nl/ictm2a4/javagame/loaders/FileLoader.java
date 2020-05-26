@@ -12,8 +12,9 @@ import java.util.HashMap;
 
 public class FileLoader {
     private ArrayList<Image> groundTiles, wallTiles, coinImages, torchImages, keyImages, doorImages, leverImages;
-    private HashMap<String, ArrayList<Image>> playerImages;
-    private Image fakeWallOverlay, teleportationStoneImage;
+    private HashMap<String, ArrayList<Image>> playerImages, orcImages, swordImages;
+    private Image fakeWallOverlay, swordImage, teleportationStoneImage;
+  
     private static FileLoader instance;
 
     public FileLoader() {
@@ -35,6 +36,8 @@ public class FileLoader {
         reloadLeverImages();
         reloadFakeWallImages();
         reloadTelportationStoneImage();
+        reloadOrcImages();
+        reloadSwordImages();
     }
 
     /**
@@ -98,6 +101,19 @@ public class FileLoader {
         }
     }
 
+    public void reloadOrcImages() {
+        orcImages = new HashMap<>();
+        for(PlayerStatus status : PlayerStatus.values()) {
+            for (PlayerStatus.Direction direction : PlayerStatus.Direction.values()) {
+                String s = status.toString().toLowerCase() + direction.toString().toLowerCase();
+                orcImages.put(s, new ArrayList<>());
+                for (int i = 0; i < status.getImageAmount(); i++) {
+                    orcImages.get(s).add(loadImage("textures/mob-" + status.toString().toLowerCase() + direction.toString().toLowerCase() + "-" + i + ".png"));
+                }
+            }
+        }
+    }
+
     /**
      * Relaad all torch images
      */
@@ -111,7 +127,23 @@ public class FileLoader {
         fakeWallOverlay = loadImage("textures/fakewalloverlay.png");
     }
 
-    public void reloadTelportationStoneImage() {teleportationStoneImage = loadImage("textures/teleportation_stone-0.png");}
+    public void reloadTelportationStoneImage() {
+      teleportationStoneImage = loadImage("textures/teleportation_stone-0.png");
+    }
+  
+    public void reloadSwordImages() {
+        swordImage = FileLoader.loadImage("textures/sword-0.png");
+        swordImages = new HashMap<>();
+        for(PlayerStatus status : PlayerStatus.values()) {
+            for (PlayerStatus.Direction direction : PlayerStatus.Direction.values()) {
+                String s = status.toString().toLowerCase() + direction.toString().toLowerCase();
+                swordImages.put(s, new ArrayList<>());
+                for (int i = 0; i < status.getImageAmount(); i++) {
+                    swordImages.get(s).add(loadImage("textures/sword-" + status.toString().toLowerCase() + direction.toString().toLowerCase() + "-" + i + ".png"));
+                }
+            }
+        }
+    }
 
     /**
      * Load an image from the resource folder using a path
@@ -176,6 +208,18 @@ public class FileLoader {
      */
     public Image getPlayerImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
         return this.playerImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
+    }
+
+    public Image getOrcImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
+        return this.orcImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
+    }
+
+    public Image getSwordImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
+        return this.swordImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
+    }
+
+    public Image getSwordImageSingle() {
+        return this.swordImage;
     }
 
     public Image getTorchImage(int index) {

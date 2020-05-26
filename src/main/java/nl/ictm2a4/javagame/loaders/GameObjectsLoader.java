@@ -17,12 +17,14 @@ public class GameObjectsLoader {
             Ground.class,
             Player.class,
             EndPoint.class,
+            Sword.class,
             Torch.class,
             Door.class,
             Lever.class,
             Key.class,
             FakeWall.class,
-            TeleportationStone.class
+            TeleportationStone.class,
+            Orc.class
         );
     }
 

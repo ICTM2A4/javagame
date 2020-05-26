@@ -3,7 +3,7 @@ package nl.ictm2a4.javagame.loaders;
 import nl.ictm2a4.javagame.screens.MainMenu;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
-import org.json.simple.JSONArray;
+import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.uicomponents.HUD;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,7 +14,6 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Optional;
 
 public class LevelLoader {
@@ -75,7 +74,6 @@ public class LevelLoader {
             e.printStackTrace();
         }
         GameScreen.getInstance().setPanel(currentLevel);
-        GameScreen.getInstance().addOverlay(HUD.getInstance());
         paused = false;
         return true;
     }
@@ -125,64 +123,6 @@ public class LevelLoader {
         return instance;
     }
 
-    private File checkFolders() {
-        File customLevelsFolder = new File((CUSTOMLEVELSPATH + File.separator + "customlevels").replaceAll("%20", ""));
-
-        if (!customLevelsFolder.exists())
-            customLevelsFolder.mkdir();
-
-        return customLevelsFolder;
-    }
-
-    /**
-     * Create a custom level file
-     * @param id The id of the level
-     * @return The created file
-     * @throws IOException
-     */
-    public File createCustomLevelFile(int id) throws IOException {
-
-        File customLevelsFolder = checkFolders();
-
-        File file = new File(customLevelsFolder.getPath() + File.separator + "level-"+id+".json");
-        file.createNewFile();
-
-
-        JSONObject object = new JSONObject();
-        object.put("name", "");
-        object.put("ground", new JSONArray());
-
-        try(FileWriter writer = new FileWriter(file)) {
-            writer.write(object.toJSONString());
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return file;
-    }
-
-    public boolean removeCustomLevelFile(int id) {
-        File customLevelsFolder = checkFolders();
-        File file = new File(customLevelsFolder.getPath() + File.separator + "level-"+id+".json");
-        return file.delete();
-    }
-
-    /**
-     * Get a custom level file from the filesystem
-     * @param id The id of the level
-     * @return Get the custom level file
-     * @throws IOException
-     */
-    public File getCustomLevelFile(int id) throws IOException {
-        File customLevelsFolder = checkFolders();
-        File file = new File(customLevelsFolder.getPath() + File.separator + "level-"+id+".json");
-        if (!file.exists())
-            return createCustomLevelFile(id);
-        else
-            return file;
-    }
-
     /**
      * Return a level JSON object from default levels or custom level
      * @param id The id of the level
@@ -190,39 +130,19 @@ public class LevelLoader {
      */
     public Optional<JSONObject> getLevelObject(int id) {
         JSONParser parser = new JSONParser();
-        Optional<JSONObject> levelOjbect = Optional.empty();
+        Optional<JSONObject> levelObject = Optional.empty();
 
-        if (id < LevelLoader.DEFAULTLEVELAMOUNT) {
+        if (id <= LevelLoader.DEFAULTLEVELAMOUNT) {
             try (InputStream is = this.getClass().getResourceAsStream("/levels/level-" + id + ".json")) {
                 Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
                 Object object = parser.parse(rd);
-                levelOjbect = Optional.of((JSONObject) object);
-            } catch (IOException | ParseException e) {
-                e.printStackTrace();
-            }
-        } else {
-            File customLevelsFolder = new File((CUSTOMLEVELSPATH + File.separator + "customlevels").replaceAll("%20", ""));
-            File file = new File(customLevelsFolder.getPath() + File.separator + "level-" + id + ".json");
-
-            try (InputStream is = new FileInputStream(file)) {
-                Reader rd = new InputStreamReader(is, StandardCharsets.UTF_8);
-                Object object = parser.parse(rd);
-                levelOjbect = Optional.of((JSONObject) object);
+                levelObject = Optional.of((JSONObject) object);
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
         }
 
-        return levelOjbect;
-    }
-
-    /**
-     * Get a new level id
-     * @return Integer of new level id
-     */
-    public int getNewLevelId() {
-        File customLevelFolder = checkFolders();
-        return DEFAULTLEVELAMOUNT + Objects.requireNonNull(customLevelFolder.listFiles()).length;
+        return levelObject;
     }
 
     public boolean isPaused() {
@@ -233,6 +153,8 @@ public class LevelLoader {
      * Create a new custom level
      */
     public void createCustomLevel() {
-        LevelLoader.getInstance().loadLevel(LevelLoader.getInstance().getNewLevelId());
+        LevelService service = new LevelService();
+        Level level = new Level(service.getLevels().size() + 1);
+        LevelLoader.getInstance().loadLevel(level.getId());
     }
 }

@@ -6,8 +6,10 @@ import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
 import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.services.users.User;
 import nl.ictm2a4.javagame.uicomponents.FPSCounter;
 import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
+import nl.ictm2a4.javagame.uicomponents.HUD;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +18,7 @@ import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class GameScreen extends JFrame implements KeyListener, Runnable {
 
@@ -51,6 +54,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
 
+    private User currentUser;
+
     public GameScreen() {
         setTitle(title);
 
@@ -73,7 +78,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         setPanel(new MainMenu());
 
-        LevelLoader.getInstance().loadLevel(0);
+        LevelLoader.getInstance().loadLevel(1);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -141,6 +146,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         requestFocus();
         fixed.repaint();
+        if (panel instanceof Level)
+            GameScreen.getInstance().addOverlay(HUD.getInstance());
     }
 
     /**
@@ -300,6 +307,22 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         fpsStore = new double[FPS_HISTORY_NR];
         for (int i = 0; i < FPS_HISTORY_NR; i++) {
             fpsStore[i] = 0.0;
+        }
+    }
+
+    public void setCurrentUser(User user){
+        currentUser = user;
+    }
+
+    public User getCurrentUser(){
+        return currentUser;
+    }
+
+    public String getApiToken(){
+        if(currentUser != null){
+            return currentUser.token;
+        } else {
+            return null;
         }
     }
 }

@@ -1,6 +1,9 @@
 package nl.ictm2a4.javagame.gameobjects;
 
+import nl.ictm2a4.javagame.cevents.PlayerDiedEvent;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
+import nl.ictm2a4.javagame.event.EventHandler;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -8,6 +11,7 @@ import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.screens.LevelEditor;
+import nl.ictm2a4.javagame.uicomponents.HUD;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -23,6 +27,8 @@ public class Player extends GameObject {
 
     private PlayerStatus status;
     private PlayerStatus.Direction direction;
+    private int health, damage;
+    private long prevHit;
 
     private List<Pickup> inventory;
 
@@ -36,6 +42,8 @@ public class Player extends GameObject {
         status = PlayerStatus.IDLE;
         direction = PlayerStatus.Direction.RIGHT;
         inventory = new ArrayList<>();
+        health = 100;
+        damage = 4;
     }
 
     /**
@@ -71,8 +79,8 @@ public class Player extends GameObject {
             !(pressedKeys.contains(KeyEvent.VK_A) || rpiButton.equals("left")) &&
             !(pressedKeys.contains(KeyEvent.VK_S) || rpiButton.equals("down")) &&
             !(pressedKeys.contains(KeyEvent.VK_D) || rpiButton.equals("right")))
-            status = PlayerStatus.IDLE;
-
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.IDLE;
     }
 
     /**
@@ -84,9 +92,11 @@ public class Player extends GameObject {
         if(!checkCollide(x, y)) {
             setX(x);
             setY(y);
-            status = PlayerStatus.MOVING;
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.MOVING;
         } else {
-            status = PlayerStatus.IDLE;
+            if (status != PlayerStatus.FIGHTING)
+                status = PlayerStatus.IDLE;
         }
     }
 
@@ -95,6 +105,10 @@ public class Player extends GameObject {
         g.drawImage(FileLoader.getInstance().getPlayerImage(status,direction,currentImage),
             getX() - 8, getY() - 30,
             LevelLoader.getInstance().getCurrentLevel().get());
+        if (getInventory().stream().filter(object -> object instanceof Sword).findFirst().isPresent())
+            g.drawImage(FileLoader.getInstance().getSwordImage(status,direction,currentImage),
+                getX() - 8, getY() - 30,
+                LevelLoader.getInstance().getCurrentLevel().get());
     }
 
     /**
@@ -102,6 +116,7 @@ public class Player extends GameObject {
      */
     @Override
     public void tick() {
+        checkCollide(getX(), getY());
         checkMove();
 
         animateCount++;
@@ -109,9 +124,33 @@ public class Player extends GameObject {
             animateCount = 0;
             currentImage++;
         }
+
+        if (status == PlayerStatus.FIGHTING && currentImage >= PlayerStatus.FIGHTING.getImageAmount())
+            status = PlayerStatus.IDLE;
+
         if (currentImage >= status.getImageAmount())
             currentImage = 0;
 
+
+        tryHitting();
+    }
+
+    private void tryHitting() {
+        List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
+        String rpiButton = RaspberryPIController.getInstance().getPressedButton();
+
+        if ((pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle")) && prevHit + 200 <= System.currentTimeMillis()) {
+            for(Mob mob : LevelLoader.getInstance().getCurrentLevel().get().
+                getGameObjects().stream().filter(gameObject -> gameObject instanceof Mob).toArray(Mob[]::new)) {
+
+                if (mob.checkCollideSingle(this, getX(), getY())) {
+                    mob.removeHealth(getDamage());
+                    status = PlayerStatus.FIGHTING;
+                    currentImage = 0;
+                    prevHit = System.currentTimeMillis();
+                }
+            }
+        }
     }
 
     public void addToInventory(Pickup pickup) {
@@ -142,5 +181,24 @@ public class Player extends GameObject {
                 level.addGameObject(new Player(gridX, gridY));
             }
         }.setRequireGround(true);
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+        if (this.health <= 0) {
+            EventManager.getInstance().callEvent(new PlayerDiedEvent());
+        }
+    }
+
+    public int getDamage() {
+        return this.damage;
+    }
+
+    public int getHealth() {
+        return this.health;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

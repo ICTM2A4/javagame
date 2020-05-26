@@ -14,8 +14,7 @@ import java.util.ArrayList;
 public class SettingScreen extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
-    private CButton gameSpeed, shadows, lights;
-    String[] languages = new String[] {"gameSpeed", "1x", "2x", "4x", "8x"};
+    private CButton shadows, lights;
 
     public SettingScreen() {
         setLayout(new GridBagLayout());
@@ -28,35 +27,6 @@ public class SettingScreen extends JPanel implements ActionListener {
         String[] buttonNames = {"Back"};
 
         this.setPreferredSize(new Dimension(360, 360));
-
-        gameSpeed = new CButton("");
-        gameSpeed.setFocusable(false);
-
-        add(gameSpeed, gbc);
-
-        JComboBox<String> gameSpeed = new JComboBox<>(languages);
-        ActionListener cbAction = e -> {
-            String s = (String) gameSpeed.getSelectedItem();
-
-            switch (s) {
-                case "1x" :
-                    GameScreen.getInstance().setFps(30);
-                    break;
-                case "2x" :
-                    GameScreen.getInstance().setFps(60);
-                    break;
-                case "4x" :
-                    GameScreen.getInstance().setFps(120);
-                    break;
-                case "8x" :
-                    GameScreen.getInstance().setFps(240);
-                    break;
-            }
-        };
-        gameSpeed.addActionListener(cbAction);
-        gameSpeed.setBackground(new Color(146, 115, 63));
-
-        this.gameSpeed.add(gameSpeed);
 
         shadows = new CButton("");
         JCheckBox checkBox = new JCheckBox("shadows");
@@ -76,7 +46,9 @@ public class SettingScreen extends JPanel implements ActionListener {
         lights.add(checkBox2);
         checkBox2.setBackground(new Color(146, 115, 63));
         checkBox2.setSelected(LevelLoader.getInstance().getCurrentLevel().get().isAnimateLights());
-        add(lights, gbc);
+        if (checkBox.isSelected()) {
+            add(lights, gbc);
+        }
         buttons = new ArrayList<>();
 
         for(String name : buttonNames) {
@@ -100,7 +72,7 @@ public class SettingScreen extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttons.get(0)) {
             setVisible(false);
-            GameScreen.getInstance().addOverlay(new PauseScreen());
+            PauseScreen.getInstance().setVisible(true);
         }
     }
 }

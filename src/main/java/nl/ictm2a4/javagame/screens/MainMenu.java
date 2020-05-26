@@ -26,13 +26,19 @@ public class MainMenu extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(360, 360));
         buttons = new ArrayList<>();
 
-        String[] buttonNames = {"Start","Select level","Level Builder","Exit"};
+        LoginScreen loginScreen = new LoginScreen();
+
+        String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Exit"};
+
+        boolean isLoggedIn = GameScreen.getInstance().getCurrentUser() != null;
 
         for(String name : buttonNames) {
             CButton button = new CButton(name);
             buttons.add(button);
             button.addActionListener(this);
             button.setMargin(new Insets(0, 0, 0, 0));
+            if (name.equals("Login") && isLoggedIn) {continue;}
+            if (name.equals("Logout") && !isLoggedIn) continue;
             add(button, gbc);
         }
 
@@ -52,13 +58,28 @@ public class MainMenu extends JPanel implements ActionListener {
             LevelLoader.getInstance().startLevel();
         }
         if(e.getSource() == buttons.get(1)) { // select level
-            GameScreen.getInstance().setPanel(new LevelSelectScreen());
+            if(GameScreen.getInstance().getCurrentUser() == null) {
+                GameScreen.getInstance().addOverlay(new LoginScreen());
+            } else {
+                GameScreen.getInstance().setPanel(new LevelSelectScreen());
+            }
         }
         if(e.getSource() == buttons.get(2)) { // level builder
-            GameScreen.getInstance().setPanel(new preLevelEditorScreen());
+            if(GameScreen.getInstance().getCurrentUser() == null){
+                GameScreen.getInstance().addOverlay(new LoginScreen());
+            } else{
+                LevelLoader.getInstance().createCustomLevel();
+                GameScreen.getInstance().setPanel(new LevelEditor());
+            }
         }
-        if(e.getSource() == buttons.get(3)) { // exit
-            RaspberryPIController.getInstance().disconnect();
+        if(e.getSource() == buttons.get(3)) { // Login
+            GameScreen.getInstance().addOverlay(new LoginScreen());
+        }
+        if (e.getSource() == buttons.get(4)) { // Logout
+            GameScreen.getInstance().setCurrentUser(null);
+        }
+        if(e.getSource() == buttons.get(5)) { // exit
+            //RaspberryPIController.getInstance().disconnect();
             System.exit(0);
         }
 
