@@ -35,15 +35,23 @@ public class AchievementScreen extends JPanel implements ActionListener {
 
         var achievements = new AchievementsService().getAchievements();
 
+        JPanel achievementPanel = new JPanel();
+        achievementPanel.setLayout(new GridLayout(0, 2, 5, 30));
+        add(achievementPanel);
+        achievementPanel.setBackground(new Color(0,0,0,0));
+
         for(Achievement achievement : achievements){
-            CButton achievementButton = new CButton("");
+            JButton achievementButton = new JButton("");
+            achievementButton.setPreferredSize(new Dimension(120,120));
+            achievementButton.setBackground(new Color(0,0,0,0));
+            achievementButton.setBorder(BorderFactory.createEmptyBorder());
             JCheckBox checkBox = new JCheckBox(achievement.getName());
             checkBox.setEnabled(false);
-            checkBox.setForeground(Color.BLACK);
-            checkBox.setBackground(new Color(146, 115, 63));
+            checkBox.setBackground(new Color(0,0,0,0));
             checkBox.setSelected(achieved_achievements.stream().anyMatch(a -> a.getId() == achievement.getId()));
             achievementButton.add(checkBox);
-            add(achievementButton, gbc);
+
+            achievementPanel.add(achievementButton, gbc);
         }
 
         back = new CButton("Back");

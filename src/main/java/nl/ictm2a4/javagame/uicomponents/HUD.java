@@ -1,6 +1,8 @@
 package nl.ictm2a4.javagame.uicomponents;
 
 import nl.ictm2a4.javagame.cevents.PlayerHealthLossEvent;
+import nl.ictm2a4.javagame.cevents.RegenEvent;
+import nl.ictm2a4.javagame.event.EventHandler;
 import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.gameobjects.Pickup;
 import nl.ictm2a4.javagame.gameobjects.Player;
@@ -22,6 +24,7 @@ public class HUD extends JPanel {
     private int prevHealth = 100;
     private long prevHeal, prevHitTime;
     private int health;
+    private boolean calledEvent;
 
     private Optional<Player> optPlayer;
 
@@ -57,6 +60,7 @@ public class HUD extends JPanel {
                 player.setHealth(player.getHealth() - 4);
                 health = player.getHealth();
                 repaint();
+                calledEvent = false;
             }
             if (prevHealth > player.getHealth()) {
                 player.setHealth(player.getHealth() + 1);
@@ -67,6 +71,12 @@ public class HUD extends JPanel {
             if (player.getHealth() < 100 &&
                 prevHeal + HEALINTERVAL <= System.currentTimeMillis() && player.getHealth() > 0 &&
                 prevHitTime + REGENINTERVAL <= System.currentTimeMillis()) {
+
+                if (!calledEvent) {
+                    EventManager.getInstance().callEvent(new RegenEvent(player.getHealth()));
+                    calledEvent = true;
+                }
+
                 prevHealth++;
                 prevHeal = System.currentTimeMillis();
             }

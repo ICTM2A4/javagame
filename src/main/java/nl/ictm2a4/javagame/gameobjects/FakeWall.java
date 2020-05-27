@@ -1,5 +1,7 @@
 package nl.ictm2a4.javagame.gameobjects;
 
+import nl.ictm2a4.javagame.cevents.ThroughFakeWallEvent;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -10,6 +12,9 @@ import java.awt.image.BufferedImage;
 
 public class FakeWall extends GameObject {
 
+    private final int EVENTINTERVAL = 10;
+    private int tick;
+
     @JSONLoader(JSONString = "fakeWalls")
     public FakeWall(Integer gridX, Integer gridY) {
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
@@ -19,6 +24,16 @@ public class FakeWall extends GameObject {
 
     @Override
     public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
+        boolean result = super.checkCollideSingle(gameObject, x, y);
+
+        tick++;
+        if (tick >= EVENTINTERVAL) {
+            tick = 0;
+            if (result && gameObject instanceof Player)
+                EventManager.getInstance().callEvent(new ThroughFakeWallEvent(this));
+        }
+
+
         return false;
     }
 

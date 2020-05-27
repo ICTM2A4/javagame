@@ -1,5 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
+import nl.ictm2a4.javagame.cevents.LevelSavedEvent;
+import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.gameobjects.*;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.GameObjectsLoader;
@@ -132,6 +134,7 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
             try {
                 if (level.saveLevel()){
                     JOptionPane.showMessageDialog(this, "Het Level is opgeslagen");
+                    EventManager.getInstance().callEvent(new LevelSavedEvent(level.getId()));
                 } else {
                     JOptionPane.showMessageDialog(this, "Het Level is niet opgeslagen");
                 }

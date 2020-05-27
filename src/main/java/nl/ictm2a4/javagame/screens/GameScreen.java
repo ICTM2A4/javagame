@@ -1,9 +1,7 @@
 package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.achievement.AchievementHandler;
-import nl.ictm2a4.javagame.cachievements.FirstDoorOpened;
-import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
-import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
+import nl.ictm2a4.javagame.cachievements.*;
 import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.listeners.ScoreListener;
 import nl.ictm2a4.javagame.loaders.FileLoader;
@@ -216,6 +214,12 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new LevelOneAchieved();
         new FirstDoorOpened();
         new LastLevelAchieved();
+        new FirstLevelSaved();
+        new BelowTenHealth();
+        new TheStrongest();
+        new FistFight();
+        new FakeWallPassage();
+        new Wizard();
     }
 
     private void registerListeners(){
