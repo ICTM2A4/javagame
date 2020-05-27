@@ -426,6 +426,8 @@ public class Level extends JPanel implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDiedEvent event) {
         GameScreen.getInstance().addOverlay(new GameOverScreen());
+        LevelLoader.getInstance().pause();
+
     }
 
     @EventHandler
