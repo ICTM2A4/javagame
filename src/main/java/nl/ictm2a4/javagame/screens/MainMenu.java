@@ -31,7 +31,7 @@ public class MainMenu extends JPanel implements ActionListener {
 
         String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Achievements", "Settings", "Exit"};
 
-        boolean isLoggedIn = GameScreen.getInstance().getCurrentUser() != null;
+        boolean isLoggedIn = GameScreen.getInstance().getCurrentUser().isPresent();
 
         for(String name : buttonNames) {
             CButton button = new CButton(name);
@@ -56,7 +56,7 @@ public class MainMenu extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if(e.getSource() == buttons.get(0)) { // start
-            if(GameScreen.getInstance().getCurrentUser() == null && LevelLoader.getInstance().getCurrentLevel().isPresent()
+            if(GameScreen.getInstance().getCurrentUser().isEmpty() && LevelLoader.getInstance().getCurrentLevel().isPresent()
                 && LevelLoader.getInstance().getCurrentLevel().get().getId() > LevelLoader.DEFAULTLEVELAMOUNT){
                 GameScreen.getInstance().addOverlay(new LoginScreen());
             } else{
@@ -67,7 +67,7 @@ public class MainMenu extends JPanel implements ActionListener {
             GameScreen.getInstance().setPanel(new LevelSelectScreen());
         }
         if(e.getSource() == buttons.get(2)) { // level builder
-            if(GameScreen.getInstance().getCurrentUser() == null){
+            if(GameScreen.getInstance().getCurrentUser().isEmpty()){
                 GameScreen.getInstance().addOverlay(new LoginScreen());
             } else{
                 LevelLoader.getInstance().createCustomLevel();

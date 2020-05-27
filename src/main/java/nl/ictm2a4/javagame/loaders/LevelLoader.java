@@ -146,6 +146,7 @@ public class LevelLoader {
         return levelObject;
     }
 
+    @Deprecated
     public boolean isPaused() {
         return paused;
     }

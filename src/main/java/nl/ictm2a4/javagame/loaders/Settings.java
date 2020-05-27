@@ -18,7 +18,8 @@ public class Settings {
     private static Settings instance;
     private boolean showShadows = true;
     private boolean animatedLights = true;
-    private String username, password;
+    private boolean useRPI;
+    private String username, password, raspberryPiIp;
 
     public Settings() {
         instance = this;
@@ -142,6 +143,10 @@ public class Settings {
         return animatedLights;
     }
 
+    public void setUseRPI(boolean value) {useRPI = value;}
+
+    public boolean isUseRPI() {return useRPI;}
+
     public void updateUser(String username, String password) {
         this.username = username;
         this.password = password;
@@ -154,5 +159,11 @@ public class Settings {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public void setRaspberryPiIp(String ip) {this.raspberryPiIp = ip;}
+
+    public String getRaspberryPiIp() {
+        return raspberryPiIp;
     }
 }

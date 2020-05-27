@@ -49,6 +49,7 @@ public abstract class GameObject {
                 .anyMatch(gameObject -> gameObject.checkCollideSingle(this, x, y) && gameObject.isCollidable());
     }
 
+    @Deprecated
     public GameObject[] checkCollideGameObjects(int x, int y) {
         return LevelLoader.getInstance().getCurrentLevel().get().getGameObjects()
                 .stream()
@@ -216,6 +217,7 @@ public abstract class GameObject {
      * Get if the object is an entity
      * @return boolean isEntity
      */
+    @Deprecated
     public boolean isEntity() {
         return this.isEntity;
     }

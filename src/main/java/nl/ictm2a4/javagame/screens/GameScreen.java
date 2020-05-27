@@ -9,7 +9,6 @@ import nl.ictm2a4.javagame.listeners.ScoreListener;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.loaders.Settings;
-import nl.ictm2a4.javagame.services.scores.Score;
 import nl.ictm2a4.javagame.services.scores.ScoreService;
 import nl.ictm2a4.javagame.services.users.User;
 import nl.ictm2a4.javagame.services.users.UserService;
@@ -28,7 +27,7 @@ import java.util.Optional;
 
 public class GameScreen extends JFrame implements KeyListener, Runnable {
 
-    public static final String GAMENAME = "JavaGame";
+    public static final String GAMENAME = "The Labyrinth";
 
     public static final boolean USE_RPI = false; // True for RPI connection
 
@@ -36,8 +35,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private final static int MAX_FRAME_SKIPS = 5;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
 
-//    private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
-    private DecimalFormat df = new DecimalFormat("0");  // 2 dp
+    private DecimalFormat df = new DecimalFormat("0");
     private final static int STAT_INTERVAL = 1000; //ms
     private final static int FPS_HISTORY_NR = 10;
     private long lastStatusStore = 0;
@@ -55,15 +53,14 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private boolean isRunning;
 
     private static GameScreen instance;
-    private String title = GAMENAME;
     private List<Integer> pressedKeys;
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
 
-    private User currentUser;
+    private User currentUser; //TODO Paul nu doen! make optional
 
     public GameScreen() {
-        setTitle(title);
+        setTitle(GAMENAME);
 
         instance = this;
 
@@ -137,19 +134,20 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     /**
-     * Reset the screen title to the default title
-     */
-    public void resetTitle() {
-        setTitle(title);
-    }
-
-    /**
      * Set the panel of the GameScreen and update the title
      * @param panel The new JPanel to set
      * @param title The title to append to the gametitle
      */
     @Deprecated
     public void setPanel(JPanel panel, String title) {
+        setPanel(panel);
+    }
+
+    /**
+     * Set the panel of the GameScreen and reset the title
+     * @param panel The new JPanel to set
+     */
+    public void setPanel(JPanel panel) {
         fixed.removeAll();
         JPanel temp = new JPanel();
         temp.setLayout(new GridBagLayout());
@@ -169,15 +167,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         fixed.repaint();
         if (panel instanceof Level)
             GameScreen.getInstance().addOverlay(HUD.getInstance());
-    }
 
-    /**
-     * Set the panel of the GameScreen and reset the title
-     * @param panel The new JPanel to set
-     */
-    public void setPanel(JPanel panel) {
-        setPanel(panel, "");
-        resetTitle();
     }
 
     public void addOverlay(JPanel panel) {
@@ -223,6 +213,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     }
 
+    @Deprecated
     public double getFPS() {
         return FPSCounter.getInstance().getAvgFPS();
     }
@@ -340,7 +331,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     public Optional<User> getCurrentUser(){
-        return Optional.of(currentUser);
+        return Optional.ofNullable(currentUser);
     }
 
     public String getApiToken(){
@@ -352,12 +343,11 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     private void tryLogin() {
-        String username = Settings.getInstance().getUsername();
 
         var login = new UserService().authenticate(Settings.getInstance().getUsername(),
             Settings.getInstance().getPassword());
 
-        if(login != null && login.token != null && login.token != "")
+        if(login != null && login.token != null && !login.token.equals(""))
             GameScreen.getInstance().setCurrentUser(login);
     }
 }

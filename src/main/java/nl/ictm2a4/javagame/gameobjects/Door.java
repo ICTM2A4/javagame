@@ -57,6 +57,7 @@ public class Door extends GameObject {
         setCollidable(false);
     }
 
+    @Deprecated
     public void setClosed(){
         this.open = false;
         setCollidable(true);

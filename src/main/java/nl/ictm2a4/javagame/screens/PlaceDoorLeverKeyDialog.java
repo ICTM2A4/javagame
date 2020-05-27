@@ -6,10 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
-    private JLabel doorCodeLabel;
-    private JButton okButton, cancelButton;
     private JComboBox doorCodeComboBox;
-    private String[] colors = { "Yellow", "Red", "Blue", "Green" };
 
     private boolean confirmed;
 
@@ -18,17 +15,18 @@ public class PlaceDoorLeverKeyDialog extends JDialog implements ActionListener {
         setSize(480, 240);
         setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        doorCodeLabel = new JLabel("Code");
+        JLabel doorCodeLabel = new JLabel("Code");
         add(doorCodeLabel);
 
+        String[] colors = {"Yellow", "Red", "Blue", "Green"};
         doorCodeComboBox = new JComboBox(colors);
         add(doorCodeComboBox);
 
-        okButton = new JButton("Ok");
+        JButton okButton = new JButton("Ok");
         okButton.addActionListener(this::onOkClicked);
         add(okButton);
 
-        cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(this::onCancelClicked);
         add(cancelButton);
 

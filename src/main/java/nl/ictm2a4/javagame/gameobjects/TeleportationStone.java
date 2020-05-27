@@ -96,7 +96,7 @@ public class TeleportationStone extends GameObject {
         prevTeleport = System.currentTimeMillis();
     }
 
-    public boolean getTeleported() {
-        return this.teleported;
-    }
+//    public boolean getTeleported() {
+//        return this.teleported;
+//    }
 }

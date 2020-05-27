@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public abstract class Achievement implements Listener {
 
-    private boolean achieved;
     protected int id;
 
     public Achievement(int id) {
@@ -31,14 +30,9 @@ public abstract class Achievement implements Listener {
         return achieved_achievements.stream().filter(a -> a.id == this.id).findAny().isPresent();
     }
 
-    public void setAchieved(boolean achieved) {
-        this.achieved = achieved;
-    }
-
-    public void achieve(String tekst) {
+    public void achieve(String tekst) { //TODO: tekst uit api gebruiken
         if(isAchieved())
             return;
-        this.achieved = true;
         AchievementHandler.getInstance().achieve(tekst);
     }
 }

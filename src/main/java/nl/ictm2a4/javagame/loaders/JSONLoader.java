@@ -11,5 +11,4 @@ public @interface JSONLoader {
 
     String JSONString();
     boolean withExtra() default false;
-    boolean inArray() default true;
 }
