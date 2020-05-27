@@ -1,7 +1,5 @@
 package nl.ictm2a4.javagame.gameobjects;
 
-import nl.ictm2a4.javagame.cevents.ReachedEndEvent;
-import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
@@ -26,6 +24,9 @@ public class FakeWall extends GameObject {
 
     @Override
     public void draw(Graphics g) {
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
+
         g.drawImage(FileLoader.getInstance().getWallTile(connectedFacesSum(this.hasConnectedFaces(Wall.class))), getX(), getY(),
             LevelLoader.getInstance().getCurrentLevel().get());
 

@@ -23,7 +23,7 @@ public abstract class Mob extends GameObject {
     private int stepSize = 2;
 
     public Mob(int gridX, int gridY, int width, int height, int range, int damage, int health) {
-        super(gridX, gridY, width, height, true);
+        super(gridX, gridY, width, height);
         this.range = range;
         this.damage = damage;
         this.maxHealth = health;
@@ -41,11 +41,6 @@ public abstract class Mob extends GameObject {
 
         // (x, y) is within circle a.k.a. range of mob
         return (r * r) >= ((x - a) * (x - a)) + ((y - b) * (y - b));
-    }
-
-    @Deprecated
-    public int getRange() {
-        return this.range;
     }
 
     @Override

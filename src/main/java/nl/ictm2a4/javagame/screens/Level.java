@@ -32,7 +32,6 @@ public class Level extends JPanel implements Listener {
     private int id;
     private ArrayList<GameObject> gameObjects;
     private String name;
-    private Optional<Player> player;
     private BufferedImage shadow;
     private boolean renderShadows, animateLights;
     private Optional<JSONObject> object;
@@ -82,7 +81,7 @@ public class Level extends JPanel implements Listener {
                 object = Optional.of(new JSONObject());
             } else {
                 try {
-                    object = Optional.of((JSONObject)parser.parse(dbLevel.content));
+                    object = Optional.of((JSONObject)parser.parse(dbLevel.getContent()));
                     return;
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -135,7 +134,7 @@ public class Level extends JPanel implements Listener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        player.ifPresent(value -> drawLight(g, new Point(value.getX() + (value.getWidth() / 2), value.getY() + (value.getHeight() / 2) - 24),
+        getPlayer().ifPresent(value -> drawLight(g, new Point(value.getX() + (value.getWidth() / 2), value.getY() + (value.getHeight() / 2) - 24),
             50));
 
         getGameObjects().stream().filter(gameObject -> gameObject instanceof Torch).forEach(torch -> drawLight(g,
@@ -188,8 +187,7 @@ public class Level extends JPanel implements Listener {
      * @param gameObject GameObject to remove
      */
     public void removeGameObject(GameObject gameObject) {
-        if (this.gameObjects.contains(gameObject))
-            this.gameObjects.remove(gameObject);
+        this.gameObjects.remove(gameObject);
     }
 
     /**
@@ -271,8 +269,6 @@ public class Level extends JPanel implements Listener {
             }
         }
 
-        player = getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).map(p -> (Player)p).findFirst();
-
         regenerateWalls();
     }
 
@@ -313,18 +309,14 @@ public class Level extends JPanel implements Listener {
 
         if (dbLevel == null) {
             if(currentUser.isPresent()){
-                dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.get().id, "");
+                dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.get().getId(), "");
             }
 
-            if(levelService.addLevel(dbLevel) != null){
-                return true; // succes
-            } else{
-                return false; // fail
-            }
+            return (levelService.addLevel(dbLevel) != null);
         }
 
-        dbLevel.name = name;
-        dbLevel.content = saveObject.toString();
+        dbLevel.setName(name);
+        dbLevel.setContent(saveObject.toString());
 
         return levelService.updateLevel(dbLevel);
     }
@@ -346,6 +338,7 @@ public class Level extends JPanel implements Listener {
      */
     private void generateWalls() {
         Ground[] groundTiles = getGameObjects().stream().filter(object -> (object instanceof Ground))
+                .map(g -> (Ground)g)
                 .toArray(Ground[]::new);
 
         for(Ground ground : groundTiles) {
@@ -370,27 +363,10 @@ public class Level extends JPanel implements Listener {
      * Regenerate all walls - remove all walls - create new walls
      */
     public void regenerateWalls() {
-        Wall[] walls = getGameObjects().stream().filter(gameObject -> gameObject instanceof Wall).toArray(Wall[]::new);
+        Wall[] walls = getGameObjects().stream().filter(gameObject -> gameObject instanceof Wall).map(w -> (Wall)w).toArray(Wall[]::new);
         for (Wall wall : walls)
             getGameObjects().remove(wall);
         generateWalls();
-    }
-
-    /**
-     * Find a GameObject based on the x and y coordinates
-     * 
-     * @param x x to check for
-     * @param y y to check for
-     * @return Optional GameObject based on the coords, use #.ifPresent() and
-     *         #.get() to use
-     */
-    @Deprecated
-    public Optional<GameObject> fromCoords(int x, int y) {
-        return getGameObjects().stream()
-                .filter(gameObject -> (gameObject.getX() <= x && gameObject.getY() <= y
-                        && gameObject.getX() + gameObject.getWidth() > x
-                        && gameObject.getY() + gameObject.getHeight() > y))
-                .findAny();
     }
 
     /**
@@ -432,7 +408,7 @@ public class Level extends JPanel implements Listener {
 
     @EventHandler
     public void onItemPickup(ItemPickupEvent event) {
-        if (event.getPickup() instanceof Sword)
+        if (event.getPickup() instanceof Sword && getPlayer().isPresent())
             getPlayer().get().setDamage(20);
     }
 

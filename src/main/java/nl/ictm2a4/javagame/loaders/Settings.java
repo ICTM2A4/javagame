@@ -2,7 +2,6 @@ package nl.ictm2a4.javagame.loaders;
 
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.services.users.User;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

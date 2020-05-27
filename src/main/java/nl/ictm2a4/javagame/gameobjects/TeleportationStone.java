@@ -35,7 +35,7 @@ public class TeleportationStone extends GameObject {
     public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
         boolean result = super.checkCollideSingle(gameObject,x,y);
 
-        if (result && gameObject instanceof Player && !teleported) {
+        if (result && gameObject instanceof Player && !teleported && LevelLoader.getInstance().getCurrentLevel().isPresent()) {
             Level level = LevelLoader.getInstance().getCurrentLevel().get();
 
             Optional<TeleportationStone> stream = level.getGameObjects().stream()
@@ -70,6 +70,9 @@ public class TeleportationStone extends GameObject {
 
     @Override
     public void draw(Graphics g) {
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
+
         g.drawImage(FileLoader.getInstance().getTeleportationStoneImage(),
                 getX() ,getY(),
                 LevelLoader.getInstance().getCurrentLevel().get());
@@ -95,8 +98,4 @@ public class TeleportationStone extends GameObject {
         this.teleported = teleported;
         prevTeleport = System.currentTimeMillis();
     }
-
-//    public boolean getTeleported() {
-//        return this.teleported;
-//    }
 }

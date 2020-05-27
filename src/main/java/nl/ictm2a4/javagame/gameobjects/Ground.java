@@ -20,6 +20,8 @@ public class Ground extends GameObject {
 
     @Override
     public void draw(Graphics g) {
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
         g.drawImage(FileLoader.getInstance().getGroundTile(connectedFacesSum(this.hasConnectedFaces(Ground.class))),
             getX(), getY(),
             LevelLoader.getInstance().getCurrentLevel().get());

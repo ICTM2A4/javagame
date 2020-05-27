@@ -28,7 +28,7 @@ public class Door extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        if(!open){
+        if(!open && LevelLoader.getInstance().getCurrentLevel().isPresent()){
             g.drawImage(FileLoader.getInstance().getDoorImage(getExtra() <= 3 ? getExtra() : 0),
                     getX(), getY(),
                     LevelLoader.getInstance().getCurrentLevel().get());
@@ -55,12 +55,6 @@ public class Door extends GameObject {
     public void setOpen(){
         this.open = true;
         setCollidable(false);
-    }
-
-    @Deprecated
-    public void setClosed(){
-        this.open = false;
-        setCollidable(true);
     }
 
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {

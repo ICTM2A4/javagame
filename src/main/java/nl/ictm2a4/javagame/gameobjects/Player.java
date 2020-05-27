@@ -2,7 +2,6 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.cevents.PlayerDiedEvent;
 import nl.ictm2a4.javagame.enums.PlayerStatus;
-import nl.ictm2a4.javagame.event.EventHandler;
 import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
@@ -11,7 +10,6 @@ import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.screens.LevelEditor;
-import nl.ictm2a4.javagame.uicomponents.HUD;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -36,7 +34,7 @@ public class Player extends GameObject {
     public Player(Integer gridX, Integer gridY) {
         super(((gridX * LevelLoader.GRIDWIDTH) + 4),
             ((gridY * LevelLoader.GRIDHEIGHT) + 2),
-            16, 20, true);
+            16, 20);
         setCollidable(false);
         setyIndex(10);
         status = PlayerStatus.IDLE;
@@ -102,10 +100,12 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Graphics g) {
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
         g.drawImage(FileLoader.getInstance().getPlayerImage(status,direction,currentImage),
             getX() - 8, getY() - 30,
             LevelLoader.getInstance().getCurrentLevel().get());
-        if (getInventory().stream().filter(object -> object instanceof Sword).findFirst().isPresent())
+        if (getInventory().stream().anyMatch(object -> object instanceof Sword))
             g.drawImage(FileLoader.getInstance().getSwordImage(status,direction,currentImage),
                 getX() - 8, getY() - 30,
                 LevelLoader.getInstance().getCurrentLevel().get());
@@ -139,9 +139,10 @@ public class Player extends GameObject {
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
         String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 
-        if ((pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle")) && prevHit + 200 <= System.currentTimeMillis()) {
+        if ((pressedKeys.contains(KeyEvent.VK_SPACE)  || rpiButton.equals("middle")) && prevHit + 200 <= System.currentTimeMillis()
+            && LevelLoader.getInstance().getCurrentLevel().isPresent()) {
             for(Mob mob : LevelLoader.getInstance().getCurrentLevel().get().
-                getGameObjects().stream().filter(gameObject -> gameObject instanceof Mob).toArray(Mob[]::new)) {
+                getGameObjects().stream().filter(gameObject -> gameObject instanceof Mob).map(m -> (Mob)m).toArray(Mob[]::new)) {
 
                 if (mob.checkCollideSingle(this, getX(), getY())) {
                     mob.removeHealth(getDamage());

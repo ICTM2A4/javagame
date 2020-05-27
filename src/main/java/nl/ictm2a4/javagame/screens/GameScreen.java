@@ -57,7 +57,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     public static JLayeredPane fixed;
     private List<Integer> achievedList;
 
-    private User currentUser; //TODO Paul nu doen! make optional
+    private Optional<User> currentUser;
 
     public GameScreen() {
         setTitle(GAMENAME);
@@ -68,6 +68,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new LevelLoader();
         new RaspberryPIController();
 
+        currentUser = Optional.empty();
         tryLogin();
 
         pressedKeys = new ArrayList<>();
@@ -98,13 +99,12 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         achievedList.add(1);
 
 
-
         if (getCurrentUser().isPresent()) {
             ScoreService service = new ScoreService();
 
             for (int i = 1; i <= LevelLoader.DEFAULTLEVELAMOUNT; i++) {
                 int finalI = i;
-                if (service.getScores().stream().anyMatch(score -> score.userID == getCurrentUser().get().id && score.scoredOnID == finalI))
+                if (service.getScores().stream().anyMatch(score -> score.getUserID() == getCurrentUser().get().getId() && score.getScoredOnID() == finalI))
                     achievedList.add(i + 1);
             }
         }
@@ -131,16 +131,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         if(pressedKeys.contains(e.getKeyCode())){
             pressedKeys.remove(Integer.valueOf(e.getKeyCode()));
         }
-    }
-
-    /**
-     * Set the panel of the GameScreen and update the title
-     * @param panel The new JPanel to set
-     * @param title The title to append to the gametitle
-     */
-    @Deprecated
-    public void setPanel(JPanel panel, String title) {
-        setPanel(panel);
     }
 
     /**
@@ -206,16 +196,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     public void achieveLevel(int id) {
         if (!this.achievedList.contains(id))
             this.achievedList.add(id);
-    }
-
-    @Deprecated
-    public void setFps(int fps) {
-
-    }
-
-    @Deprecated
-    public double getFPS() {
-        return FPSCounter.getInstance().getAvgFPS();
     }
 
     public void start() {
@@ -327,19 +307,17 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     public void setCurrentUser(User user){
-        currentUser = user;
+        currentUser = Optional.of(user);
     }
 
     public Optional<User> getCurrentUser(){
-        return Optional.ofNullable(currentUser);
+        return currentUser;
     }
 
     public String getApiToken(){
-        if(currentUser != null){
-            return currentUser.token;
-        } else {
-            return null;
-        }
+        if (currentUser.isPresent())
+            return currentUser.get().getToken();
+        return "";
     }
 
     private void tryLogin() {
@@ -347,7 +325,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         var login = new UserService().authenticate(Settings.getInstance().getUsername(),
             Settings.getInstance().getPassword());
 
-        if(login != null && login.token != null && !login.token.equals(""))
-            GameScreen.getInstance().setCurrentUser(login);
+        if(login != null && login.getToken() != null && !login.getToken().equals(""))
+            setCurrentUser(login);
     }
 }

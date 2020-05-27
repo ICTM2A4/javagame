@@ -20,7 +20,7 @@ public class Sword extends Pickup {
     @Override
     public void draw(Graphics g) {
 
-        if(active){
+        if(active && LevelLoader.getInstance().getCurrentLevel().isPresent()){
             g.drawImage(FileLoader.getInstance().getSwordImageSingle(),
                 getX() + 4, getY(),
                 LevelLoader.getInstance().getCurrentLevel().get());

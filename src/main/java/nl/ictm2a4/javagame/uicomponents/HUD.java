@@ -34,6 +34,8 @@ public class HUD extends JPanel {
         setOpaque(false);
         setBackground(new Color(0,0,0,0));
         setVisible(true);
+
+        optPlayer = Optional.empty();
     }
 
     @Override
@@ -47,7 +49,7 @@ public class HUD extends JPanel {
     }
 
     public void tick() {
-        optPlayer = LevelLoader.getInstance().getCurrentLevel().get().getPlayer();
+        optPlayer = LevelLoader.getInstance().getCurrentLevel().flatMap(Level::getPlayer);
 
         if (optPlayer.isPresent()) {
             Player player = optPlayer.get();
@@ -97,7 +99,7 @@ public class HUD extends JPanel {
 
         int inventorySlots = 5;
       
-        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().get().getPlayer().get()
+        Pickup[] inventory = LevelLoader.getInstance().getCurrentLevel().flatMap(Level::getPlayer).get()
             .getInventory().stream().filter(Pickup::isDisplayInInventory).toArray(Pickup[]::new);
 
         Graphics2D g2 = (Graphics2D)g;
@@ -120,6 +122,10 @@ public class HUD extends JPanel {
 
     public void removeHealth(int healthRemoval) {
         this.prevHealth -= healthRemoval;
+
+        if (optPlayer.isEmpty())
+            return;
+
         EventManager.getInstance().callEvent(new PlayerHealthLossEvent(healthRemoval, optPlayer.get().getHealth()));
         prevHitTime = System.currentTimeMillis();
     }

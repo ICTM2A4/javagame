@@ -26,7 +26,7 @@ public class Key extends Pickup {
     @Override
     public void draw(Graphics g) {
 
-        if(active){
+        if(active && LevelLoader.getInstance().getCurrentLevel().isPresent()){
             g.drawImage(FileLoader.getInstance().getKeyImage(getExtra() <= 3 ? getExtra() : 0),
                     getX(), getY(),
                     LevelLoader.getInstance().getCurrentLevel().get());

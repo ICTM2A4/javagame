@@ -27,8 +27,6 @@ public class MainMenu extends JPanel implements ActionListener {
         this.setPreferredSize(new Dimension(360, 360));
         buttons = new ArrayList<>();
 
-        LoginScreen loginScreen = new LoginScreen();
-
         String[] buttonNames = {"Start","Select level","Level Builder", "Login", "Logout", "Achievements", "Settings", "Exit"};
 
         boolean isLoggedIn = GameScreen.getInstance().getCurrentUser().isPresent();

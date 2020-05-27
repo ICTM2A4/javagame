@@ -50,6 +50,7 @@ public class Lever extends GameObject {
         for(Door door : LevelLoader.getInstance().getCurrentLevel().get().getGameObjects().stream()
                 .filter(gameObject -> gameObject instanceof Door)
                 .filter(gameObject -> gameObject.getExtra() == getExtra())
+                .map(d -> (Door)d)
                 .toArray(Door[]::new)){
             door.setOpen();
         }

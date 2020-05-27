@@ -36,7 +36,7 @@ public class AchievementHandler {
 
     public void achieve(String tekst) {
         this.popups.add(new AchievementPopup(tekst));
-    } //TODO: tekst uit api gebruiken
+    }
 
     public void tick() {
         if (this.popups.size() > 0) {

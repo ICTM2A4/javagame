@@ -163,6 +163,9 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
     }
 
     private void loopOverAll(MouseEvent e, boolean place) {
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
+
         level = LevelLoader.getInstance().getCurrentLevel().get();
         Optional<GameObject> find = level.fromCoordsToArray(e.getX(), e.getY()).filter(gameObject -> gameObject.getClass().isAssignableFrom(current) ).findAny();
 

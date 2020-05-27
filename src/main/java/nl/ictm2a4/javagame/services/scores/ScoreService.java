@@ -14,11 +14,11 @@ public class ScoreService extends ApiService {
     public Score getScore(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET","");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var scoreJson = (JSONObject) response.body;
+        var scoreJson = (JSONObject) response.getBody();
 
         return convertJsonToScore(scoreJson);
     }
@@ -26,49 +26,41 @@ public class ScoreService extends ApiService {
     public List<Score> getScores(){
         var response = sendRequest(baseUrl, "GET","");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var scores = convertJsonToScoresList((JSONArray) response.body.get("Values"));
-
-        return scores;
+        return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
     public List<Score> getScores(int limit){
         var response = sendRequest(baseUrl, "GET","");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var scores = convertJsonToScoresList((JSONArray) response.body.get("Values"));
-
-        return scores;
+        return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
     public List<Score> getScores(int limit, String sort){
         var response = sendRequest(baseUrl + "?limit=" + limit + "&sort=" + sort, "GET","");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var scores = convertJsonToScoresList((JSONArray) response.body.get("Values"));
-
-        return scores;
+        return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
     public List<Score> getScoresPerLevel(int lid){
         var response = sendRequest(baseUrl + "?lid=" + lid, "GET","");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var scores = convertJsonToScoresList((JSONArray) response.body.get("Values"));
-
-        return scores;
+        return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
     public Score addScore(Score score){
@@ -76,11 +68,11 @@ public class ScoreService extends ApiService {
         var scoreJson = convertScoreToJson(score);
         var response = sendRequest(baseUrl, "POST", scoreJson.toString());
 
-        if(response == null || response.responseCode != 201){
+        if(response == null || response.getResponseCode() != 201){
             return null;
         }
 
-        var returnScoreJson = (JSONObject) response.body;
+        var returnScoreJson = (JSONObject) response.getBody();
 
         return convertJsonToScore(returnScoreJson);
     }
@@ -111,11 +103,11 @@ public class ScoreService extends ApiService {
 
     private JSONObject convertScoreToJson(Score score){
         var scoreJson = new JSONObject();
-        scoreJson.put("id", score.id);
-        scoreJson.put("scoreAmount", score.scoreAmount);
-        scoreJson.put("timestamp", "1996-12-12T12:12:23"); //, score.Timestamp); Formattering gaat niet helemaal goed
-        scoreJson.put("userID", score.userID);
-        scoreJson.put("scoredOnID", score.scoredOnID);
+        scoreJson.put("id", score.getId());
+        scoreJson.put("scoreAmount", score.getScoreAmount());
+        scoreJson.put("timestamp", "1996-12-12T12:12:23"); //, score.Timestamp); Formattering gaat niet helemaal goed //TODO: wutt
+        scoreJson.put("userID", score.getUserID());
+        scoreJson.put("scoredOnID", score.getScoredOnID());
 
         return scoreJson;
     }

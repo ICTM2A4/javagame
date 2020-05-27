@@ -34,13 +34,13 @@ public class RegisterScreen extends JPanel implements ActionListener {
 
         JLabel password = new JLabel("Password:");
         add(password, gbc);
-        Jpassword = new JTextField(10);
+        Jpassword = new JPasswordField(10);
         Jpassword.addActionListener(this);
         add(Jpassword, gbc);
 
         JLabel password2 = new JLabel("Repeat password:");
         add(password2, gbc);
-        Jpassword2 = new JTextField(10);
+        Jpassword2 = new JPasswordField(10);
         Jpassword2.addActionListener(this);
         add(Jpassword2, gbc);
 
@@ -73,12 +73,12 @@ public class RegisterScreen extends JPanel implements ActionListener {
             String wachtwoord = Jpassword.getText();
             String wachtwoord2 = Jpassword2.getText();
             String naam = Jusername.getText();
-            if (wachtwoord != "" && wachtwoord.equals(wachtwoord2) && naam != "") {
+            if (!wachtwoord.equals("") && wachtwoord.equals(wachtwoord2) && !naam.equals("")) {
                 var user = new User(0, naam, wachtwoord, "");
 
                 var registeredUser = new UserService().register(user);
 
-                if(registeredUser != null && registeredUser.token != null && registeredUser.token != ""){
+                if(registeredUser != null && registeredUser.getToken() != null && !registeredUser.getToken().equals("")){
                     GameScreen.getInstance().setCurrentUser(registeredUser); // Automatische login na registratie
                     GameScreen.getInstance().setPanel(new MainMenu());
                 } else{

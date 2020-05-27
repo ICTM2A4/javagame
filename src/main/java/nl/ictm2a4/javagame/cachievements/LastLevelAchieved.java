@@ -8,6 +8,7 @@ import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 
 public class LastLevelAchieved extends Achievement {
+
     public LastLevelAchieved(){
         super(2);
     }
@@ -15,12 +16,10 @@ public class LastLevelAchieved extends Achievement {
     @EventHandler
     public void onLevelAchieved(ReachedEndEvent event) {
         if (event.getLevelID() == LevelLoader.DEFAULTLEVELAMOUNT) {
-            achieve("Last level survived");
+            achieve();
 
             var currentUser = GameScreen.getInstance().getCurrentUser();
-            if(currentUser.isPresent()) {
-                new AchievementsService().addAchievementToUser(id, currentUser.get().id);
-            }
+            currentUser.ifPresent(user -> new AchievementsService().addAchievementToUser(id, user.getId()));
         }
     }
 }

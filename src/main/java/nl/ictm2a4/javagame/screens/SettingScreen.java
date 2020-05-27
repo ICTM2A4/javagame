@@ -15,11 +15,15 @@ import java.util.ArrayList;
 public class SettingScreen extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
-    private CButton shadows, lights;
     private JPanel origin;
+    private CButton lights;
 
     public SettingScreen(JPanel origin) {
         this.origin = origin;
+
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -31,12 +35,11 @@ public class SettingScreen extends JPanel implements ActionListener {
 
         this.setPreferredSize(new Dimension(360, 360));
 
-        shadows = new CButton("");
+        CButton shadows = new CButton("");
         JCheckBox checkBox = new JCheckBox("shadows");
         checkBox.addItemListener(e -> {
                 Settings.getInstance().setShowShadows(e.getStateChange() == ItemEvent.SELECTED);
                 LevelLoader.getInstance().getCurrentLevel().get().setRenderShadows(e.getStateChange() == ItemEvent.SELECTED);
-                repaint();
             }
         );
         shadows.add(checkBox);
@@ -49,15 +52,12 @@ public class SettingScreen extends JPanel implements ActionListener {
         checkBox2.addItemListener(e -> {
                 Settings.getInstance().setAnimatedLights(e.getStateChange() == ItemEvent.SELECTED);
                 LevelLoader.getInstance().getCurrentLevel().get().setAnimateLights(e.getStateChange() == ItemEvent.SELECTED);
-                repaint();
             }
         );
         lights.add(checkBox2);
         checkBox2.setBackground(new Color(146, 115, 63));
         checkBox2.setSelected(Settings.getInstance().isAnimatedLights());
-        if (checkBox.isSelected()) {
-            add(lights, gbc);
-        }
+        add(lights, gbc);
         buttons = new ArrayList<>();
 
         for(String name : buttonNames) {
