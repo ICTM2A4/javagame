@@ -14,7 +14,6 @@ public class EndScreen extends JPanel implements ActionListener {
 
     private CButton nextLevel, backToMainMenu, restart;
     int levelId = LevelLoader.getInstance().getCurrentLevel().get().getId();
-    //long points = LevelLoader.getInstance().getCurrentLevel().get().getScore();
 
     public EndScreen() {
         setLayout(new GridBagLayout());

@@ -6,9 +6,6 @@ import java.util.ArrayList;
 
 public class AchievementHandler {
 
-    //TODO: eerste deur openen
-    //TODO: level 10 halen
-
     private static AchievementHandler instance;
 
     private ArrayList<Achievement> achievements;
@@ -21,6 +18,7 @@ public class AchievementHandler {
         popups = new ArrayList<>();
     }
 
+    @Deprecated
     public ArrayList<Achievement> getAchievements() {
         return achievements;
     }
@@ -38,7 +36,7 @@ public class AchievementHandler {
 
     public void achieve(String tekst) {
         this.popups.add(new AchievementPopup(tekst));
-    }
+    } //TODO: tekst uit api gebruiken
 
     public void tick() {
         if (this.popups.size() > 0) {

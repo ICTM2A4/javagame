@@ -5,14 +5,11 @@ import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.services.levels.Level;
 import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
-import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class preLevelEditorScreen extends JPanel implements ActionListener {
 

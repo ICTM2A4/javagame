@@ -33,9 +33,9 @@ public class Orc extends Mob {
         }
     }
 
-    public void tick() {
-        super.tick();
-    }
+//    //public void tick() {
+//        super.tick();
+//    }
 
     @Override
     public boolean checkCollideSingle(GameObject otherGameObject, int x, int y) {

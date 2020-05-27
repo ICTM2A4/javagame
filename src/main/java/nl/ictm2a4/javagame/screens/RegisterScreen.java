@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class RegisterScreen extends JPanel implements ActionListener {
 
-    private JLabel username, password, password2, message;
+    private JLabel message;
     private JTextField Jusername, Jpassword, Jpassword2;
     private CButton register, back;
 
@@ -26,19 +26,19 @@ public class RegisterScreen extends JPanel implements ActionListener {
 
         this.setPreferredSize(new Dimension(360, 360));
 
-        username = new JLabel("Username:");
+        JLabel username = new JLabel("Username:");
         add(username, gbc);
         Jusername = new JTextField(10);
         Jusername.addActionListener(this);
         add(Jusername, gbc);
 
-        password = new JLabel("Password:");
+        JLabel password = new JLabel("Password:");
         add(password, gbc);
         Jpassword = new JTextField(10);
         Jpassword.addActionListener(this);
         add(Jpassword, gbc);
 
-        password2 = new JLabel("Repeat password:");
+        JLabel password2 = new JLabel("Repeat password:");
         add(password2, gbc);
         Jpassword2 = new JTextField(10);
         Jpassword2.addActionListener(this);

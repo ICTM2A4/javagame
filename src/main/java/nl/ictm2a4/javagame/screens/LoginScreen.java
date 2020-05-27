@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class LoginScreen extends JPanel implements ActionListener {
 
-    private JLabel username, password, message;
+    private JLabel message;
     private JTextField Jusername, Jpassword;
     private ArrayList<CButton> buttons;
 
@@ -27,13 +27,13 @@ public class LoginScreen extends JPanel implements ActionListener {
 
         this.setPreferredSize(new Dimension(360, 360));
 
-        username = new JLabel("Username:");
+        JLabel username = new JLabel("Username:");
         add(username, gbc);
         Jusername = new JTextField(10);
         Jusername.addActionListener(this);
         add(Jusername, gbc);
 
-        password = new JLabel("Password:");
+        JLabel password = new JLabel("Password:");
         add(password, gbc);
         Jpassword = new JPasswordField(10);
         Jpassword.addActionListener(this);

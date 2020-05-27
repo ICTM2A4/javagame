@@ -37,16 +37,7 @@ public class Level extends JPanel implements Listener {
     private boolean renderShadows, animateLights;
     private Optional<JSONObject> object;
     private long score;
-    private long current = System.currentTimeMillis();
     private long start;
-
-    public int getId() {
-        return id;
-    }
-
-    public long getScore() {
-        return score;
-    }
 
     public Level(int id) {
         this.id = id;
@@ -68,6 +59,14 @@ public class Level extends JPanel implements Listener {
         EventManager.getInstance().registerEvent(this);
         shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public long getScore() {
+        return score;
     }
 
     /**
@@ -211,10 +210,6 @@ public class Level extends JPanel implements Listener {
         this.name = name;
     }
 
-    public boolean isAnimateLights() {
-        return animateLights;
-    }
-
     public void setAnimateLights(boolean animateLights) {
         this.animateLights = animateLights;
     }
@@ -241,7 +236,6 @@ public class Level extends JPanel implements Listener {
     public void loadLevel() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         clearGameObjects();
         loadObject();
-        current = System.currentTimeMillis();
 
         if (object.isEmpty())
             return;
@@ -342,10 +336,6 @@ public class Level extends JPanel implements Listener {
      */
     public void setRenderShadows(boolean renderShadows) {
         this.renderShadows = renderShadows;
-    }
-
-    public boolean isRenderShadows() {
-        return renderShadows;
     }
 
     /**

@@ -1,11 +1,6 @@
 package nl.ictm2a4.javagame.screens;
 
-import nl.ictm2a4.javagame.achievement.AchievementHandler;
-import nl.ictm2a4.javagame.cachievements.FirstDoorOpened;
-import nl.ictm2a4.javagame.cachievements.LastLevelAchieved;
-import nl.ictm2a4.javagame.cachievements.LevelOneAchieved;
 import nl.ictm2a4.javagame.loaders.FileLoader;
-import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.services.achievements.Achievement;
 import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
@@ -41,12 +36,12 @@ public class AchievementScreen extends JPanel implements ActionListener {
         var achievements = new AchievementsService().getAchievements();
 
         for(Achievement achievement : achievements){
-            var achievementButton = new CButton("");
+            CButton achievementButton = new CButton("");
             JCheckBox checkBox = new JCheckBox(achievement.name);
             checkBox.setEnabled(false);
             checkBox.setForeground(Color.BLACK);
             checkBox.setBackground(new Color(146, 115, 63));
-            checkBox.setSelected(achieved_achievements.stream().filter(a -> a.id == achievement.id).findAny().isPresent());
+            checkBox.setSelected(achieved_achievements.stream().anyMatch(a -> a.id == achievement.id));
             achievementButton.add(checkBox);
             add(achievementButton, gbc);
         }

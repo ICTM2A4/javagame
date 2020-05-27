@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 public class GameOverScreen extends JPanel implements ActionListener {
 
     CButton backToMainMenu, restart;
-    long points = LevelLoader.getInstance().getCurrentLevel().get().getScore();
 
     public GameOverScreen() {
         setLayout(new GridBagLayout());
@@ -23,9 +22,9 @@ public class GameOverScreen extends JPanel implements ActionListener {
         gbc.anchor = GridBagConstraints.WEST;
         this.setPreferredSize(new Dimension(360, 360));
 
-        JLabel score = new JLabel("tijd: " + points / 1000);
-        score.setForeground(Color.WHITE);
-        add(score, gbc);
+        JLabel gameOver = new JLabel("Game Over");
+        gameOver.setForeground(Color.WHITE);
+        add(gameOver, gbc);
         restart = new CButton("Restart");
         restart.addActionListener(this);
         add(restart, gbc);

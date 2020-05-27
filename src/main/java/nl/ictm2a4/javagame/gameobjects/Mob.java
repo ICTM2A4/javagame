@@ -43,6 +43,7 @@ public abstract class Mob extends GameObject {
         return (r * r) >= ((x - a) * (x - a)) + ((y - b) * (y - b));
     }
 
+    @Deprecated
     public int getRange() {
         return this.range;
     }
