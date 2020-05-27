@@ -66,7 +66,7 @@ public abstract class Mob extends GameObject {
     public void draw(Graphics g) {
 
         if (isAlive())
-            paintHealthBar(g, getX() - 6, getY() - 46);
+            paintHealthBar(g, getX() - 6, getY() - 36);
 
     }
 

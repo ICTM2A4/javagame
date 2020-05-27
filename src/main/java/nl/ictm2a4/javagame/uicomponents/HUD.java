@@ -33,7 +33,11 @@ public class HUD extends JPanel {
         instance = this;
         setLayout(new GridBagLayout());
 
-        setPreferredSize(new Dimension(LevelLoader.WIDTH, LevelLoader.HEIGHT));
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        setSize(screenSize.width, screenSize.height);
+
+        setPreferredSize(new Dimension(screenSize.width, screenSize.height));
         setOpaque(false);
         setBackground(new Color(0,0,0,0));
         setVisible(true);
@@ -86,7 +90,7 @@ public class HUD extends JPanel {
     }
 
     private void paintHealth(Graphics g) {
-        int startY = LevelLoader.HEIGHT - 68;
+        int startY = getHeight() - 88;
         int startX = 30;
 
         g.setColor(Color.DARK_GRAY);
@@ -105,7 +109,7 @@ public class HUD extends JPanel {
 
     private void paintInventory(Graphics g) {
         int startX = 30;
-        int startY = LevelLoader.HEIGHT - 30;
+        int startY = getHeight() - 50;
 
         int inventorySlots = 5;
       

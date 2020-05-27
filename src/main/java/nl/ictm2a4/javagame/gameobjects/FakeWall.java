@@ -18,7 +18,6 @@ public class FakeWall extends GameObject {
     @JSONLoader(JSONString = "fakeWalls")
     public FakeWall(Integer gridX, Integer gridY) {
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
-        setCollidable(false);
         setyIndex(2);
     }
 
@@ -33,8 +32,10 @@ public class FakeWall extends GameObject {
                 EventManager.getInstance().callEvent(new ThroughFakeWallEvent(this));
         }
 
+        if (gameObject instanceof Player)
+            return false;
 
-        return false;
+        return result;
     }
 
     @Override
