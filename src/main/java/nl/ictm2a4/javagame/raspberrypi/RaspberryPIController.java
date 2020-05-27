@@ -1,6 +1,7 @@
 package nl.ictm2a4.javagame.raspberrypi;
 
 import nl.ictm2a4.javagame.loaders.LevelLoader;
+import nl.ictm2a4.javagame.loaders.Settings;
 import nl.ictm2a4.javagame.screens.GameScreen;
 
 import java.util.concurrent.Executors;
@@ -16,9 +17,12 @@ public class RaspberryPIController {
 
     public RaspberryPIController() {
         instance = this;
-        if (GameScreen.USE_RPI) {
+        String ip = Settings.getInstance().getRaspberryPiIp();
+        if (Settings.getInstance().isUseRPI() && !ip.equals("")) {
 
-            this.client = new Client("192.168.0.136", 8001); //TODO: uit settings halen
+            String[] ipSplit = ip.split(":");
+
+            this.client = new Client(ipSplit[0], Integer.parseInt(ipSplit[1]));
 
             executor =
                 Executors.newSingleThreadScheduledExecutor();
@@ -44,7 +48,7 @@ public class RaspberryPIController {
     }
 
     public void disconnect() {
-        if (GameScreen.USE_RPI) {
+        if (Settings.getInstance().isUseRPI() && client.isConnected()) {
             this.executor.shutdown();
 
             new java.util.Timer().schedule(

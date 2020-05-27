@@ -50,6 +50,7 @@ public class RegisterScreen extends JPanel implements ActionListener {
         register = new CButton("register");
         register.addActionListener(this);
         add(register, gbc);
+        getRootPane().setDefaultButton(register);
 
         back = new CButton("back");
         back.addActionListener(this);
