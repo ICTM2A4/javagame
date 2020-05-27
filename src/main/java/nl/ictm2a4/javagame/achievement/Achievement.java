@@ -22,17 +22,20 @@ public abstract class Achievement implements Listener {
         ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement> achieved_achievements = new ArrayList<>();
 
         if(currentUser.isPresent()){
-            achieved_achievements = (ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement>) new AchievementsService().getAchievements(currentUser.get().id);
-        } else{
-            return false;
+            achieved_achievements = (ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement>)
+                new AchievementsService().getAchievements(currentUser.get().getId());
         }
 
-        return achieved_achievements.stream().filter(a -> a.id == this.id).findAny().isPresent();
+        return achieved_achievements.stream().anyMatch(a -> a.getId() == this.id);
     }
 
-    public void achieve(String tekst) { //TODO: tekst uit api gebruiken
+    public void achieve() {
         if(isAchieved())
             return;
+
+        AchievementsService service = new AchievementsService();
+        String tekst = service.getAchievement(id).getName();
+
         AchievementHandler.getInstance().achieve(tekst);
     }
 }

@@ -1,7 +1,6 @@
 package nl.ictm2a4.javagame.services.users;
 
 import nl.ictm2a4.javagame.services.ApiService;
-import nl.ictm2a4.javagame.services.scores.Score;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -16,11 +15,11 @@ public class UserService extends ApiService {
 
         var response = sendRequest(baseUrl + "/authenticate", "POST", userJson.toString());
 
-        if(response == null || response.responseCode != 200) {
+        if(response == null || response.getResponseCode() != 200) {
             return null;
         }
 
-        return convertJsonToUser((JSONObject) response.body);
+        return convertJsonToUser(response.getBody());
     }
 
     public User register(User user){
@@ -28,23 +27,21 @@ public class UserService extends ApiService {
 
         var response = sendRequest(baseUrl + "/register", "POST", userJson.toString());
 
-        if(response == null || response.responseCode != 200) {
+        if(response == null || response.getResponseCode() != 200) {
             return null;
         }
 
-        return convertJsonToUser((JSONObject) response.body);
+        return convertJsonToUser(response.getBody());
     }
 
     public List<User> getUsers(){
         var response = sendRequest(baseUrl, "GET","");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var users = convertJsonToUsersList((JSONArray) response.body.get("Values"));
-
-        return users;
+        return convertJsonToUsersList((JSONArray) response.getBody().get("Values"));
     }
 
     // JSON conversie
@@ -69,10 +66,10 @@ public class UserService extends ApiService {
 
     private JSONObject convertUserToJson(User user){
         var userJson = new JSONObject();
-        userJson.put("id", user.id);
-        userJson.put("username", user.username);
-        userJson.put("password", user.password);
-        userJson.put("token", user.token);
+        userJson.put("id", user.getId());
+        userJson.put("username", user.getUsername());
+        userJson.put("password", user.getPassword());
+        userJson.put("token", user.getToken());
 
 
         return userJson;

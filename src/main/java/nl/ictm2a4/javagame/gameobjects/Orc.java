@@ -26,16 +26,12 @@ public class Orc extends Mob {
     @Override
     public void draw(Graphics g) {
         super.draw(g);
-        if (this.isAlive()) {
+        if (this.isAlive() && LevelLoader.getInstance().getCurrentLevel().isPresent()) {
             g.drawImage(FileLoader.getInstance().getOrcImage(getStatus(), getDirection(), getCurrentImage()),
                 getX() - 8, getY() - 30,
                 LevelLoader.getInstance().getCurrentLevel().get());
         }
     }
-
-//    //public void tick() {
-//        super.tick();
-//    }
 
     @Override
     public boolean checkCollideSingle(GameObject otherGameObject, int x, int y) {

@@ -13,11 +13,11 @@ public class LevelService extends ApiService {
     public Level getLevel(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var levelJson = (JSONObject) response.body;
+        var levelJson = (JSONObject) response.getBody();
 
         return convertJsonToLevel(levelJson);
     }
@@ -25,13 +25,11 @@ public class LevelService extends ApiService {
     public List<Level> getLevels(){
         var response = sendRequest(baseUrl, "GET", "");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var levels = convertJsonToLevelsList((JSONArray) response.body.get("Values"));
-
-        return levels;
+        return convertJsonToLevelsList((JSONArray) response.getBody().get("Values"));
     }
 
     public Level addLevel(Level level){
@@ -40,22 +38,22 @@ public class LevelService extends ApiService {
 
         // TODO: Afdwingen dat content in JSON formaat is
 
-        if(response == null || response.responseCode != 201) {
+        if(response == null || response.getResponseCode() != 201) {
             return null;
         }
 
-        var returnLevelJson = (JSONObject) response.body;
+        var returnLevelJson = (JSONObject) response.getBody();
 
         return convertJsonToLevel(returnLevelJson);
     }
 
     public Boolean updateLevel(Level level){
         var levelJson = convertLevelToJson(level);
-        var response = sendRequest(baseUrl + "/" + level.id, "PUT", levelJson.toString());
+        var response = sendRequest(baseUrl + "/" + level.getId(), "PUT", levelJson.toString());
 
         // TODO: Afdwingen dat content in JSON formaat is
 
-        if(response != null && response.responseCode == 204){
+        if(response != null && response.getResponseCode() == 204){
             return true;
         }
 
@@ -87,12 +85,12 @@ public class LevelService extends ApiService {
 
     private JSONObject convertLevelToJson(Level level){
         var levelJson = new JSONObject();
-        levelJson.put("id", level.id);
-        levelJson.put("name", level.name);
-        levelJson.put("description", level.description);
-        levelJson.put("content", level.content);
-        levelJson.put("creatorID", level.creatorID);
-        levelJson.put("creatorUserName", level.creatorUserName);
+        levelJson.put("id", level.getId());
+        levelJson.put("name", level.getName());
+        levelJson.put("description", level.getDescription());
+        levelJson.put("content", level.getContent());
+        levelJson.put("creatorID", level.getCreatorID());
+        levelJson.put("creatorUserName", level.getCreatorUserName());
 
         return levelJson;
     }

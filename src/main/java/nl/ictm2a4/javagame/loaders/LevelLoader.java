@@ -53,19 +53,17 @@ public class LevelLoader {
     /**
      * Start a level by it's id, and load the level
      * @param id ID of the level
-     * @return true if the level could be started, false if the level could not be started
      */
-    public boolean startLevel(int id) {
+    public void startLevel(int id) {
         loadLevel(id);
-        return startLevel();
+        startLevel();
     }
 
     /**
      * Start the current loaded level
-     * @return true if the level could be started, false if the level could not be started
      */
-    public boolean startLevel() {
-        if (currentLevel == null) return false;
+    public void startLevel() {
+        if (currentLevel == null) return;
         loadLevel(currentLevel.getId());
         currentLevel.setRenderShadows(Settings.getInstance().isShowShadows());
         currentLevel.setAnimateLights(Settings.getInstance().isAnimatedLights());
@@ -76,7 +74,6 @@ public class LevelLoader {
         }
         GameScreen.getInstance().setPanel(currentLevel);
         paused = false;
-        return true;
     }
 
     /**
@@ -99,6 +96,9 @@ public class LevelLoader {
      * Resume the current level and request focus on the JPanel
      */
     public void resume() {
+        if (getCurrentLevel().isEmpty())
+            return;
+
         GameScreen.getInstance().requestFocus();
         paused = false;
         getCurrentLevel().get().resetStart();
@@ -146,7 +146,6 @@ public class LevelLoader {
         return levelObject;
     }
 
-    @Deprecated
     public boolean isPaused() {
         return paused;
     }

@@ -27,21 +27,21 @@ public class AchievementScreen extends JPanel implements ActionListener {
 
         var currentUser = GameScreen.getInstance().getCurrentUser();
 
-        ArrayList<Achievement> achieved_achievements = new ArrayList<Achievement>();
+        ArrayList<Achievement> achieved_achievements = new ArrayList<>();
 
         if(currentUser.isPresent()){
-            achieved_achievements = (ArrayList<Achievement>) new AchievementsService().getAchievements(currentUser.get().id);
+            achieved_achievements = (ArrayList<Achievement>) new AchievementsService().getAchievements(currentUser.get().getId());
         }
 
         var achievements = new AchievementsService().getAchievements();
 
         for(Achievement achievement : achievements){
             CButton achievementButton = new CButton("");
-            JCheckBox checkBox = new JCheckBox(achievement.name);
+            JCheckBox checkBox = new JCheckBox(achievement.getName());
             checkBox.setEnabled(false);
             checkBox.setForeground(Color.BLACK);
             checkBox.setBackground(new Color(146, 115, 63));
-            checkBox.setSelected(achieved_achievements.stream().anyMatch(a -> a.id == achievement.id));
+            checkBox.setSelected(achieved_achievements.stream().anyMatch(a -> a.getId() == achievement.getId()));
             achievementButton.add(checkBox);
             add(achievementButton, gbc);
         }

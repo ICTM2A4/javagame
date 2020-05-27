@@ -1,6 +1,5 @@
 package nl.ictm2a4.javagame.raspberrypi;
 
-
 import java.io.*;
 import java.net.*;
 import java.lang.*;

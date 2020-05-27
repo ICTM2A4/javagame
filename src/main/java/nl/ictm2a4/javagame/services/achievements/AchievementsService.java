@@ -1,7 +1,6 @@
 package nl.ictm2a4.javagame.services.achievements;
 
 import nl.ictm2a4.javagame.services.ApiService;
-import nl.ictm2a4.javagame.services.levels.Level;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -14,11 +13,11 @@ public class AchievementsService extends ApiService {
     public Achievement getAchievement(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        var achivementJson = (JSONObject) response.body;
+        var achivementJson = (JSONObject) response.getBody();
 
         return convertJsonToAchievement(achivementJson);
     }
@@ -26,21 +25,21 @@ public class AchievementsService extends ApiService {
     public List<Achievement> getAchievements(){
         var response = sendRequest(baseUrl, "GET", "");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        return convertJsonToAchievementsList((JSONArray) response.body.get("Values"));
+        return convertJsonToAchievementsList((JSONArray) response.getBody().get("Values"));
     }
 
     public List<Achievement> getAchievements(int uid){
         var response = sendRequest(baseUrl + "?uid=" + uid, "GET", "");
 
-        if(response == null || response.responseCode != 200){
+        if(response == null || response.getResponseCode() != 200){
             return null;
         }
 
-        return convertJsonToAchievementsList((JSONArray) response.body.get("Values"));
+        return convertJsonToAchievementsList((JSONArray) response.getBody().get("Values"));
     }
 
     public Achievement addAchievement(Achievement achievement){
@@ -49,20 +48,20 @@ public class AchievementsService extends ApiService {
 
         // TODO: Afdwingen dat content in JSON formaat is
 
-        if(response == null || response.responseCode != 201) {
+        if(response == null || response.getResponseCode() != 201) {
             return null;
         }
 
-        return convertJsonToAchievement((JSONObject) response.body);
+        return convertJsonToAchievement((JSONObject) response.getBody());
     }
 
     public Boolean updateAchievement(Achievement achievement){
         var achievementJson = convertAchievementToJson(achievement);
-        var response = sendRequest(baseUrl + "/" + achievement.id   , "PUT", achievementJson.toString());
+        var response = sendRequest(baseUrl + "/" + achievement.getId()   , "PUT", achievementJson.toString());
 
         // TODO: Afdwingen dat content in JSON formaat is
 
-        if(response != null && response.responseCode == 204){
+        if(response != null && response.getResponseCode() == 204){
             return true;
         }
 
@@ -76,7 +75,7 @@ public class AchievementsService extends ApiService {
 
         var response = sendRequest(baseUrl + "/user", "POST", userAchievementJson.toString());
 
-        if(response != null && response.responseCode == 200){
+        if(response != null && response.getResponseCode() == 200){
             return true;
         }
 
@@ -90,7 +89,7 @@ public class AchievementsService extends ApiService {
 
         var response = sendRequest(baseUrl + "/user", "DELETE", userAchievementJson.toString());
 
-        if(response != null && response.responseCode == 200){
+        if(response != null && response.getResponseCode() == 200){
             return true;
         }
 
@@ -119,9 +118,9 @@ public class AchievementsService extends ApiService {
 
     private JSONObject convertAchievementToJson(Achievement achievement){
         var levelJson = new JSONObject();
-        levelJson.put("id", achievement.id);
-        levelJson.put("name", achievement.name);
-        levelJson.put("description", achievement.description);
+        levelJson.put("id", achievement.getId());
+        levelJson.put("name", achievement.getName());
+        levelJson.put("description", achievement.getDescription());
 
         return levelJson;
     }

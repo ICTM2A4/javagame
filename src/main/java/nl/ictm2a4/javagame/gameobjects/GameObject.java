@@ -2,29 +2,21 @@ package nl.ictm2a4.javagame.gameobjects;
 
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.Level;
-import nl.ictm2a4.javagame.screens.LevelEditor;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class GameObject {
 
     private int x, y, extra, width, height;
     private boolean collidable = true;
-    private boolean isEntity;
     private int yIndex;
 
     public GameObject(int x, int y, int width, int height) {
-        this(x,y,width,height,true);
-    }
-
-    public GameObject(int x, int y, int width, int height, boolean isEntity) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.isEntity = isEntity;
         this.yIndex = 0;
     }
 
@@ -212,15 +204,6 @@ public abstract class GameObject {
      * Tick the GameObject
      */
     public void tick() {}
-
-    /**
-     * Get if the object is an entity
-     * @return boolean isEntity
-     */
-    @Deprecated
-    public boolean isEntity() {
-        return this.isEntity;
-    }
 
     public int getExtra() {
         return this.extra;

@@ -7,6 +7,7 @@ import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 
 public class LevelOneAchieved extends Achievement {
+
     public LevelOneAchieved(){
         super(1);
     }
@@ -14,12 +15,10 @@ public class LevelOneAchieved extends Achievement {
     @EventHandler
     public void onReachedEndEvent(ReachedEndEvent event) {
         if (event.getLevelID() == 1) {
-            achieve("First level achieved");
+            achieve();
 
             var currentUser = GameScreen.getInstance().getCurrentUser();
-            if(currentUser.isPresent()) {
-                new AchievementsService().addAchievementToUser(id, currentUser.get().id);
-            }
+            currentUser.ifPresent(user -> new AchievementsService().addAchievementToUser(id, user.getId()));
         }
     }
 }

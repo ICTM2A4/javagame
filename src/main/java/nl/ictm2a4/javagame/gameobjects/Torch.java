@@ -24,6 +24,9 @@ public class Torch extends GameObject {
 
     @Override
     public void draw(Graphics g) {
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
+
         g.drawImage(FileLoader.getInstance().getTorchImage(currentImage),
             getX(), getY(),
             LevelLoader.getInstance().getCurrentLevel().get());

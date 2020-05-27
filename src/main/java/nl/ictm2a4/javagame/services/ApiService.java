@@ -14,8 +14,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class ApiService {
+
     protected String baseUrl = "https://javagameapi.rillprogramming.com"; // prod
     //protected String baseUrl = "https://localhost:44320"; // local
+
     public Response sendRequest(String uri){
         return sendRequest(uri, "GET", "");
     }
@@ -31,13 +33,13 @@ public class ApiService {
 
             String apiToken = GameScreen.getInstance().getApiToken();
 
-            if(apiToken != null && apiToken != ""){
+            if(apiToken != null && !apiToken.equals("")){
                 connection.setRequestProperty("Authorization", "Bearer " + apiToken);
             }
 
-            if(method == "POST" || method == "PUT"){
+            if(method.equals("POST") || method.equals("PUT")){
 
-                int length = body.getBytes(("UTF-8")).length;
+                int length = body.getBytes(StandardCharsets.UTF_8).length;
 
                 connection.setRequestProperty("Content-Length", String.valueOf(length));
                 connection.setRequestProperty("Content-Type", "application/json");
@@ -45,7 +47,7 @@ public class ApiService {
                     connection.setDoOutput(true);
 
                     try(OutputStream os = connection.getOutputStream()) {
-                        byte[] input = body.getBytes("utf-8");
+                        byte[] input = body.getBytes(StandardCharsets.UTF_8);
                         os.write(input, 0, input.length);
                 }
             }
@@ -76,9 +78,7 @@ public class ApiService {
             connection.disconnect();
 
             return new Response(responseCode, responseBody);
-        } catch (IOException e) {
-            System.out.println("Request failed: " + e.toString());
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             System.out.println("Request failed: " + e.toString());
         }
 

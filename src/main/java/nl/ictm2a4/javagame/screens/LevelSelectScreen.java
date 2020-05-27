@@ -138,7 +138,7 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         var customLevels = new LevelService().getLevels();
 
         for(Level level : customLevels){
-            int loadLevel = level.id;
+            int loadLevel = level.getId();
 
             if (loadLevel > LevelLoader.DEFAULTLEVELAMOUNT) {
 
@@ -146,7 +146,7 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
                 container.setLayout(new GridLayout(2, 0, 5, 5));
                 container.setBackground(new Color(0, 0, 0, 0));
 
-                CButton button = new CButton("Start " + level.name);
+                CButton button = new CButton("Start " + level.getName());
                 container.add(button);
                 jpcustomLevel.add(container);
 

@@ -27,6 +27,9 @@ public class ScoreListener implements Listener {
 
     @EventHandler
     public void onLevelAchieved(ReachedEndEvent event) {
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
+
         var timeScore = LevelLoader.getInstance().getCurrentLevel().get().getScore();
 
         scoreAmount = Math.round((60 * 30 - timeScore) * 0.9);
@@ -39,7 +42,7 @@ public class ScoreListener implements Listener {
             return;
         }
 
-        var score = new Score(0, scoreAmount, LocalDateTime.now(), user.get().id, "", event.getLevelID(), "");
+        var score = new Score(0, scoreAmount, LocalDateTime.now(), user.get().getId(), "", event.getLevelID(), "");
 
         new ScoreService().addScore(score);
     }

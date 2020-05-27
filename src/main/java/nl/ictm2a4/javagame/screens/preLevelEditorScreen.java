@@ -96,24 +96,27 @@ public class preLevelEditorScreen extends JPanel implements ActionListener {
 
         var levelService = new LevelService();
 
+        if (GameScreen.getInstance().getCurrentUser().isEmpty())
+            return;
+
         Level[] levelList = levelService.getLevels().stream()
-            .filter(level -> level.creatorID == GameScreen.getInstance().getCurrentUser().get().id).toArray(Level[]::new);
+            .filter(level -> level.getCreatorID() == GameScreen.getInstance().getCurrentUser().get().getId()).toArray(Level[]::new);
 
         for(Level level : levelList) {
             JPanel container = new JPanel();
             container.setLayout(new GridLayout(2, 0, 0, 5));
             container.setBackground(new Color(0, 0, 0, 0));
 
-            CButton editLevel = new CButton("Edit level " + level.name);
+            CButton editLevel = new CButton("Edit level " + level.getName());
             editLevel.setPreferredSize(new Dimension(140, 30));
             container.add(editLevel);
             jpcustomLevel.add(container);
 
-            int loadLevel = level.id;
+            int loadLevel = level.getId();
             editLevel.addActionListener(
                 e -> {
                     LevelLoader.getInstance().loadLevel(loadLevel);
-                    GameScreen.getInstance().setPanel(new LevelEditor(), "Level Editor");
+                    GameScreen.getInstance().setPanel(new LevelEditor());
                 }
             );
         }

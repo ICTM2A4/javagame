@@ -18,13 +18,13 @@ public class RaspberryPIController {
         instance = this;
         if (GameScreen.USE_RPI) {
 
-            this.client = new Client("192.168.0.136", 8001);
+            this.client = new Client("192.168.0.136", 8001); //TODO: uit settings halen
 
             executor =
                 Executors.newSingleThreadScheduledExecutor();
 
             Runnable periodicTask = () -> {
-                if (client.isConnected() && LevelLoader.getInstance().getCurrentLevel().isPresent()) //TODO: only if not paused
+                if (client.isConnected() && LevelLoader.getInstance().getCurrentLevel().isPresent() && !LevelLoader.getInstance().isPaused())
                     currentButton = client.getButtonStatus();
             };
 

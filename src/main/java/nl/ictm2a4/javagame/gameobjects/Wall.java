@@ -17,6 +17,10 @@ public class Wall extends GameObject {
         ArrayList<Class<? extends GameObject>> matches = new ArrayList<>();
         matches.add(Wall.class);
         matches.add(FakeWall.class);
+
+        if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
+            return;
+
         g.drawImage(FileLoader.getInstance().getWallTile(connectedFacesSum(this.hasConnectedFaces(matches))),
             getX(), getY(),
             LevelLoader.getInstance().getCurrentLevel().get());
