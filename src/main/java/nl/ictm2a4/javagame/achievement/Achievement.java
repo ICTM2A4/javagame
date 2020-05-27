@@ -19,17 +19,9 @@ public abstract class Achievement implements Listener {
     }
 
     public boolean isAchieved() {
+        var achievedAchievements = GameScreen.getInstance().getAchievedAchievements();
 
-        var currentUser = GameScreen.getInstance().getCurrentUser();
-
-        ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement> achieved_achievements = new ArrayList<>();
-
-        if(currentUser.isPresent()){
-            achieved_achievements = (ArrayList<nl.ictm2a4.javagame.services.achievements.Achievement>)
-                new AchievementsService().getAchievements(currentUser.get().getId());
-        }
-
-        return achieved_achievements.stream().anyMatch(a -> a.getId() == this.id);
+        return achievedAchievements.stream().anyMatch(a -> a.getId() == this.id);
     }
 
     public void achieve() {
@@ -37,12 +29,13 @@ public abstract class Achievement implements Listener {
         if(isAchieved() || (level.isPresent() && level.get().getId() > LevelLoader.DEFAULTLEVELAMOUNT))
             return;
 
-        AchievementsService service = new AchievementsService();
-        String tekst = service.getAchievement(id).getName();
+        var gameScreen = GameScreen.getInstance();
 
+        String tekst = gameScreen.getAchievement(id).getName();
         AchievementHandler.getInstance().achieve(tekst);
+        var currentUser = gameScreen.getCurrentUser();
 
-        var currentUser = GameScreen.getInstance().getCurrentUser();
+        GameScreen.getInstance().addAchievedAchievement(new nl.ictm2a4.javagame.services.achievements.Achievement(id, "", ""));
         currentUser.ifPresent(user -> new AchievementsService().addAchievementToUser(id, user.getId()));
     }
 }

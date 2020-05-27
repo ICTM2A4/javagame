@@ -25,15 +25,9 @@ public class AchievementScreen extends JPanel implements ActionListener {
 
         this.setPreferredSize(new Dimension(360, 360));
 
-        var currentUser = GameScreen.getInstance().getCurrentUser();
-
-        ArrayList<Achievement> achieved_achievements = new ArrayList<>();
-
-        if(currentUser.isPresent()){
-            achieved_achievements = (ArrayList<Achievement>) new AchievementsService().getAchievements(currentUser.get().getId());
-        }
-
-        var achievements = new AchievementsService().getAchievements();
+       var gameScreen = GameScreen.getInstance();
+        var achievedAchievements = gameScreen.getAchievedAchievements();
+        var achievements = gameScreen.getAchievements();
 
         JPanel achievementPanel = new JPanel();
         achievementPanel.setLayout(new GridLayout(0, 2, 5, 30));
@@ -48,7 +42,7 @@ public class AchievementScreen extends JPanel implements ActionListener {
             JCheckBox checkBox = new JCheckBox(achievement.getName());
             checkBox.setEnabled(false);
             checkBox.setBackground(new Color(0,0,0,0));
-            checkBox.setSelected(achieved_achievements.stream().anyMatch(a -> a.getId() == achievement.getId()));
+            checkBox.setSelected(achievedAchievements.stream().anyMatch(a -> a.getId() == achievement.getId()));
             achievementButton.add(checkBox);
 
             achievementPanel.add(achievementButton, gbc);

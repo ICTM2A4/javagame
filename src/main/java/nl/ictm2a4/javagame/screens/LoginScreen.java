@@ -2,6 +2,7 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.Settings;
+import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 import nl.ictm2a4.javagame.services.users.UserService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
@@ -74,6 +75,11 @@ public class LoginScreen extends JPanel implements ActionListener {
             if(login != null && login.getToken() != null && !login.getToken().equals("")){
                 GameScreen.getInstance().setCurrentUser(login);
                 Settings.getInstance().updateUser(usernametext, passwordtext);
+
+                // Get achieved achievements upon login
+                var aa = new AchievementsService().getAchievements(login.getId());
+                GameScreen.getInstance().setAchievedAchievements(aa);
+
                 GameScreen.getInstance().setPanel(new MainMenu());
             } else {
                 message.setText("Login incorrect");

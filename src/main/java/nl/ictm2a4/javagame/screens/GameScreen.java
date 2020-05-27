@@ -7,6 +7,8 @@ import nl.ictm2a4.javagame.listeners.ScoreListener;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.loaders.Settings;
+import nl.ictm2a4.javagame.services.achievements.Achievement;
+import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 import nl.ictm2a4.javagame.services.scores.ScoreService;
 import nl.ictm2a4.javagame.services.users.User;
 import nl.ictm2a4.javagame.services.users.UserService;
@@ -55,6 +57,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     private Optional<User> currentUser;
 
+    private List<Achievement> achievedAchievements;
+    private List<Achievement> achievements;
+
     public GameScreen() {
         setTitle(GAMENAME);
         currentUser = Optional.empty();
@@ -66,8 +71,10 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new RaspberryPIController();
 
         tryLogin();
+        refreshAchievements();
 
         pressedKeys = new ArrayList<>();
+        achievedAchievements = new ArrayList<>();
 
         setUndecorated(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -314,6 +321,31 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         else
             currentUser = Optional.of(user);
     }
+    
+    public void setAchievedAchievements(List<Achievement> aa){
+        if(aa != null)
+            achievedAchievements = aa;
+    }
+
+    public void addAchievedAchievement(Achievement achievement){
+        achievedAchievements.add(achievement);
+    }
+
+    public List<Achievement> getAchievedAchievements(){
+        return achievedAchievements;
+    }
+
+    public List<Achievement> getAchievements(){
+        return achievements;
+    }
+
+    public Achievement getAchievement(int id){
+        return achievements.stream().filter(a -> a.getId() == id).findFirst().get();
+    }
+
+    public void refreshAchievements(){
+        achievements = new AchievementsService().getAchievements();
+    }
 
     public Optional<User> getCurrentUser(){
         return currentUser;
@@ -330,7 +362,12 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         var login = new UserService().authenticate(Settings.getInstance().getUsername(),
             Settings.getInstance().getPassword());
 
-        if(login != null && login.getToken() != null && !login.getToken().equals(""))
+        if(login != null && login.getToken() != null && !login.getToken().equals("")){
             setCurrentUser(login);
+
+            // Get achieved achievements upon startup
+            var aa = new AchievementsService().getAchievements(login.getId());
+            setAchievedAchievements(aa);
+        }
     }
 }
