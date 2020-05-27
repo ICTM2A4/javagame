@@ -10,13 +10,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 public class SettingScreen extends JPanel implements ActionListener {
 
     private ArrayList<CButton> buttons;
     private JPanel origin;
-    private CButton lights;
+    private boolean[] values;
+    private JTextField rpiIP;
 
     public SettingScreen(JPanel origin) {
         this.origin = origin;
@@ -35,29 +37,34 @@ public class SettingScreen extends JPanel implements ActionListener {
 
         this.setPreferredSize(new Dimension(360, 360));
 
-        CButton shadows = new CButton("");
-        JCheckBox checkBox = new JCheckBox("shadows");
-        checkBox.addItemListener(e -> {
-                Settings.getInstance().setShowShadows(e.getStateChange() == ItemEvent.SELECTED);
-                LevelLoader.getInstance().getCurrentLevel().get().setRenderShadows(e.getStateChange() == ItemEvent.SELECTED);
-            }
-        );
-        shadows.add(checkBox);
-        checkBox.setBackground(new Color(146, 115, 63));
-        checkBox.setSelected(Settings.getInstance().isShowShadows());
-        add(shadows, gbc);
+        values = new boolean[]{Settings.getInstance().isShowShadows(), Settings.getInstance().isAnimatedLights(), Settings.getInstance().isUseRPI()};
+        String[] settingNames = new String[]{"shadows","Animated Lights","Use RaspberryPI"};
 
-        lights = new CButton("");
-        JCheckBox checkBox2 = new JCheckBox("Animated Lights");
-        checkBox2.addItemListener(e -> {
-                Settings.getInstance().setAnimatedLights(e.getStateChange() == ItemEvent.SELECTED);
-                LevelLoader.getInstance().getCurrentLevel().get().setAnimateLights(e.getStateChange() == ItemEvent.SELECTED);
-            }
-        );
-        lights.add(checkBox2);
-        checkBox2.setBackground(new Color(146, 115, 63));
-        checkBox2.setSelected(Settings.getInstance().isAnimatedLights());
-        add(lights, gbc);
+        for(int i = 0; i < settingNames.length; i++) {
+            CButton button = new CButton("");
+            JCheckBox checkBox = new JCheckBox(settingNames[i]);
+            checkBox.setBackground(new Color(146, 115, 63));
+
+            checkBox.setSelected(values[i]);
+
+            button.add(checkBox);
+            add(button, gbc);
+
+            int finalI = i;
+            checkBox.addItemListener(e -> {
+                values[finalI] = (e.getStateChange() == ItemEvent.SELECTED);
+
+            });
+        }
+
+        String raspberryIP = (Settings.getInstance().getRaspberryPiIp().equals("")) ? "RPIIP: 000.000.0.000:port" : Settings.getInstance().getRaspberryPiIp();
+
+        CButton rpiIPField = new CButton("");
+        rpiIP = new JTextField(raspberryIP, 10);
+        rpiIP.setBackground(new Color(146, 115, 63));
+        rpiIPField.add(rpiIP);
+        add(rpiIPField, gbc);
+
         buttons = new ArrayList<>();
 
         for(String name : buttonNames) {
@@ -80,6 +87,15 @@ public class SettingScreen extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == buttons.get(0)) {
+
+            Settings.getInstance().setShowShadows(values[0]);
+            Settings.getInstance().setAnimatedLights(values[1]);
+            Settings.getInstance().setUseRPI(values[2]);
+            Settings.getInstance().setRaspberryPiIp(rpiIP.getText());
+
+            Settings.getInstance().save();
+
+
             if (origin instanceof MainMenu) {
                 GameScreen.getInstance().setPanel(new MainMenu());
             } else {

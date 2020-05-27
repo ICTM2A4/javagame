@@ -1,5 +1,6 @@
 package nl.ictm2a4.javagame.loaders;
 
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.screens.GameScreen;
 import nl.ictm2a4.javagame.services.users.User;
 import org.json.simple.JSONObject;
@@ -46,6 +47,8 @@ public class Settings {
             animatedLights = (Boolean) settingsObject.get().getOrDefault("animatedLights", true);
             username = (String) ((JSONObject)settingsObject.get().getOrDefault("user", new JSONObject())).getOrDefault("username", "");
             password = (String) ((JSONObject)settingsObject.get().getOrDefault("user", new JSONObject())).getOrDefault("password", "");
+            useRPI = (Boolean) settingsObject.get().getOrDefault("useRPI", false);
+            raspberryPiIp = (String) settingsObject.get().getOrDefault("rpiIP", "");
 
         }
     }
@@ -57,10 +60,11 @@ public class Settings {
             JSONObject object = new JSONObject();
             object.put("showShadows", showShadows);
             object.put("animatedLights", animatedLights);
+            object.put("useRPI", useRPI);
+            object.put("rpiIP", raspberryPiIp);
 
             JSONObject userObject = new JSONObject();
             if (GameScreen.getInstance().getCurrentUser().isPresent()) {
-                User user = GameScreen.getInstance().getCurrentUser().get();
                 userObject.put("username", username);
                 userObject.put("password", password);
             }
@@ -94,6 +98,8 @@ public class Settings {
             JSONObject object = new JSONObject();
             object.put("showShadows", true);
             object.put("animatedLights", true);
+            object.put("useRPI", false);
+            object.put("rpiIP", "");
             object.put("user", new JSONObject());
             try(FileWriter writer = new FileWriter(file)) {
                 writer.write(object.toJSONString());
@@ -126,7 +132,6 @@ public class Settings {
 
     public void setShowShadows(boolean value) {
         this.showShadows = value;
-        save();
     }
 
     public boolean isShowShadows() {
@@ -135,21 +140,23 @@ public class Settings {
 
     public void setAnimatedLights(boolean value) {
         this.animatedLights = value;
-        save();
     }
 
     public boolean isAnimatedLights() {
         return animatedLights;
     }
 
-    public void setUseRPI(boolean value) {useRPI = value;}
+    public void setUseRPI(boolean value) {
+        useRPI = value;
+        if (!value)
+            RaspberryPIController.getInstance().disconnect();
+    }
 
     public boolean isUseRPI() {return useRPI;}
 
     public void updateUser(String username, String password) {
         this.username = username;
         this.password = password;
-        save();
     }
 
     public String getUsername() {
@@ -160,7 +167,12 @@ public class Settings {
         return this.password;
     }
 
-    public void setRaspberryPiIp(String ip) {this.raspberryPiIp = ip;}
+    public void setRaspberryPiIp(String ip) {
+        boolean reconnect = (!ip.equals(this.raspberryPiIp) && !ip.equals(""));
+        this.raspberryPiIp = ip;
+        if(reconnect)
+            new RaspberryPIController();
+    }
 
     public String getRaspberryPiIp() {
         return raspberryPiIp;

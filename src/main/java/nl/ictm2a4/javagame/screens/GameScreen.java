@@ -29,8 +29,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     public static final String GAMENAME = "The Labyrinth";
 
-    public static final boolean USE_RPI = false; // True for RPI connection
-
     private final static int MAX_FPS = 30;
     private final static int MAX_FRAME_SKIPS = 5;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
@@ -61,6 +59,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     public GameScreen() {
         setTitle(GAMENAME);
+        currentUser = Optional.empty();
 
         instance = this;
 
@@ -68,7 +67,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new LevelLoader();
         new RaspberryPIController();
 
-        currentUser = Optional.empty();
         tryLogin();
 
         pressedKeys = new ArrayList<>();
@@ -307,7 +305,10 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     public void setCurrentUser(User user){
-        currentUser = Optional.of(user);
+        if (user == null)
+            currentUser = Optional.empty();
+        else
+            currentUser = Optional.of(user);
     }
 
     public Optional<User> getCurrentUser(){
