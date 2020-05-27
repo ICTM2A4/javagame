@@ -1,10 +1,13 @@
 package nl.ictm2a4.javagame.achievement;
 
 import nl.ictm2a4.javagame.event.Listener;
+import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.screens.GameScreen;
+import nl.ictm2a4.javagame.screens.Level;
 import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public abstract class Achievement implements Listener {
 
@@ -30,12 +33,16 @@ public abstract class Achievement implements Listener {
     }
 
     public void achieve() {
-        if(isAchieved())
+        Optional<Level> level = LevelLoader.getInstance().getCurrentLevel();
+        if(isAchieved() || (level.isPresent() && level.get().getId() > LevelLoader.DEFAULTLEVELAMOUNT))
             return;
 
         AchievementsService service = new AchievementsService();
         String tekst = service.getAchievement(id).getName();
 
         AchievementHandler.getInstance().achieve(tekst);
+
+        var currentUser = GameScreen.getInstance().getCurrentUser();
+        currentUser.ifPresent(user -> new AchievementsService().addAchievementToUser(id, user.getId()));
     }
 }

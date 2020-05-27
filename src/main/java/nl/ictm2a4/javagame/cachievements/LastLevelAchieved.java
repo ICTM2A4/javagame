@@ -17,9 +17,6 @@ public class LastLevelAchieved extends Achievement {
     public void onLevelAchieved(ReachedEndEvent event) {
         if (event.getLevelID() == LevelLoader.DEFAULTLEVELAMOUNT) {
             achieve();
-
-            var currentUser = GameScreen.getInstance().getCurrentUser();
-            currentUser.ifPresent(user -> new AchievementsService().addAchievementToUser(id, user.getId()));
         }
     }
 }

@@ -16,9 +16,6 @@ public class LevelOneAchieved extends Achievement {
     public void onReachedEndEvent(ReachedEndEvent event) {
         if (event.getLevelID() == 1) {
             achieve();
-
-            var currentUser = GameScreen.getInstance().getCurrentUser();
-            currentUser.ifPresent(user -> new AchievementsService().addAchievementToUser(id, user.getId()));
         }
     }
 }

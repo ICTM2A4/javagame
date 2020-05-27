@@ -1,6 +1,6 @@
 package nl.ictm2a4.javagame.gameobjects;
 
-import nl.ictm2a4.javagame.cevents.TeleportingEvent;
+import nl.ictm2a4.javagame.cevents.TeleportEvent;
 import nl.ictm2a4.javagame.event.EventManager;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.JSONLoader;
@@ -50,12 +50,12 @@ public class TeleportationStone extends GameObject {
                         level.getPlayer().get().setX(stone.getX());
                         level.getPlayer().get().setY(stone.getY());
                     }
-                }, 5);
+                }, 5L);
 
                 stone.setTeleported(true);
                 this.setTeleported(true);
 
-                EventManager.getInstance().callEvent(new TeleportingEvent(this));
+                EventManager.getInstance().callEvent(new TeleportEvent(this, stone));
             }
         }
 
