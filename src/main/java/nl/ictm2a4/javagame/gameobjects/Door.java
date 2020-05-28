@@ -16,6 +16,12 @@ public class Door extends GameObject {
 
     public boolean open = false;
 
+    /**
+     *
+     * @param gridX, The door's X position on the level grid
+     * @param gridY, The door's Y position on the level grid
+     * @param doorCode, The door's code, determines which keys and levers open the door
+     */
     @JSONLoader(JSONString = "doors", withExtra = true)
     public Door(Integer gridX, Integer gridY, Integer doorCode){
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);

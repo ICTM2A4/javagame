@@ -10,6 +10,11 @@ import java.util.List;
 public class LevelService extends ApiService {
     private String baseUrl = super.baseUrl + "/api/levels";
 
+    /** Gets a specific level from the API by the ID
+     *
+     * @param id
+     * @return The level
+     */
     public Level getLevel(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET", "");
 
@@ -22,6 +27,10 @@ public class LevelService extends ApiService {
         return convertJsonToLevel(levelJson);
     }
 
+    /** Gets the list of all the levels in the API
+     *
+     * @return A list of all the levels in the API
+     */
     public List<Level> getLevels(){
         var response = sendRequest(baseUrl, "GET", "");
 
@@ -32,6 +41,11 @@ public class LevelService extends ApiService {
         return convertJsonToLevelsList((JSONArray) response.getBody().get("Values"));
     }
 
+    /** Adds the given level to the API
+     *
+     * @param level
+     * @return the added level if succesful, null if unsuccesful
+     */
     public Level addLevel(Level level){
         var levelJson = convertLevelToJson(level);
         var response = sendRequest(baseUrl, "POST", levelJson.toString());
@@ -47,6 +61,11 @@ public class LevelService extends ApiService {
         return convertJsonToLevel(returnLevelJson);
     }
 
+    /** Updates the given level in the API
+     *
+     * @param level
+     * @return true if succesful, false if unsuccesful
+     */
     public Boolean updateLevel(Level level){
         var levelJson = convertLevelToJson(level);
         var response = sendRequest(baseUrl + "/" + level.getId(), "PUT", levelJson.toString());
@@ -62,6 +81,11 @@ public class LevelService extends ApiService {
 
     // JSON conversie
 
+    /** Converts a JSONarray of levels to a list of levels
+     *
+     * @param levelJson
+     * @return the list of levels
+     */
     private List<Level> convertJsonToLevelsList(JSONArray levelJson){
         var levels = new ArrayList<Level>();
 
@@ -72,6 +96,11 @@ public class LevelService extends ApiService {
         return levels;
     }
 
+    /** Converts a JSONObject of a level to a level
+     *
+     * @param levelJson
+     * @return The level
+     */
     private Level convertJsonToLevel(JSONObject levelJson){
         return new Level(
                 ((Long)levelJson.get("id")).intValue(),
@@ -83,6 +112,11 @@ public class LevelService extends ApiService {
         );
     }
 
+    /** Converts a level to a JSONObject of the level
+     *
+     * @param level
+     * @return the JSONObject of the level
+     */
     private JSONObject convertLevelToJson(Level level){
         var levelJson = new JSONObject();
         levelJson.put("id", level.getId());

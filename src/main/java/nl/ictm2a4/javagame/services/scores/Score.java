@@ -9,6 +9,16 @@ public class Score {
     private LocalDateTime timestamp;
     private String userName, scoredOnName;
 
+    /**
+     *
+     * @param id, The ID of the score
+     * @param sa, The amount scored
+     * @param ts, The score's timestamp
+     * @param uid, The ID of the user associated with the score
+     * @param un, The name of the user associated with the score
+     * @param soi, The ID of the level associated with the score
+     * @param son, The name of the level associated with the score
+     */
     public Score(int id, long sa, LocalDateTime ts, int uid, String un, int soi, String son){
         this.id = id;
         scoreAmount = sa;

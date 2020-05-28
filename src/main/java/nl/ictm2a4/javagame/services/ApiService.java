@@ -14,14 +14,25 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class ApiService {
-
     protected String baseUrl = "https://javagameapi.rillprogramming.com"; // prod
     //protected String baseUrl = "https://localhost:44320"; // local
 
+    /** Sends a request to the API
+     *
+     * @param uri: the URI of the request
+     * @return A response with the response code and response body
+     */
     public Response sendRequest(String uri){
         return sendRequest(uri, "GET", "");
     }
 
+    /** Sends a request to the API
+     *
+     * @param uri: the URI of the request
+     * @param method: the HTTP method of the request
+     * @param body: the body of the request
+     * @return A response with the response code and response body
+     */
     public Response sendRequest(String uri, String method, String body){
         int responseCode = -1;
 
