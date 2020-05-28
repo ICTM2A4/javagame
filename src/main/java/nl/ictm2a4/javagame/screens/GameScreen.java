@@ -73,12 +73,13 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new LevelLoader();
         new RaspberryPIController();
 
+        achievedAchievements = new ArrayList<>();
+
         tryLogin();
         refreshAchievements();
         refreshCustomLevels();
 
         pressedKeys = new ArrayList<>();
-        achievedAchievements = new ArrayList<>();
 
         setUndecorated(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -328,6 +329,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     public void refreshAchievements(){
         achievements = new AchievementsService().getAchievements();
+        if (getCurrentUser().isPresent())
+            achievedAchievements = new AchievementsService().getAchievements(getCurrentUser().get().getId());
     }
 
     public List<Achievement> getAchievements(){
