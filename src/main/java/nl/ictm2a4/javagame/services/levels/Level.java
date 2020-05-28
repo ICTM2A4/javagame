@@ -5,6 +5,15 @@ public class Level {
     private int id, creatorID;
     private String name, description, content, creatorUserName;
 
+    /**
+     *
+     * @param id, The ID of the Level
+     * @param name, The name of the level
+     * @param description, The description of the level
+     * @param content, The content of the level, must be in JSON format
+     * @param creatorid, The ID of the level's creator
+     * @param creatorUserName, The username of the level's creator
+     */
     public Level(int id, String name, String description, String content, int creatorid, String creatorUserName){
         this.id = id;
         this.name = name;
