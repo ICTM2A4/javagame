@@ -77,6 +77,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new RaspberryPIController();
 
         achievedAchievements = new ArrayList<>();
+        achievedList = new ArrayList<>();
 
         tryLogin();
         refreshAchievements();
