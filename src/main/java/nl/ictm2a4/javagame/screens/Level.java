@@ -74,7 +74,7 @@ public class Level extends JPanel implements Listener {
     public void loadObject() {
         // loading custom level
         if (id > LevelLoader.DEFAULTLEVELAMOUNT) {
-            nl.ictm2a4.javagame.services.levels.Level dbLevel = new LevelService().getLevel(this.id);
+            var dbLevel = GameScreen.getInstance().getCustomLevel(this.id);
             JSONParser parser = new JSONParser();
 
             if (dbLevel == null) {
@@ -303,8 +303,12 @@ public class Level extends JPanel implements Listener {
                 saveObject.put(jl.JSONString(), arrayTiles);
         }
 
+        var gameScreen = GameScreen.getInstance();
         var levelService = new LevelService();
-        var dbLevel = levelService.getLevel(this.id);
+
+        gameScreen.refreshCustomLevels();
+
+        var dbLevel = gameScreen.getCustomLevel(this.id);
         var currentUser = GameScreen.getInstance().getCurrentUser();
 
         if (dbLevel == null) {
@@ -312,12 +316,14 @@ public class Level extends JPanel implements Listener {
                 dbLevel = new nl.ictm2a4.javagame.services.levels.Level(this.id, this.getName(), "", saveObject.toString(), currentUser.get().getId(), "");
             }
 
+            GameScreen.getInstance().addCustomLevel(dbLevel);
             return (levelService.addLevel(dbLevel) != null);
         }
 
         dbLevel.setName(name);
         dbLevel.setContent(saveObject.toString());
 
+        gameScreen.updateCustomLevel(dbLevel.getId(), dbLevel);
         return levelService.updateLevel(dbLevel);
     }
 
