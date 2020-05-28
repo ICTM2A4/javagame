@@ -10,6 +10,12 @@ import java.util.List;
 public class UserService extends ApiService {
     private String baseUrl = super.baseUrl + "/api/users";
 
+    /** Authenticates a user using a username and password
+     *
+     * @param username
+     * @param password
+     * @return The authenticated user containing their ID, username and token if succesful, null if unsuccesful
+     */
     public User authenticate(String username, String password){
         var userJson = convertUserToJson(new User(0, username, password, ""));
 
@@ -22,6 +28,11 @@ public class UserService extends ApiService {
         return convertJsonToUser(response.getBody());
     }
 
+    /** Registers a user
+     *
+     * @param user, username and password must be given
+     * @return The authenticated user containing their ID, username, and token if succesful, null if unsuccesful
+     */
     public User register(User user){
         var userJson = convertUserToJson(user);
 
@@ -44,7 +55,13 @@ public class UserService extends ApiService {
         return convertJsonToUsersList((JSONArray) response.getBody().get("Values"));
     }
 
-    // JSON conversie
+    // JSON conversion
+
+    /** Converts a JSONArray of users to a list of users
+     *
+     * @param usersJson
+     * @return the list of usrs
+     */
     public List<User> convertJsonToUsersList(JSONArray usersJson){
         var users = new ArrayList<User>();
 
@@ -55,6 +72,11 @@ public class UserService extends ApiService {
         return users;
     }
 
+    /** Converts a JSONObject of a user to a user
+     *
+     * @param userJson
+     * @return The user
+     */
     private User convertJsonToUser(JSONObject userJson){
         return new User(
                 ((Long)userJson.get("id")).intValue(),
@@ -64,6 +86,11 @@ public class UserService extends ApiService {
         );
     }
 
+    /** Converts a user to a JSONObject of the user
+     *
+     * @param user
+     * @return the JSONObject of the user
+     */
     private JSONObject convertUserToJson(User user){
         var userJson = new JSONObject();
         userJson.put("id", user.getId());
