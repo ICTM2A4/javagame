@@ -101,6 +101,10 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         return panel;
     }
 
+    /**
+     * removes objects
+     * @param level
+     */
     public void removeObjects(Level level) {
         ArrayList<GameObject> removeList = new ArrayList<>();
 
@@ -165,6 +169,11 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         }
     }
 
+    /**
+     * loops over all objects from object loader
+     * @param e is mouse event
+     * @param place
+     */
     private void loopOverAll(MouseEvent e, boolean place) {
         if (LevelLoader.getInstance().getCurrentLevel().isEmpty())
             return;
@@ -199,62 +208,126 @@ public class LevelEditor extends JPanel implements ActionListener, MouseMotionLi
         public int gridX, gridY;
         private boolean requireGround, requireWall;
 
+        /**
+         *
+         * @param gameObject is gameobject
+         * @param image is image
+         */
         public LevelEditorItem(Class<? extends GameObject> gameObject, Image image) {
             this.gameObject = gameObject;
             this.image = image;
         }
 
+        /**
+         * places object in leveleditor
+         * @param mouseX
+         * @param mouseY
+         */
         public void onPlace(int mouseX, int mouseY) {
             gridX = Math.round(mouseX / LevelLoader.GRIDWIDTH);
             gridY = Math.round(mouseY / LevelLoader.GRIDHEIGHT);
         }
 
+        /**
+         * look is object may be placed
+         * @param mouseX the x of the mouse
+         * @param mouseY the y of the mouse
+         * @return boolean
+         */
         public boolean allowedToPlace(int mouseX, int mouseY) {
             if (requireWall && !onWall(mouseX, mouseY)) return false;
             if (requireGround && !onGround(mouseX, mouseY)) return false;
             return true;
         }
 
+        /**
+         * if mouse is dragged
+         * @param mouseX the x of the mouse
+         * @param mouseY the y of the mouse
+         */
         public void onDrag(int mouseX, int mouseY) {
             gridX = Math.round(mouseX / LevelLoader.GRIDWIDTH);
             gridY = Math.round(mouseY / LevelLoader.GRIDHEIGHT);
         }
+
+        /**
+         * if object needs to be removed
+         * @param find finds object
+         */
         public void onRemove(Optional<GameObject> find) {
             find.ifPresent(getInstance().getLevel()::removeGameObject);
         }
+
+        /**
+         * checks if is allowed to remove
+         * @param gameObject
+         * @return boolean
+         */
         public boolean checkRemove(GameObject gameObject) {
             return !this.allowedToPlace(Math.round(gameObject.getX() / LevelLoader.GRIDWIDTH) * LevelLoader.GRIDWIDTH,
                 Math.round(gameObject.getY() / LevelLoader.GRIDHEIGHT) * LevelLoader.GRIDHEIGHT);
         }
 
+        /**
+         * gets gameobject
+         * @return gameobject
+         */
         public Class<? extends GameObject> getGameObject() {
             return gameObject;
         }
 
+        /**
+         * gets image
+         * @return image
+         */
         public Image getImage() {
             return image;
         }
 
+        /**
+         * if true wall may be placed
+         * @param requireWall if true requires wall
+         * @return boolean
+         */
         public LevelEditorItem setRequireWall(boolean requireWall) {
             this.requireWall = requireWall;
             return this;
         }
 
+        /**
+         * if called ground is required
+         * @param requireGround if true requires ground
+         * @return boolean
+         */
         public LevelEditorItem setRequireGround(boolean requireGround) {
             this.requireGround = requireGround;
             return this;
         }
 
+        /**
+         * if mouse is on ground return true
+         * @param mouseX
+         * @param mouseY
+         * @return boolean
+         */
         private boolean onGround(int mouseX, int mouseY) {
             return getInstance().getLevel().fromCoordsToArray(mouseX, mouseY).anyMatch(gameObject -> gameObject instanceof Ground);
         }
 
+        /**
+         * if mouse is on wall return true
+         * @param mouseX
+         * @param mouseY
+         * @return boolean
+         */
         private boolean onWall(int mouseX, int mouseY) {
             return getInstance().getLevel().fromCoordsToArray(mouseX, mouseY).anyMatch(gameObject -> gameObject instanceof Wall);
         }
     }
 
-    // screen creation
+    /**
+     * creates screen
+     */
     private void createButtons() {
         JPanel buttons = getPanel();
         addComp ( this, buttons, 1, 2, 1, 1

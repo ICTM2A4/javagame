@@ -425,10 +425,18 @@ public class Level extends JPanel implements Listener {
         LevelLoader.getInstance().startLevel();
     }
 
+
+    /**
+     * get the player
+     * @return stream of gameobjects that are instance of player
+     */
     public Optional<Player> getPlayer() {
         return getGameObjects().stream().filter(gameObject -> gameObject instanceof Player).map(p -> (Player)p).findFirst();
     }
 
+    /**
+     * resets the score in levels
+     */
     public void resetStart() {
         start = System.currentTimeMillis();
     }

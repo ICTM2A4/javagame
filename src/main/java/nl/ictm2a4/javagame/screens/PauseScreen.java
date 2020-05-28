@@ -75,6 +75,10 @@ public class PauseScreen extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * gets an instance of the screen
+     * @return instance
+     */
     public static PauseScreen getInstance() {
         return instance;
     }

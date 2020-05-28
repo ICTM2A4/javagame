@@ -2,14 +2,12 @@ package nl.ictm2a4.javagame.screens;
 
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.services.achievements.Achievement;
-import nl.ictm2a4.javagame.services.achievements.AchievementsService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class AchievementScreen extends JPanel implements ActionListener {
 

@@ -180,6 +180,10 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         fixed.repaint();
     }
 
+    /**
+     * returns the pane: fixed
+     * @return fixed
+     */
     public JLayeredPane getFixed() {
         return fixed;
     }
@@ -192,19 +196,34 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         return instance;
     }
 
+    /**
+     * get list of pressedkeys
+     * @return pressed list
+     */
     public List<Integer> getPressedKeys() {
         return pressedKeys;
     }
 
+    /**
+     * get list of achievements
+     * @return achieved list
+     */
     public List<Integer> getAchievedList() {
         return this.achievedList;
     }
 
+    /**
+     *
+     * @param id the level id
+     */
     public void achieveLevel(int id) {
         if (!this.achievedList.contains(id))
             this.achievedList.add(id);
     }
 
+    /**
+     * starts the thread in the game
+     */
     public void start() {
         isRunning = true;
         thread = new Thread(this);
@@ -220,6 +239,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         }
     }
 
+    /**
+     * registers achievements
+     */
     private void registerAchievements() {
         new AchievementHandler();
         new LevelOneAchieved();
@@ -233,6 +255,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new Wizard();
     }
 
+    /**
+     * registers achievements
+     */
     private void registerListeners(){
         EventManager.getInstance().registerListener(new ScoreListener());
     }
@@ -319,6 +344,10 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         }
     }
 
+    /**
+     * sets the current user
+     * @param user User
+     */
     public void setCurrentUser(User user){
         if (user == null)
             currentUser = Optional.empty();
@@ -327,35 +356,61 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
     // Access to buffered achievements, could be moved to the services
 
+    /**
+     * refeshes the achievements
+     */
     public void refreshAchievements(){
         achievements = new AchievementsService().getAchievements();
         if (getCurrentUser().isPresent())
             achievedAchievements = new AchievementsService().getAchievements(getCurrentUser().get().getId());
     }
 
+    /**
+     * list of achievements
+     * @return achievements
+     */
     public List<Achievement> getAchievements(){
         return achievements;
     }
 
+    /**
+     * gets achievements
+     * @param id level
+     * @return stream
+     */
     public Achievement getAchievement(int id){
         return achievements.stream().filter(a -> a.getId() == id).findFirst().get();
     }
 
+    /**
+     * sets the achieved achievements
+     * @param aa list of achievements
+     */
     public void setAchievedAchievements(List<Achievement> aa){
         if(aa != null)
             achievedAchievements = aa;
     }
 
+    /**
+     * adds achieved achievements
+     * @param achievement
+     */
     public void addAchievedAchievement(Achievement achievement){
         achievedAchievements.add(achievement);
     }
 
+    /**
+     * gets achieved achievements
+     * @return
+     */
     public List<Achievement> getAchievedAchievements(){
         return achievedAchievements;
     }
 
-    // Access to buffered custom levels
 
+    /**
+     * Access to buffered custom levels
+     */
     public void refreshCustomLevels(){
         customLevels = new LevelService().getLevels();
         if(customLevels == null){
@@ -363,38 +418,64 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         }
     }
 
+    /**
+     * gets custom levels
+     * @return custom levels
+     */
     public List<nl.ictm2a4.javagame.services.levels.Level> getCustomLevels(){
         return customLevels;
     }
 
+    /**
+     * get the custom level id
+     * @param id level id
+     * @return
+     */
     public nl.ictm2a4.javagame.services.levels.Level getCustomLevel(int id){
         var customLevel = customLevels.stream().filter(a -> a.getId() == id).findFirst();
-        if(customLevel.isPresent())
-            return customLevel.get();
-        else
-            return null;
+        return customLevel.orElse(null);
     }
 
+    /**
+     * adds a custom level
+     * @param level level
+     */
     public void addCustomLevel(nl.ictm2a4.javagame.services.levels.Level level){
         customLevels.add(level);
     }
 
+    /**
+     * update a custom level
+     * @param id level id
+     * @param level level
+     */
     public void updateCustomLevel(int id, nl.ictm2a4.javagame.services.levels.Level level){
         int index = customLevels.stream().filter(cl -> cl.getId() == id).findFirst().get().getId();
 
         customLevels.set(index, level);
     }
 
+    /**
+     * gets the current user
+     * @return current user
+     */
     public Optional<User> getCurrentUser(){
         return currentUser;
     }
 
+    /**
+     * get api token
+     * @return token
+     */
     public String getApiToken(){
         if (currentUser.isPresent())
             return currentUser.get().getToken();
         return "";
     }
 
+    /**
+     * tries to log in 
+     */
     private void tryLogin() {
 
         var login = new UserService().authenticate(Settings.getInstance().getUsername(),

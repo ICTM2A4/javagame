@@ -3,7 +3,6 @@ package nl.ictm2a4.javagame.screens;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.services.levels.Level;
-import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -64,6 +63,10 @@ public class preLevelEditorScreen extends JPanel implements ActionListener {
 
         setVisible(true);
     }
+
+    /**
+     * creates screen
+     */
     public void createCenterStrip() {
         JPanel centerStrip = getPanel();
         addComp ( this, centerStrip , 1, 1, 1, 1

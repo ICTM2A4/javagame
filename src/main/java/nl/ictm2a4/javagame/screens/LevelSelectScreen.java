@@ -67,6 +67,10 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
 
         setVisible(true);
     }
+
+    /**
+     * creates screen
+     */
     public void createCenterStrip() {
         JPanel centerStrip = getPanel();
         addComp ( this, centerStrip , 1, 1, 1, 1

@@ -62,6 +62,7 @@ public class TeleportationStone extends GameObject {
         return false;
     }
 
+
     public void tick() {
         if (prevTeleport + 1000 <= System.currentTimeMillis() && teleported)
             teleported = false;
@@ -98,6 +99,10 @@ public class TeleportationStone extends GameObject {
         }.setRequireGround(true);
     }
 
+    /**
+     * setTeleported for TeleportationStone
+     * @param teleported
+     */
     public void setTeleported(boolean teleported) {
         this.teleported = teleported;
         prevTeleport = System.currentTimeMillis();
