@@ -32,7 +32,7 @@ public class EndScreen extends JPanel implements ActionListener {
         nextLevel = new CButton("Next Level");
         nextLevel.addActionListener(this);
         add(nextLevel, gbc);
-        nextLevel.setVisible(levelId <= LevelLoader.DEFAULTLEVELAMOUNT);
+        nextLevel.setVisible(levelId < LevelLoader.DEFAULTLEVELAMOUNT);
 
         restart = new CButton("Restart");
         restart.addActionListener(this);
