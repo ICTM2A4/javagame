@@ -234,7 +234,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     private void registerListeners(){
-        EventManager.getInstance().registerEvent(new ScoreListener());
+        EventManager.getInstance().registerListener(new ScoreListener());
     }
 
     @Override

@@ -25,7 +25,7 @@ public class EventManager {
         }
     }
 
-    public void registerEvent(Listener listener) {
+    public void registerListener(Listener listener) {
 
         // alle methods laden uit de listener class
         Method[] publicMethods = listener.getClass().getMethods();

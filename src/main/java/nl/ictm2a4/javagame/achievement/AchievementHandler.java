@@ -26,7 +26,7 @@ public class AchievementHandler {
     public void addAchievement(Achievement achievement) {
         if (!achievements.contains(achievement)) {
             achievements.add(achievement);
-            EventManager.getInstance().registerEvent(achievement);
+            EventManager.getInstance().registerListener(achievement);
         }
     }
 

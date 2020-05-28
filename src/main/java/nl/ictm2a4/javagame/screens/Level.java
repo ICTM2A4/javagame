@@ -55,7 +55,7 @@ public class Level extends JPanel implements Listener {
 
         animateLights = true;
 
-        EventManager.getInstance().registerEvent(this);
+        EventManager.getInstance().registerListener(this);
         shadow = new BufferedImage(LevelLoader.WIDTH,LevelLoader.HEIGHT,BufferedImage.TYPE_INT_ARGB);
         setVisible(true);
     }
