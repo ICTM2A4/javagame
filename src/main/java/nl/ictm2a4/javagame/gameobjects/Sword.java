@@ -26,7 +26,10 @@ public class Sword extends Pickup {
                 LevelLoader.getInstance().getCurrentLevel().get());
         }
     }
-
+    /**
+     * Get the LevelEditorSpecs for Sword
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         return new LevelEditor.LevelEditorItem(Sword.class, FileLoader.getInstance().getSwordImageSingle()) {
             @Override

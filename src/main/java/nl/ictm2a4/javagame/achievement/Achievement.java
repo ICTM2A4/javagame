@@ -13,17 +13,29 @@ public abstract class Achievement implements Listener {
 
     protected int id;
 
+    /**
+     * Create an achievement and add it to the AchievementHandler
+     * @param id The ID of the achievement int the database
+     */
     public Achievement(int id) {
         AchievementHandler.getInstance().addAchievement(this);
         this.id = id;
     }
 
+    /**
+     * Get the achieved status of the achievement
+     * @return Value of achieved
+     */
     public boolean isAchieved() {
         var achievedAchievements = GameScreen.getInstance().getAchievedAchievements();
 
         return achievedAchievements.stream().anyMatch(a -> a.getId() == this.id);
     }
 
+    /**
+     * Set the achieved status to true
+     * Saves the status of the achievment in the database
+     */
     public void achieve() {
         Optional<Level> level = LevelLoader.getInstance().getCurrentLevel();
         if(isAchieved() || (level.isPresent() && level.get().getId() > LevelLoader.DEFAULTLEVELAMOUNT))

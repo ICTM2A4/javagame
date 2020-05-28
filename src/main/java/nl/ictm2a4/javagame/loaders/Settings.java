@@ -21,11 +21,17 @@ public class Settings {
     private boolean useRPI;
     private String username, password, raspberryPiIp;
 
+    /**
+     * Create an instance of Settings and load all settings from the file
+     */
     public Settings() {
         instance = this;
         load();
     }
 
+    /**
+     * Load all settings from the settings.json file
+     */
     private void load() {
         Optional<File> file = getSettingsFile();
 
@@ -53,6 +59,9 @@ public class Settings {
         }
     }
 
+    /**
+     * Save all settings to the settings.json file
+     */
     public void save() {
         if (getSettingsFile().isPresent()) {
             File file = getSettingsFile().get();
@@ -81,15 +90,28 @@ public class Settings {
         }
     }
 
+    /**
+     * Check if the settings folder exists
+     * @return The folder file
+     */
     private File checkFolders() {
-        File customLevelsFolder = new File((Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath()
-            + File.separator + GameScreen.GAMENAME).replaceAll("%20", " "))
+        File gameFolder = new File(String.valueOf((Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath()
+            + File.separator + GameScreen.GAMENAME).replaceAll("%20", "")))));
+        if (!gameFolder.exists())
+            gameFolder.mkdir();
+
+        File settingsFolder = new File((Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath()
+            + File.separator + GameScreen.GAMENAME))
             + File.separator + "settings").replaceAll("%20", ""));
-        if (!customLevelsFolder.exists())
-            customLevelsFolder.mkdir();
-        return customLevelsFolder;
+        if (!settingsFolder.exists())
+            settingsFolder.mkdir();
+        return settingsFolder;
     }
 
+    /**
+     * Create the settings.json file
+     * @return Get the Optional File of settings.json
+     */
     private Optional<File> createFile() {
         try {
             File customLevelsFolder = checkFolders();
@@ -114,6 +136,10 @@ public class Settings {
         return Optional.empty();
     }
 
+    /**
+     * Check if the settingsFile exits
+     * @return Return the Optional settings file
+     */
     private Optional<File> getSettingsFile() {
         File customLevelsFolder = checkFolders();
         File file = new File(customLevelsFolder.getPath() + File.separator + "settings.json");
@@ -124,49 +150,94 @@ public class Settings {
 
     }
 
+    /**
+     * Get the instance of Settings
+     * @return Settings instance
+     */
     public static Settings getInstance() {
         if (instance == null)
             new Settings();
         return instance;
     }
 
+    /**
+     * Set the new setting value of the shadows
+     * @param value New setting to set
+     */
     public void setShowShadows(boolean value) {
         this.showShadows = value;
     }
 
+    /**
+     * Get the setting value of shadows
+     * @return Shadow setting value
+     */
     public boolean isShowShadows() {
         return showShadows;
     }
 
+    /**
+     * Set the setting value of animated lights
+     * @param value New setting to set
+     */
     public void setAnimatedLights(boolean value) {
         this.animatedLights = value;
     }
 
+    /**
+     * Get the setting value of animated lights
+     * @return Animated lights setting value
+     */
     public boolean isAnimatedLights() {
         return animatedLights;
     }
 
+    /**
+     * Set the setting value of raspberry pi usage
+     * @param value New setting to set
+     */
     public void setUseRPI(boolean value) {
         useRPI = value;
         if (!value)
             RaspberryPIController.getInstance().disconnect();
     }
 
+    /**
+     * Get the setting value of raspberry pi usage
+     * @return Raspberry PI usage setting value
+     */
     public boolean isUseRPI() {return useRPI;}
 
+    /**
+     * Update the user data setting
+     * @param username Username to set
+     * @param password Password to set
+     */
     public void updateUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    /**
+     * Get the username setting
+     * @return Username setting value
+     */
     public String getUsername() {
         return this.username;
     }
 
+    /**
+     * Get the password setting
+     * @return Password setting value
+     */
     public String getPassword() {
         return this.password;
     }
 
+    /**
+     * Set the rapsberry pi ip
+     * @param ip Raspberry PI ip to set
+     */
     public void setRaspberryPiIp(String ip) {
         boolean reconnect = (!ip.equals(this.raspberryPiIp) && !ip.equals(""));
         this.raspberryPiIp = ip;
@@ -174,6 +245,10 @@ public class Settings {
             new RaspberryPIController();
     }
 
+    /**
+     * Get the raspberry PI ip
+     * @return Raspberry PI ip
+     */
     public String getRaspberryPiIp() {
         return raspberryPiIp;
     }

@@ -12,6 +12,10 @@ public class AchievementPopup extends JPanel {
     private String tekst;
     private int startY = -40;
 
+    /**
+     * Create a achievement popup
+     * @param tekst The tekst to display on the popup
+     */
     public AchievementPopup(String tekst) {
         super();
 
@@ -37,6 +41,11 @@ public class AchievementPopup extends JPanel {
         g.drawString(this.tekst, 12,30);
     }
 
+    /**
+     * Render the popup, so it can move up and down
+     * @param frame The current frame to display
+     * @return if the frame has a next move
+     */
     public boolean render(int frame) {
         int startX = LevelLoader.WIDTH;
 

@@ -18,7 +18,6 @@ import java.util.Optional;
 
 public class LevelLoader {
 
-    private final Path CUSTOMLEVELSPATH = Path.of((new JFileChooser().getFileSystemView().getDefaultDirectory().toPath() + File.separator + GameScreen.GAMENAME).replaceAll("%20", " "));
     public static final int DEFAULTLEVELAMOUNT = 10;
 
     private static LevelLoader instance;
@@ -31,14 +30,12 @@ public class LevelLoader {
     private boolean paused;
     private Level currentLevel;
 
+    /**
+     * Create an instance of the LevelLoader
+     */
     public LevelLoader() {
         instance = this;
         paused = true;
-
-        File gameFolder = new File(CUSTOMLEVELSPATH.toUri());
-        if (!gameFolder.exists()) {
-            gameFolder.mkdir();
-        }
     }
 
     /**
@@ -146,6 +143,10 @@ public class LevelLoader {
         return levelObject;
     }
 
+    /**
+     * Get the status of the level paused
+     * @return Status of paused
+     */
     public boolean isPaused() {
         return paused;
     }

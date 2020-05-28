@@ -78,6 +78,10 @@ public class TeleportationStone extends GameObject {
                 LevelLoader.getInstance().getCurrentLevel().get());
     }
 
+    /**
+     * Get the LevelEditorSpecs for TeleportationStone
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         return new LevelEditor.LevelEditorItem(TeleportationStone.class, FileLoader.getInstance().getTeleportationStoneImage()) {
             @Override

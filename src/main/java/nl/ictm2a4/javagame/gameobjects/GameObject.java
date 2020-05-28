@@ -59,18 +59,18 @@ public abstract class GameObject {
      /**
      * Returns whether there is a collision between this gameobject and another gameobject at a specified location. Useful for checking if an object can move anywhere.
      *
-     * @param otherGameObject The other game object against which the collision will be checked
+     * @param gameObject The other game object against which the collision will be checked
      * @param x the X coordinate of the position at which the collision will be checked
      * @param y the Y coordinate of the position at which the collision will be checked
      * @return If there is a collision between this object and the other game object at the given coordinates
      */
-    public boolean checkCollideSingle(GameObject otherGameObject, int x, int y) {
-        if (x >= this.getX() + this.getWidth() || this.getX() >= x + otherGameObject.getWidth()){
+    public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
+        if (x >= this.getX() + this.getWidth() || this.getX() >= x + gameObject.getWidth()){
             // The objects do not overlap on the X axis
             return false;
         }
 
-        if (y >= this.getY() + this.getHeight() || this.getY() >= y + otherGameObject.getHeight()) {
+        if (y >= this.getY() + this.getHeight() || this.getY() >= y + gameObject.getHeight()) {
             // The objects do not overlap on the Y axis
             return false;
         }

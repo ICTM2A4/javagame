@@ -11,6 +11,10 @@ public class GameObjectsLoader {
     private static GameObjectsLoader instance;
     private List<Class<? extends GameObject>> objectList;
 
+    /**
+     * Create an instance of the GameObjectsLoader
+     * - creates a list of all active gameObjects used in the LevelEditor
+     */
     public GameObjectsLoader() {
         instance = this;
         objectList = Arrays.asList(
@@ -28,10 +32,18 @@ public class GameObjectsLoader {
         );
     }
 
+    /**
+     * Get the list of all GameObjects classes
+     * @return List of GameObject classes
+     */
     public List<Class<? extends GameObject>> getObjectList() {
         return objectList;
     }
 
+    /**
+     * Get the instance of the GameObjectsLoader
+     * @return GameObjectsLoader intance
+     */
     public static GameObjectsLoader getInstance() {
         if (instance == null) {
             new GameObjectsLoader();

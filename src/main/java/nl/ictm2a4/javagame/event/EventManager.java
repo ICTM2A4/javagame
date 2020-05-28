@@ -9,11 +9,18 @@ public class EventManager {
     private static EventManager instance;
     private Map<Class<? extends Event>, Set<RegisteredListener>> listenerMap;
 
+    /**
+     * Create an instance of the EventManger
+     */
     public EventManager() {
         instance = this;
         listenerMap = new HashMap<>();
     }
 
+    /**
+     * Call an event and send it to all the RegisteredListeners associated with the event
+     * @param event Event to execute
+     */
     public void callEvent(Event event) {
 
         Set<RegisteredListener> listeners = listenerMap.get(event.getClass());
@@ -25,6 +32,10 @@ public class EventManager {
         }
     }
 
+    /**
+     * Register a listener in the EventManger so it can catch events
+     * @param listener Listener to register
+     */
     public void registerListener(Listener listener) {
 
         // alle methods laden uit de listener class
@@ -79,6 +90,10 @@ public class EventManager {
 
     }
 
+    /**
+     * Get an instance of the EventManager
+     * @return EventManager instance
+     */
     public static EventManager getInstance() {
         if (instance == null) {
             new EventManager();

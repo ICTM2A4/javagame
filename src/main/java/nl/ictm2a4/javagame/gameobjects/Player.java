@@ -50,8 +50,6 @@ public class Player extends GameObject {
     public void checkMove() {
         int stepSize = 4;
 
-
-
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
         String rpiButton = RaspberryPIController.getInstance().getPressedButton();
 
@@ -135,6 +133,9 @@ public class Player extends GameObject {
         tryHitting();
     }
 
+    /**
+     * Check if the player is trying to hit the mob
+     */
     private void tryHitting() {
         List<Integer> pressedKeys = GameScreen.getInstance().getPressedKeys();
         String rpiButton = RaspberryPIController.getInstance().getPressedButton();
@@ -154,22 +155,43 @@ public class Player extends GameObject {
         }
     }
 
+    /**
+     * Add the Pickup item to the inventory
+     * @param pickup Pickup item to add
+     */
     public void addToInventory(Pickup pickup) {
         inventory.add(pickup);
     }
 
+    /**
+     * Remove a Pickup item from the inventory
+     * @param pickup Pickup item to remove
+     */
     public void removeFromInventory(Pickup pickup) {
         inventory.remove(pickup);
     }
 
+    /**
+     * Get all the Pickup items from the inventory
+     * @return List of inventory Pickup items
+     */
     public List<Pickup> getInventory(){
         return inventory;
     }
 
-    public Optional<Pickup> getFromInventory(int keycode){
-        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).findFirst();
+    /**
+     * Get the Key item from the player by it's keyCode
+     * @param keycode keyCode to find the Key by
+     * @return The Optional Key
+     */
+    public Optional<Key> getFromInventory(int keycode){
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).map(k -> (Key)k).findFirst();
     }
 
+    /**
+     * Get the LevelEditorSpecs for Player
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         return new LevelEditor.LevelEditorItem(Player.class, FileLoader.getInstance().getPlayerImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0)) {
             @Override
@@ -184,6 +206,10 @@ public class Player extends GameObject {
         }.setRequireGround(true);
     }
 
+    /**
+     * Set the new health of the player
+     * @param health New health to set
+     */
     public void setHealth(int health) {
         this.health = health;
         if (this.health <= 0) {
@@ -191,14 +217,26 @@ public class Player extends GameObject {
         }
     }
 
+    /**
+     * Get the damage of the player
+     * @return player damage
+     */
     public int getDamage() {
         return this.damage;
     }
 
+    /**
+     * Get the health of the player
+     * @return player health
+     */
     public int getHealth() {
         return this.health;
     }
 
+    /**
+     * Set the Player damage
+     * @param damage Damage to set
+     */
     public void setDamage(int damage) {
         this.damage = damage;
     }

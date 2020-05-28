@@ -26,7 +26,10 @@ public class Ground extends GameObject {
             getX(), getY(),
             LevelLoader.getInstance().getCurrentLevel().get());
     }
-
+    /**
+     * Get the LevelEditorSpecs for Ground
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         return new LevelEditor.LevelEditorItem(Ground.class, FileLoader.getInstance().getGroundTile(15)) {
             @Override

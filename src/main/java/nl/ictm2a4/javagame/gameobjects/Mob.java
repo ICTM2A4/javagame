@@ -70,6 +70,12 @@ public abstract class Mob extends GameObject {
 
     }
 
+    /**
+     * Paint the healthbar of the Mob
+     * @param g Graphics of the JPanel
+     * @param x The x to start the bar
+     * @param y The y to start the bar
+     */
     private void paintHealthBar(Graphics g, int x, int y) {
         Graphics2D g2 = (Graphics2D)g;
         g2.setColor(Color.DARK_GRAY);
@@ -81,10 +87,17 @@ public abstract class Mob extends GameObject {
         g2.fillRect(x + 2, y + 2, width, 4);
     }
 
+    /**
+     * Get the alive status of the Mob
+     * @return Alive status
+     */
     public boolean isAlive() {
         return this.alive;
     }
 
+    /**
+     * Start the next move of the mob
+     */
     private void nextMove() {
         // 0: nothing, 1: up, 2: right, 3: down, 4: left
 
@@ -109,6 +122,9 @@ public abstract class Mob extends GameObject {
         checkMove();
     }
 
+    /**
+     * Check if the mob can move to the next calculated positon
+     */
     private void checkMove() {
         if (prevDirection == 1) {
             move(getX(), getY()- stepSize);
@@ -129,6 +145,11 @@ public abstract class Mob extends GameObject {
         }
     }
 
+    /**
+     * Move the mob to the next postion and update the Movemnt status
+     * @param x x coordinate to move to
+     * @param y y coordinate to move to
+     */
     private void move(int x, int y) {
         if(!checkCollide(x, y)) {
             setX(x);
@@ -141,6 +162,10 @@ public abstract class Mob extends GameObject {
         }
     }
 
+    /**
+     * Remove health from the mob
+     * @param healthRemoval Health to remove
+     */
     public void removeHealth(int healthRemoval) {
         this.health -= healthRemoval;
         if (this.health <= 0) {
@@ -149,27 +174,51 @@ public abstract class Mob extends GameObject {
         }
     }
 
+    /**
+     * Get the current health of the mob
+     * @return Mob health
+     */
     public int getHealth() {
         return this.health;
     }
 
+    /**
+     * Get the current direction of the mob
+     * @return Mob direction
+     */
     public PlayerStatus.Direction getDirection() {
         return this.direction;
     }
 
+    /**
+     * Get the current status of the mob
+     * @return Mob status
+     */
     public PlayerStatus getStatus() {
         return this.status;
     }
 
+    /**
+     * Set the status of the mob
+     * @param status New mob status
+     */
     public void setStatus(PlayerStatus status) {
         this.status = status;
         currentImage = 0;
     }
 
+    /**
+     * Get the current mob animation image
+     * @return Mob image index
+     */
     public int getCurrentImage() {
         return currentImage;
     }
 
+    /**
+     * Get the amount of the mob damage
+     * @return Mob damage
+     */
     public int getDamage() {
         return this.damage;
     }

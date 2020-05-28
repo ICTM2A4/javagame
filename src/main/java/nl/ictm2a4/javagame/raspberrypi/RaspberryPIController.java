@@ -15,6 +15,9 @@ public class RaspberryPIController {
     private String currentButton = "";
     private ScheduledExecutorService executor;
 
+    /**
+     * Create an instance of the RaspberryPI controller
+     */
     public RaspberryPIController() {
         instance = this;
         String ip = Settings.getInstance().getRaspberryPiIp();
@@ -36,10 +39,18 @@ public class RaspberryPIController {
         }
     }
 
+    /**
+     * Get the pressed button on the RaspberryPI
+     * @return Current pressed button on RaspberryPI
+     */
     public String getPressedButton() {
         return currentButton;
     }
 
+    /**
+     * Get the instance of the RaspberryPI controller
+     * @return RaspberryPIController instance
+     */
     public static RaspberryPIController getInstance() {
         if (instance == null) {
             new RaspberryPIController();
@@ -47,6 +58,9 @@ public class RaspberryPIController {
         return instance;
     }
 
+    /**
+     * Disconnect from the RaspberryPI
+     */
     public void disconnect() {
         if (Settings.getInstance().isUseRPI() && client.isConnected()) {
             this.executor.shutdown();

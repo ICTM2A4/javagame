@@ -21,6 +21,14 @@ public class FakeWall extends GameObject {
         setyIndex(2);
     }
 
+    /**
+     * Check if something is colliding with the FakeWall
+     * If a player is colliding return false (so the player can pass) any other object must collide
+     * @param gameObject The other game object against which the collision will be checked
+     * @param x the X coordinate of the position at which the collision will be checked
+     * @param y the Y coordinate of the position at which the collision will be checked
+     * @return If there is a collision between this object and the other game object at the given coordinates
+     */
     @Override
     public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
         boolean result = super.checkCollideSingle(gameObject, x, y);
@@ -51,6 +59,10 @@ public class FakeWall extends GameObject {
             LevelLoader.getInstance().getCurrentLevel().get());
     }
 
+    /**
+     * Get the LevelEditorSpecs for FakeWall
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         BufferedImage image = new BufferedImage(32,32,BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
