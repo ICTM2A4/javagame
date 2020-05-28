@@ -85,8 +85,6 @@ public class HUD extends JPanel {
                 prevHeal = System.currentTimeMillis();
             }
         }
-
-
     }
 
     private void paintHealth(Graphics g) {

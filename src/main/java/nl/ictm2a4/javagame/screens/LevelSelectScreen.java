@@ -11,11 +11,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Optional;
 
 public class LevelSelectScreen extends JPanel implements ActionListener {
 
-    private CButton back;
+    private CButton back, highscores;
     private GridBagConstraints gbc;
 
     private void addComp(JPanel panel, JComponent comp
@@ -161,6 +162,10 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         back = new CButton("back");
         back.addActionListener(this);
         center.add(back, gbc);
+
+        highscores = new CButton("highscores");
+        highscores.addActionListener(this);
+        center.add(highscores, gbc); //TODO: naast elkaar plaatsen?
     }
     public void createLeftStrip() {
         JPanel leftStrip =  getPanel();
@@ -198,5 +203,38 @@ public class LevelSelectScreen extends JPanel implements ActionListener {
         if(e.getSource() == back) {
             GameScreen.getInstance().setPanel(new MainMenu());
         }
+        if (e.getSource() == highscores) {{
+
+            try {
+                String os = System.getProperty("os.name").toLowerCase();
+
+                Runtime rt = Runtime.getRuntime();
+                String url = "https://javagame.rillprogramming.com";
+
+                if (os.contains("win")) { // windows
+                    rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+                }
+                else if (os.contains("mac")) { //mac
+                    rt.exec("open " + url);
+                }
+                else { // linux
+                    String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror",
+                        "netscape", "opera", "links", "lynx" };
+
+                    StringBuffer cmd = new StringBuffer();
+                    for (int i = 0; i < browsers.length; i++)
+                        if(i == 0)
+                            cmd.append(String.format(    "%s \"%s\"", browsers[i], url));
+                        else
+                            cmd.append(String.format(" || %s \"%s\"", browsers[i], url));
+                    // If the first didn't work, try the next browser and so on
+
+                    rt.exec(new String[] { "sh", "-c", cmd.toString() });
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }}
     }
 }

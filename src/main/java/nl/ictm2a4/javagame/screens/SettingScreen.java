@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class SettingScreen extends JPanel implements ActionListener {
 
@@ -94,6 +95,12 @@ public class SettingScreen extends JPanel implements ActionListener {
             Settings.getInstance().setRaspberryPiIp(rpiIP.getText());
 
             Settings.getInstance().save();
+
+            Optional<Level> level = LevelLoader.getInstance().getCurrentLevel();
+            if (level.isPresent()) {
+                level.get().setRenderShadows(values[0]);
+                level.get().setAnimateLights(values[1]);
+            }
 
 
             if (origin instanceof MainMenu) {
