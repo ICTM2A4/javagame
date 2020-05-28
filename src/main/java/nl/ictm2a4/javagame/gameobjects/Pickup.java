@@ -12,6 +12,12 @@ public abstract class Pickup extends GameObject {
     private Image image;
     private boolean displayInInventory = true;
 
+    /**
+     *
+     * @param gridX, The pickup's X position on the level grid
+     * @param gridY, The pickup's Y position on the level grid
+     * @param image, The pickup's sprite
+     */
     public Pickup(int gridX, int gridY, Image image){
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
         this.image = image;

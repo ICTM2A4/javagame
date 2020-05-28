@@ -13,6 +13,12 @@ public class Key extends Pickup {
 
     // extra = doorCode
 
+    /**
+     *
+     * @param gridX, The key's X position on the level grid
+     * @param gridY, The key's Y position on the level grid
+     * @param doorCode, The key's door code, determines which doors it will open
+     */
     @JSONLoader(JSONString = "keys", withExtra = true)
     public Key(Integer gridX, Integer gridY, Integer doorCode){
         super(gridX, gridY, FileLoader.getInstance().getKeyImage(doorCode));

@@ -18,6 +18,12 @@ import java.util.List;
 public class Lever extends GameObject {
     private boolean active;
 
+    /**
+     *
+     * @param gridX, The lever's X position on the level grid
+     * @param gridY, The lever's Y position on the level grid
+     * @param doorCode, The lever's door code, determines which doors it will open
+     */
     @JSONLoader(JSONString = "levers", withExtra = true)
     public Lever(Integer gridX, Integer gridY, Integer doorCode) {
         super(gridX * LevelLoader.GRIDWIDTH, gridY * LevelLoader.GRIDHEIGHT, LevelLoader.GRIDWIDTH, LevelLoader.GRIDHEIGHT);
