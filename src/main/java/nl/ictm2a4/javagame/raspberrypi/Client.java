@@ -13,12 +13,20 @@ public class Client {
     private String ip;
     private int port;
 
+    /**
+     * Initiate a client
+     * @param ip IP of the server
+     * @param port Port of the server
+     */
     public Client(String ip, int port) {
         this.ip = ip;
         this.port = port;
         connect();
     }
 
+    /**
+     * Create a socket connection to the server
+     */
     private void connect() {
         try {
             socket = new Socket(ip, port);
@@ -31,6 +39,10 @@ public class Client {
         }
     }
 
+    /**
+     * Send a request to the server to get the button status of the RaspberryPI
+     * @return RaspberyPI button status
+     */
     public String getButtonStatus() {
         String str = "";
 
@@ -46,6 +58,9 @@ public class Client {
         return str;
     }
 
+    /**
+     * Close the socket connection with the server
+     */
     public void disconnect() {
         try {
             dout.writeUTF("EXIT");
@@ -57,6 +72,10 @@ public class Client {
         }
     }
 
+    /**
+     * Get the connection status of the socket conneciton with the RaspberryPI
+     * @return Connection status with RaspberryPI
+     */
     public boolean isConnected() {
         return socket.isConnected();
     }

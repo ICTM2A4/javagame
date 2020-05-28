@@ -67,6 +67,10 @@ public class EndPoint extends GameObject {
         return result;
     }
 
+    /**
+     * Get the LevelEditorSpecs for EndPoint
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         return new LevelEditor.LevelEditorItem(EndPoint.class, FileLoader.getInstance().getCoinImage(0)) {
             @Override

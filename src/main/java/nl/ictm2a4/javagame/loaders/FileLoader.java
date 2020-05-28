@@ -58,6 +58,9 @@ public class FileLoader {
             wallTiles.add(loadImage("textures/wall-" + i + ".jpg"));
     }
 
+    /**
+     * Reload all lever images
+     */
     public void reloadLeverImages(){
         leverImages = new ArrayList<>();
         for(int i = 0; i < 4; i++)
@@ -73,12 +76,18 @@ public class FileLoader {
             coinImages.add(loadImage("textures/coin-" + i + ".png"));
     }
 
+    /**
+     * Reload all key images
+     */
     public void reloadKeyImages() {
         keyImages = new ArrayList<>();
         for(int i = 0; i < 4; i++)
             keyImages.add(loadImage("textures/key-" + i + ".png"));
     }
 
+    /**
+     * Reload all door images
+     */
     public void reloadDoorImages() {
         doorImages = new ArrayList<>();
         for(int i = 0; i < 4; i++)
@@ -101,6 +110,9 @@ public class FileLoader {
         }
     }
 
+    /**
+     * Reload all orc images
+     */
     public void reloadOrcImages() {
         orcImages = new HashMap<>();
         for(PlayerStatus status : PlayerStatus.values()) {
@@ -123,14 +135,23 @@ public class FileLoader {
             torchImages.add(loadImage("textures/torch-" + i + ".png"));
     }
 
+    /**
+     * Reload fake wall image
+     */
     public void reloadFakeWallImages() {
         fakeWallOverlay = loadImage("textures/fakewalloverlay.png");
     }
 
+    /**
+     * Reload teleportation stone image
+     */
     public void reloadTelportationStoneImage() {
       teleportationStoneImage = loadImage("textures/teleportation_stone-0.png");
     }
-  
+
+    /**
+     * Reload all sword images
+     */
     public void reloadSwordImages() {
         swordImage = FileLoader.loadImage("textures/sword-0.png");
         swordImages = new HashMap<>();
@@ -169,14 +190,29 @@ public class FileLoader {
         return this.groundTiles.get(index);
     }
 
+    /**
+     * Get the key image by it's index
+     * @param index Index of the image, 0 - 3
+     * @return Image of the key
+     */
     public Image getKeyImage(int index) {
         return this.keyImages.get(index);
     }
 
+    /**
+     * Get the lever image by it's index
+     * @param doorCode Index of the image, 0 - 3
+     * @return Image of the lever
+     */
     public Image getLeverImage(int doorCode) {
         return this.leverImages.get(doorCode);
     }
 
+    /**
+     * Get the door image by it's index
+     * @param index Index of the image, 0 - 3
+     * @return Image of the door
+     */
     public Image getDoorImage(int index) {
         return this.doorImages.get(index);
     }
@@ -202,7 +238,7 @@ public class FileLoader {
     /**
      * Get a player image by it's status, direction and index
      * @param status Player movement status
-     * @param direction The direction of the player movement, left, right
+     * @param direction The direction of the player movement, left or right
      * @param index Index of the image
      * @return Image of the player
      */
@@ -210,26 +246,57 @@ public class FileLoader {
         return this.playerImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
     }
 
+    /**
+     * Get an orc image by it's status, direction and index
+     * @param status Orc movement status
+     * @param direction The direction of the orc movement, left or right
+     * @param index Index of the image
+     * @return Image of the orc
+     */
     public Image getOrcImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
         return this.orcImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
     }
 
+    /**
+     * Get a player image by it's status, direction and index
+     * @param status Player movement status
+     * @param direction The direction of the player movement, left or right
+     * @param index Index of the image
+     * @return Image of the sword
+     */
     public Image getSwordImage(PlayerStatus status, PlayerStatus.Direction direction, int index) {
         return this.swordImages.get(status.toString().toLowerCase() + direction.toString().toLowerCase()).get(index);
     }
 
+    /**
+     * Get the single sword image
+     * @return Sword image
+     */
     public Image getSwordImageSingle() {
         return this.swordImage;
     }
 
+    /**
+     * Get a torch image, by it's index
+     * @param index Index of the torch image, 0 - 3
+     * @return Image of the torch
+     */
     public Image getTorchImage(int index) {
         return this.torchImages.get(index);
     }
 
+    /**
+     * Get the fake wall overlay image
+     * @return Image of FakeWall
+     */
     public Image getFakeWallOverlay() {
         return fakeWallOverlay;
     }
 
+    /**
+     * Get the teleporation stone image
+     * @return Image of the TeleportationStone
+     */
     public Image getTeleportationStoneImage() {return teleportationStoneImage;}
 
     /**

@@ -33,9 +33,18 @@ public class Orc extends Mob {
         }
     }
 
+
+    /**
+     * Check if the player is colliding with the mob, if so initiate a time for the mob to start hitting
+     * If the timer has passed, the mob can hit the player
+     * @param gameObject The other game object against which the collision will be checked
+     * @param x the X coordinate of the position at which the collision will be checked
+     * @param y the Y coordinate of the position at which the collision will be checked
+     * @return
+     */
     @Override
-    public boolean checkCollideSingle(GameObject otherGameObject, int x, int y) {
-        if (!(otherGameObject instanceof Player) || !isAlive())
+    public boolean checkCollideSingle(GameObject gameObject, int x, int y) {
+        if (!(gameObject instanceof Player) || !isAlive())
             return false;
 
         boolean result = super.withinRange(x, y);
@@ -58,7 +67,10 @@ public class Orc extends Mob {
 
         return result;
     }
-
+    /**
+     * Get the LevelEditorSpecs for Orc
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         return new LevelEditor.LevelEditorItem(Orc.class, FileLoader.getInstance().getOrcImage(PlayerStatus.IDLE, PlayerStatus.Direction.RIGHT, 0)) {
             @Override

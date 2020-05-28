@@ -45,6 +45,10 @@ public class Torch extends GameObject {
         }
     }
 
+    /**
+     * Get the LevelEditorSpecs for Torch
+     * @return LevelEditorSpecs
+     */
     public static LevelEditor.LevelEditorItem getLevelEditorSpecs() {
         return new LevelEditor.LevelEditorItem(Torch.class, FileLoader.getInstance().getTorchImage(0)) {
             @Override
