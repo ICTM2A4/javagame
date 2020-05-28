@@ -63,6 +63,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     private List<Achievement> achievements;
     private List<nl.ictm2a4.javagame.services.levels.Level> customLevels;
 
+    /**
+     * Create and instance of the GameScreen
+     */
     public GameScreen() {
         setTitle(GAMENAME);
         currentUser = Optional.empty();
@@ -167,6 +170,10 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     }
 
+    /**
+     * Add a panel as an overlay
+     * @param panel JPanel to add as overlay
+     */
     public void addOverlay(JPanel panel) {
         JPanel temp = new JPanel();
         temp.setBackground(new Color(0, 0, 0, 0));
@@ -182,7 +189,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     /**
      * returns the pane: fixed
-     * @return fixed
+     * @return fixed JLayeredPane
      */
     public JLayeredPane getFixed() {
         return fixed;
@@ -213,7 +220,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     /**
-     *
+     * Set a level as achieved by it's id
      * @param id the level id
      */
     public void achieveLevel(int id) {
@@ -230,6 +237,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         thread.start();
     }
 
+    /**
+     * Tick all other tick-methods
+     */
     private void tick() {
         LevelLoader.getInstance().tick();
         AchievementHandler.getInstance().tick();
@@ -256,12 +266,15 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     /**
-     * registers achievements
+     * registers listeners
      */
     private void registerListeners(){
         EventManager.getInstance().registerListener(new ScoreListener());
     }
 
+    /**
+     * The main gameloop
+     */
     @Override
     public void run() {
         initTimingElements();
@@ -303,6 +316,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         }
     }
 
+    /**
+     * Make calculations for the GameLoop. The AVG FPS, amount of frames to skip
+     */
     private void storeStats() {
         frameCountPerStatCycle++;
         totalFrameCount++;
@@ -337,6 +353,9 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         }
     }
 
+    /**
+     * Set the defaults for the timing elements
+     */
     private void initTimingElements() {
         fpsStore = new double[FPS_HISTORY_NR];
         for (int i = 0; i < FPS_HISTORY_NR; i++) {
@@ -392,8 +411,8 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     }
 
     /**
-     * adds achieved achievements
-     * @param achievement
+     * Set a achievement as achieved
+     * @param achievement Achievement to achieve
      */
     public void addAchievedAchievement(Achievement achievement){
         achievedAchievements.add(achievement);
@@ -401,7 +420,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     /**
      * gets achieved achievements
-     * @return
+     * @return A list of all achieved Achievements
      */
     public List<Achievement> getAchievedAchievements(){
         return achievedAchievements;
@@ -429,7 +448,7 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
     /**
      * get the custom level id
      * @param id level id
-     * @return
+     * @return Custom level service object
      */
     public nl.ictm2a4.javagame.services.levels.Level getCustomLevel(int id){
         var customLevel = customLevels.stream().filter(a -> a.getId() == id).findFirst();
