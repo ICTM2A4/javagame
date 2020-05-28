@@ -11,6 +11,11 @@ import java.util.List;
 public class ScoreService extends ApiService {
     private String baseUrl = super.baseUrl + "/api/scores";
 
+    /** Gets a specific score from the API by the ID
+     *
+     * @param id
+     * @return The score
+     */
     public Score getScore(int id){
         var response = sendRequest(baseUrl + "/" + id, "GET","");
 
@@ -23,6 +28,10 @@ public class ScoreService extends ApiService {
         return convertJsonToScore(scoreJson);
     }
 
+    /** Gets the list of all the scores in the API
+     *
+     * @return A list of all the scores in the API
+     */
     public List<Score> getScores(){
         var response = sendRequest(baseUrl, "GET","");
 
@@ -33,6 +42,11 @@ public class ScoreService extends ApiService {
         return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
+    /** Gets a list of scores in the API
+     *
+     * @param limit, The maximum amount of entries in the list
+     * @return The list of scores
+     */
     public List<Score> getScores(int limit){
         var response = sendRequest(baseUrl, "GET","");
 
@@ -43,6 +57,12 @@ public class ScoreService extends ApiService {
         return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
+    /** Gets a list of scores in the API
+     *
+     * @param limit, The maximum amount of entries in the list
+     * @param sort, Sorting direction, "ASC" or "DESC"
+     * @return The list of scores
+     */
     public List<Score> getScores(int limit, String sort){
         var response = sendRequest(baseUrl + "?limit=" + limit + "&sort=" + sort, "GET","");
 
@@ -53,6 +73,11 @@ public class ScoreService extends ApiService {
         return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
+    /** Gets a list of the scores achieved on a given level by the level's ID
+     *
+     * @param lid, the level's ID
+     * @return The list of scores
+     */
     public List<Score> getScoresPerLevel(int lid){
         var response = sendRequest(baseUrl + "?lid=" + lid, "GET","");
 
@@ -63,6 +88,11 @@ public class ScoreService extends ApiService {
         return convertJsonToScoresList((JSONArray) response.getBody().get("Values"));
     }
 
+    /** Adds the given score to the API
+     *
+     * @param score
+     * @return The added score if succesful
+     */
     public Score addScore(Score score){
 
         var scoreJson = convertScoreToJson(score);
@@ -79,6 +109,11 @@ public class ScoreService extends ApiService {
 
     // JSON conversie
 
+    /** Converts a JSONarray of scores to a list of scores
+     *
+     * @param scoresJson
+     * @return the list of scores
+     */
     private List<Score> convertJsonToScoresList(JSONArray scoresJson){
         var scores = new ArrayList<Score>();
 
@@ -89,6 +124,11 @@ public class ScoreService extends ApiService {
         return scores;
     }
 
+    /** Converts a JSONObject of a score to a score
+     *
+     * @param scoreJson
+     * @return The score
+     */
     private Score convertJsonToScore(JSONObject scoreJson){
         return new Score(
                 ((Long) scoreJson.get("id")).intValue(),
@@ -101,6 +141,11 @@ public class ScoreService extends ApiService {
         );
     }
 
+    /** Converts a score to a JSONObject of the score
+     *
+     * @param score
+     * @return the JSONObject of the score
+     */
     private JSONObject convertScoreToJson(Score score){
         var scoreJson = new JSONObject();
         scoreJson.put("id", score.getId());
