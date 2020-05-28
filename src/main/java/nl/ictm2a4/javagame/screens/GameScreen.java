@@ -109,16 +109,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         achievedList = new ArrayList<>();
         achievedList.add(1);
 
-        if (getCurrentUser().isPresent()) {
-            ScoreService service = new ScoreService();
-
-            for (int i = 1; i <= LevelLoader.DEFAULTLEVELAMOUNT; i++) {
-                int finalI = i;
-                if (service.getScores().stream().anyMatch(score -> score.getUserID() == getCurrentUser().get().getId() && score.getScoredOnID() == finalI))
-                    achievedList.add(i + 1);
-            }
-        }
-
         registerAchievements();
         registerListeners();
         this.start();
@@ -434,6 +424,16 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         customLevels = new LevelService().getLevels();
         if(customLevels == null){
             customLevels = new ArrayList<>();
+        }
+
+        if (getCurrentUser().isPresent()) {
+            ScoreService service = new ScoreService();
+
+            for (int i = 1; i <= LevelLoader.DEFAULTLEVELAMOUNT; i++) {
+                int finalI = i;
+                if (service.getScores().stream().anyMatch(score -> score.getUserID() == getCurrentUser().get().getId() && score.getScoredOnID() == finalI))
+                    achievedList.add(i + 1);
+            }
         }
     }
 

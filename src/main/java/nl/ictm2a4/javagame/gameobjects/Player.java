@@ -184,8 +184,8 @@ public class Player extends GameObject {
      * @param keycode keyCode to find the Key by
      * @return The Optional Key
      */
-    public Optional<Key> getFromInventory(int keycode){
-        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).map(k -> (Key)k).findFirst();
+    public Optional<Pickup> getFromInventory(int keycode){
+        return inventory.stream().filter(pickup -> pickup instanceof Key).filter(key -> key.getExtra() == keycode).findFirst();
     }
 
     /**
