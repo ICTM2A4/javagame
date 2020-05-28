@@ -6,9 +6,9 @@
 
     <groupId>nl.ictm2a4</groupId>
     <artifactId>javagame</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
-    <name>JavaGame</name>
+    <name>TheLabyrinth</name>
     <description>A JavaGame made by Paul, Sietse en Jochem</description>
 
     <properties>

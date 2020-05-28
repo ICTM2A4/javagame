@@ -14,6 +14,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 public class LevelLoader {
@@ -156,7 +157,8 @@ public class LevelLoader {
      */
     public void createCustomLevel() {
         LevelService service = new LevelService();
-        Level level = new Level(service.getLevels().size() + 1);
+        List<nl.ictm2a4.javagame.services.levels.Level> levels = service.getLevels();
+        Level level = new Level(levels.get(levels.size() - 1).getId() + 1);
         LevelLoader.getInstance().loadLevel(level.getId());
     }
 }

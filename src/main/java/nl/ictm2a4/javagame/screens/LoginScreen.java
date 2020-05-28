@@ -80,6 +80,8 @@ public class LoginScreen extends JPanel implements ActionListener {
                 var aa = new AchievementsService().getAchievements(login.getId());
                 GameScreen.getInstance().setAchievedAchievements(aa);
 
+                GameScreen.getInstance().refreshCustomLevels();
+
                 GameScreen.getInstance().setPanel(new MainMenu());
             } else {
                 message.setText("Login incorrect");

@@ -139,7 +139,7 @@ public class FileLoader {
      * Reload fake wall image
      */
     public void reloadFakeWallImages() {
-        fakeWallOverlay = loadImage("textures/fakewalloverlay.png");
+        fakeWallOverlay = loadImage("textures/fakeWallOverlay.png");
     }
 
     /**

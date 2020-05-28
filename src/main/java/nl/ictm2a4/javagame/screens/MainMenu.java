@@ -78,6 +78,7 @@ public class MainMenu extends JPanel implements ActionListener {
         if (e.getSource() == buttons.get(4)) { // Logout
             GameScreen.getInstance().setCurrentUser(null);
             Settings.getInstance().updateUser("", "");
+            Settings.getInstance().save();
             GameScreen.getInstance().setPanel(new MainMenu());
         }
         if (e.getSource() == buttons.get(5)) { // achievements

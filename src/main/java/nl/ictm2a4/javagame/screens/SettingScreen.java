@@ -3,6 +3,7 @@ package nl.ictm2a4.javagame.screens;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.loaders.Settings;
+import nl.ictm2a4.javagame.raspberrypi.RaspberryPIController;
 import nl.ictm2a4.javagame.uicomponents.CButton;
 
 import javax.swing.*;
@@ -95,6 +96,8 @@ public class SettingScreen extends JPanel implements ActionListener {
             Settings.getInstance().setRaspberryPiIp(rpiIP.getText());
 
             Settings.getInstance().save();
+
+            new RaspberryPIController();
 
             Optional<Level> level = LevelLoader.getInstance().getCurrentLevel();
             if (level.isPresent()) {
