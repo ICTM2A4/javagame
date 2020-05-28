@@ -7,6 +7,9 @@ import nl.ictm2a4.javagame.listeners.ScoreListener;
 import nl.ictm2a4.javagame.loaders.FileLoader;
 import nl.ictm2a4.javagame.loaders.LevelLoader;
 import nl.ictm2a4.javagame.loaders.Settings;
+import nl.ictm2a4.javagame.services.achievements.Achievement;
+import nl.ictm2a4.javagame.services.achievements.AchievementsService;
+import nl.ictm2a4.javagame.services.levels.LevelService;
 import nl.ictm2a4.javagame.services.scores.ScoreService;
 import nl.ictm2a4.javagame.services.users.User;
 import nl.ictm2a4.javagame.services.users.UserService;
@@ -55,6 +58,11 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
     private Optional<User> currentUser;
 
+    // Buffered achievements and custom levels.
+    private List<Achievement> achievedAchievements;
+    private List<Achievement> achievements;
+    private List<nl.ictm2a4.javagame.services.levels.Level> customLevels;
+
     public GameScreen() {
         setTitle(GAMENAME);
         currentUser = Optional.empty();
@@ -66,8 +74,11 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         new RaspberryPIController();
 
         tryLogin();
+        refreshAchievements();
+        refreshCustomLevels();
 
         pressedKeys = new ArrayList<>();
+        achievedAchievements = new ArrayList<>();
 
         setUndecorated(true);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -93,7 +104,6 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
 
         achievedList = new ArrayList<>();
         achievedList.add(1);
-
 
         if (getCurrentUser().isPresent()) {
             ScoreService service = new ScoreService();
@@ -314,6 +324,63 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         else
             currentUser = Optional.of(user);
     }
+    // Access to buffered achievements, could be moved to the services
+
+    public void refreshAchievements(){
+        achievements = new AchievementsService().getAchievements();
+    }
+
+    public List<Achievement> getAchievements(){
+        return achievements;
+    }
+
+    public Achievement getAchievement(int id){
+        return achievements.stream().filter(a -> a.getId() == id).findFirst().get();
+    }
+
+    public void setAchievedAchievements(List<Achievement> aa){
+        if(aa != null)
+            achievedAchievements = aa;
+    }
+
+    public void addAchievedAchievement(Achievement achievement){
+        achievedAchievements.add(achievement);
+    }
+
+    public List<Achievement> getAchievedAchievements(){
+        return achievedAchievements;
+    }
+
+    // Access to buffered custom levels
+
+    public void refreshCustomLevels(){
+        customLevels = new LevelService().getLevels();
+        if(customLevels == null){
+            customLevels = new ArrayList<>();
+        }
+    }
+
+    public List<nl.ictm2a4.javagame.services.levels.Level> getCustomLevels(){
+        return customLevels;
+    }
+
+    public nl.ictm2a4.javagame.services.levels.Level getCustomLevel(int id){
+        var customLevel = customLevels.stream().filter(a -> a.getId() == id).findFirst();
+        if(customLevel.isPresent())
+            return customLevel.get();
+        else
+            return null;
+    }
+
+    public void addCustomLevel(nl.ictm2a4.javagame.services.levels.Level level){
+        customLevels.add(level);
+    }
+
+    public void updateCustomLevel(int id, nl.ictm2a4.javagame.services.levels.Level level){
+        int index = customLevels.stream().filter(cl -> cl.getId() == id).findFirst().get().getId();
+
+        customLevels.set(index, level);
+    }
 
     public Optional<User> getCurrentUser(){
         return currentUser;
@@ -330,7 +397,12 @@ public class GameScreen extends JFrame implements KeyListener, Runnable {
         var login = new UserService().authenticate(Settings.getInstance().getUsername(),
             Settings.getInstance().getPassword());
 
-        if(login != null && login.getToken() != null && !login.getToken().equals(""))
+        if(login != null && login.getToken() != null && !login.getToken().equals("")){
             setCurrentUser(login);
+
+            // Get achieved achievements upon startup
+            var aa = new AchievementsService().getAchievements(login.getId());
+            setAchievedAchievements(aa);
+        }
     }
 }

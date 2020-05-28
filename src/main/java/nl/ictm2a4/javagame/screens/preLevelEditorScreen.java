@@ -94,12 +94,10 @@ public class preLevelEditorScreen extends JPanel implements ActionListener {
         scrollFrame2.setBackground(new Color(0, 0, 0, 0));
         center.add(scrollFrame2);
 
-        var levelService = new LevelService();
-
         if (GameScreen.getInstance().getCurrentUser().isEmpty())
             return;
 
-        Level[] levelList = levelService.getLevels().stream()
+        Level[] levelList = GameScreen.getInstance().getCustomLevels().stream()
             .filter(level -> level.getCreatorID() == GameScreen.getInstance().getCurrentUser().get().getId()).toArray(Level[]::new);
 
         for(Level level : levelList) {
