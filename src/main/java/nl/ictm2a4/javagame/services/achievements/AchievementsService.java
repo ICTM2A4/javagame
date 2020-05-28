@@ -59,7 +59,7 @@ public class AchievementsService extends ApiService {
     /** Adds the given achievement to the API
      *
      * @param achievement
-     * @return the added achievemnt if succesful, null if unsuccesful
+     * @return the added achievement if succesful, null if unsuccesful
      */
     public Achievement addAchievement(Achievement achievement){
         var achievementJson = convertAchievementToJson(achievement);
