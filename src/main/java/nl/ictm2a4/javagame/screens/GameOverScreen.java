@@ -44,8 +44,8 @@ public class GameOverScreen extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == restart) {
-            LevelLoader.getInstance().getCurrentLevel().get().restart();
             GameScreen.getInstance().setPanel(LevelLoader.getInstance().getCurrentLevel().get());
+            LevelLoader.getInstance().getCurrentLevel().get().restart();
         }
         if (e.getSource() == backToMainMenu) {
             GameScreen.getInstance().setPanel(new MainMenu());
