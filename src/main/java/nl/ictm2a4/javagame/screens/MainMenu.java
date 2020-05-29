@@ -68,7 +68,6 @@ public class MainMenu extends JPanel implements ActionListener {
             if(GameScreen.getInstance().getCurrentUser().isEmpty()){
                 GameScreen.getInstance().addOverlay(new LoginScreen());
             } else{
-                LevelLoader.getInstance().createCustomLevel();
                 GameScreen.getInstance().setPanel(new preLevelEditorScreen());
             }
         }
